@@ -1,0 +1,4 @@
+sampleId,label
+# Template: sampleId,label
+# Valid labels: NORMAL, EXOTROPIA, ESOTROPIA, VERTICAL_STRABISMUS, OTHER
+# Labels must come from independent clinical examination ground truth.
