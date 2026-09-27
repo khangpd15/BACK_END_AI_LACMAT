@@ -1,0 +1,86 @@
+{
+  "featureCount": 30,
+  "featureList": [
+    "meanDeltaX",
+    "medianDeltaX",
+    "stdDeltaX",
+    "minDeltaX",
+    "maxDeltaX",
+    "rangeDeltaX",
+    "meanAbsDeltaX",
+    "meanDeltaY",
+    "medianDeltaY",
+    "stdDeltaY",
+    "minDeltaY",
+    "maxDeltaY",
+    "rangeDeltaY",
+    "meanAbsDeltaY",
+    "meanLeftX",
+    "stdLeftX",
+    "meanLeftY",
+    "stdLeftY",
+    "meanRightX",
+    "stdRightX",
+    "meanRightY",
+    "stdRightY",
+    "meanLeftVelocity",
+    "peakLeftVelocity",
+    "meanRightVelocity",
+    "peakRightVelocity",
+    "velocityDisparity",
+    "leftValidRatio",
+    "rightValidRatio",
+    "bothValidRatio"
+  ],
+  "bestModel": "Random Forest",
+  "results": {
+    "Random Forest": {
+      "accuracy": 0.6585,
+      "precision": 0.6,
+      "recall": 1.0,
+      "f1": 0.75,
+      "confusionMatrix": [
+        [
+          6,
+          14
+        ],
+        [
+          0,
+          21
+        ]
+      ]
+    },
+    "Logistic Regression": {
+      "accuracy": 0.561,
+      "precision": 0.5455,
+      "recall": 0.8571,
+      "f1": 0.6667,
+      "confusionMatrix": [
+        [
+          5,
+          15
+        ],
+        [
+          3,
+          18
+        ]
+      ]
+    },
+    "Support Vector Machine": {
+      "accuracy": 0.5366,
+      "precision": 0.525,
+      "recall": 1.0,
+      "f1": 0.6885,
+      "confusionMatrix": [
+        [
+          1,
+          19
+        ],
+        [
+          0,
+          21
+        ]
+      ]
+    }
+  }
+}
