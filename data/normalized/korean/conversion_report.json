@@ -1,0 +1,11 @@
+{
+  "totalFiles": 41,
+  "successfulFiles": 41,
+  "failedFiles": 0,
+  "normalFiles": 20,
+  "strabismusFiles": 21,
+  "totalSamples": 62404,
+  "invalidRows": 5351,
+  "missingColumns": 0,
+  "errors": []
+}
