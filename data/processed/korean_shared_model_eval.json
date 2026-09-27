@@ -1,0 +1,77 @@
+{
+  "trainSamples": 297,
+  "testSamples": 41,
+  "featureCount": 30,
+  "leakage": {
+    "status": "PARTICIPANT_LEVEL_LEAKAGE",
+    "uniqueTrainParticipants": 112,
+    "uniqueTestParticipants": 15,
+    "overlapCount": 2,
+    "overlapList": [
+      "\uae40\ubbfc\uacbd",
+      "\uc7a5\uc9c4\uc6b0"
+    ],
+    "details": [
+      {
+        "participantId": "\uae40\ubbfc\uacbd",
+        "trainFileCount": 5,
+        "testFileCount": 1
+      },
+      {
+        "participantId": "\uc7a5\uc9c4\uc6b0",
+        "trainFileCount": 1,
+        "testFileCount": 3
+      }
+    ]
+  },
+  "results": {
+    "Random Forest": {
+      "accuracy": 0.6098,
+      "precision": 0.5676,
+      "recall": 1.0,
+      "f1": 0.7241,
+      "confusionMatrix": [
+        [
+          4,
+          16
+        ],
+        [
+          0,
+          21
+        ]
+      ]
+    },
+    "Logistic Regression": {
+      "accuracy": 0.561,
+      "precision": 0.5455,
+      "recall": 0.8571,
+      "f1": 0.6667,
+      "confusionMatrix": [
+        [
+          5,
+          15
+        ],
+        [
+          3,
+          18
+        ]
+      ]
+    },
+    "SVM RBF": {
+      "accuracy": 0.5366,
+      "precision": 0.525,
+      "recall": 1.0,
+      "f1": 0.6885,
+      "confusionMatrix": [
+        [
+          1,
+          19
+        ],
+        [
+          0,
+          21
+        ]
+      ]
+    }
+  }
+}

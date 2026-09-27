@@ -1,0 +1,70 @@
+# Korean Shared Feature Statistical Distribution Analysis
+
+Empirical distribution comparison between **NORMAL** (N=86) and **STRABISMUS** (N=211) on the 30 shared features in the Korean training dataset.
+
+> **CLINICAL NOTICE:** This analysis reports empirical training sample statistics only. No clinical thresholds or diagnostic cut-offs are derived or asserted from these numbers.
+
+## Distribution Table
+
+| Feature Name | Class | Mean | Median | Std | Min | Max | Missing Rate | Domain Shift Note |
+|---|---|---|---|---|---|---|---|---|
+| `leftValidRatio` | NORMAL | 0.925503 | 0.95155 | 0.072793 | 0.6642 | 1.0 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.907903 | 0.92495 | 0.076847 | 0.5698 | 1.0 | 0.5% | |
+| `rightValidRatio` | NORMAL | 0.912509 | 0.9488 | 0.10253 | 0.3679 | 1.0 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.897999 | 0.9194 | 0.086677 | 0.5366 | 1.0 | 0.5% | |
+| `bothValidRatio` | NORMAL | 0.908134 | 0.94215 | 0.10412 | 0.3649 | 1.0 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.882537 | 0.91385 | 0.101622 | 0.4979 | 1.0 | 0.5% | |
+| `meanDeltaX` | NORMAL | 0.330608 | 0.331729 | 0.03534 | 0.247601 | 0.420006 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.330672 | 0.329965 | 0.038488 | 0.235032 | 0.464982 | 0.5% | |
+| `medianDeltaX` | NORMAL | 0.330451 | 0.33177 | 0.035658 | 0.246985 | 0.4197 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.330091 | 0.32873 | 0.038274 | 0.23607 | 0.46443 | 0.5% | |
+| `stdDeltaX` | NORMAL | 0.002551 | 0.001591 | 0.005228 | 0.000538 | 0.047656 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.005554 | 0.003439 | 0.009901 | 0.000559 | 0.081796 | 0.5% | |
+| `minDeltaX` | NORMAL | 0.319481 | 0.323555 | 0.049718 | 0.1158 | 0.41564 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.314348 | 0.319705 | 0.045475 | 0.11648 | 0.41138 | 0.5% | |
+| `maxDeltaX` | NORMAL | 0.344472 | 0.34408 | 0.039269 | 0.28661 | 0.48987 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.349398 | 0.34416 | 0.052845 | 0.25265 | 0.66938 | 0.5% | |
+| `rangeDeltaX` | NORMAL | 0.024992 | 0.00851 | 0.052705 | 0.00258 | 0.366 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.03505 | 0.01573 | 0.059662 | 0.00318 | 0.42835 | 0.5% | |
+| `meanAbsDeltaX` | NORMAL | 0.330608 | 0.331729 | 0.03534 | 0.247601 | 0.420006 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.330672 | 0.329965 | 0.038488 | 0.235032 | 0.464982 | 0.5% | |
+| `meanDeltaY` | NORMAL | 0.008903 | 0.006136 | 0.031565 | -0.116587 | 0.091139 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.002434 | 0.004274 | 0.034644 | -0.101127 | 0.092394 | 0.5% | |
+| `medianDeltaY` | NORMAL | 0.008492 | 0.00576 | 0.031969 | -0.12417 | 0.09071 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.002614 | 0.003715 | 0.034635 | -0.101905 | 0.0931 | 0.5% | |
+| `stdDeltaY` | NORMAL | 0.005961 | 0.00398 | 0.005651 | 0.000497 | 0.026826 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.008971 | 0.006083 | 0.010135 | 0.001048 | 0.083605 | 0.5% | |
+| `minDeltaY` | NORMAL | -0.010761 | -0.00639 | 0.042502 | -0.23862 | 0.08109 | 0.0% | LOW_RISK |
+| | STRABISMUS | -0.027663 | -0.018495 | 0.063269 | -0.41039 | 0.07385 | 0.5% | |
+| `maxDeltaY` | NORMAL | 0.038049 | 0.02065 | 0.064466 | -0.04994 | 0.43232 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.029555 | 0.02377 | 0.055883 | -0.0805 | 0.3864 | 0.5% | |
+| `rangeDeltaY` | NORMAL | 0.04881 | 0.02198 | 0.079699 | 0.00316 | 0.47476 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.057218 | 0.02966 | 0.085455 | 0.00554 | 0.76297 | 0.5% | |
+| `meanAbsDeltaY` | NORMAL | 0.022954 | 0.012335 | 0.023732 | 0.002043 | 0.117108 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.028708 | 0.022644 | 0.020315 | 0.002263 | 0.101127 | 0.5% | |
+| `meanLeftX` | NORMAL | 0.357556 | 0.358235 | 0.082944 | 0.138853 | 0.599366 | 0.0% | POTENTIAL_DOMAIN_SHIFT |
+| | STRABISMUS | 0.353327 | 0.353772 | 0.086991 | 0.065711 | 0.602414 | 0.5% | |
+| `stdLeftX` | NORMAL | 0.024081 | 0.015754 | 0.028116 | 0.0081 | 0.215965 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.036992 | 0.028259 | 0.030378 | 0.004826 | 0.184124 | 0.5% | |
+| `meanLeftY` | NORMAL | 0.505818 | 0.483088 | 0.136882 | 0.210884 | 0.834423 | 0.0% | POTENTIAL_DOMAIN_SHIFT |
+| | STRABISMUS | 0.554968 | 0.536685 | 0.160408 | 0.082285 | 0.925084 | 0.5% | |
+| `stdLeftY` | NORMAL | 0.011503 | 0.007504 | 0.014416 | 0.004147 | 0.108822 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.025822 | 0.013621 | 0.034864 | 0.003389 | 0.267278 | 0.5% | |
+| `meanRightX` | NORMAL | 0.6848 | 0.685163 | 0.077242 | 0.531864 | 0.884752 | 0.0% | POTENTIAL_DOMAIN_SHIFT |
+| | STRABISMUS | 0.678521 | 0.686427 | 0.088707 | 0.354777 | 0.905102 | 0.5% | |
+| `stdRightX` | NORMAL | 0.018963 | 0.014264 | 0.014927 | 0.008341 | 0.09203 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.032427 | 0.023684 | 0.026063 | 0.005218 | 0.137161 | 0.5% | |
+| `meanRightY` | NORMAL | 0.514808 | 0.492096 | 0.142007 | 0.193756 | 0.809775 | 0.0% | POTENTIAL_DOMAIN_SHIFT |
+| | STRABISMUS | 0.558829 | 0.552984 | 0.164248 | 0.111349 | 0.94848 | 0.5% | |
+| `stdRightY` | NORMAL | 0.010829 | 0.007937 | 0.007593 | 0.004245 | 0.042468 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.023922 | 0.014793 | 0.025668 | 0.003937 | 0.134304 | 0.5% | |
+| `meanLeftVelocity` | NORMAL | 0.069535 | 0.04902 | 0.061105 | 0.023727 | 0.323999 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.10645 | 0.080434 | 0.087457 | 0.020726 | 0.790611 | 0.5% | |
+| `peakLeftVelocity` | NORMAL | 12.984263 | 3.32913 | 28.366672 | 0.384301 | 219.715404 | 0.0% | LOW_RISK |
+| | STRABISMUS | 25.043314 | 6.118968 | 43.14924 | 0.426549 | 232.722624 | 0.5% | |
+| `meanRightVelocity` | NORMAL | 0.06094 | 0.044852 | 0.083029 | 0.025 | 0.754639 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.078016 | 0.064687 | 0.055616 | 0.02026 | 0.636265 | 0.5% | |
+| `peakRightVelocity` | NORMAL | 4.941716 | 2.675726 | 7.966538 | 0.412046 | 49.061217 | 0.0% | LOW_RISK |
+| | STRABISMUS | 8.486499 | 3.214284 | 23.099347 | 0.366686 | 226.694084 | 0.5% | |
+| `velocityDisparity` | NORMAL | 0.023682 | 0.004863 | 0.0589 | 6.1e-05 | 0.430639 | 0.0% | LOW_RISK |
+| | STRABISMUS | 0.038023 | 0.008691 | 0.061049 | 1e-06 | 0.463036 | 0.5% | |

@@ -37,6 +37,7 @@ __test__ = False
 
 def send_http_request(url: str, payload: Dict[str, Any]) -> Dict[str, Any]:
     """Send payload to live HTTP server via httpx."""
+    # pyrefly: ignore [missing-import]
     import httpx
 
     print(f"Connecting to live server: {url} ...")
@@ -48,6 +49,7 @@ def send_http_request(url: str, payload: Dict[str, Any]) -> Dict[str, Any]:
 
 def send_testclient_request(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Send payload via in-memory FastAPI TestClient."""
+    # pyrefly: ignore [missing-import]
     from fastapi.testclient import TestClient
     from app.main import app
 
@@ -100,6 +102,7 @@ def main():
     else:
         # Check if local server is listening
         try:
+            # pyrefly: ignore [missing-import]
             import httpx
 
             r = httpx.get("http://127.0.0.1:8000/health", timeout=1.0)

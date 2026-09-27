@@ -115,3 +115,58 @@ class ScreeningResponse(BaseModel):
         default="Screening result only — not a diagnosis.",
         description="Clinical disclaimer notice"
     )
+
+
+# =============================================================================
+# PHASE 4.2: TRANSFER EXPERIMENT SCHEMAS
+# =============================================================================
+
+class TransferModelMetadata(BaseModel):
+    name: str = Field("korean_shared_model", description="Model identifier")
+    version: str = Field("shared-v1.0.0", description="Contract/model version")
+
+
+class TransferDomainShiftInfo(BaseModel):
+    source: str = Field("KOREAN_INFRARED_EYE_TRACKER", description="Source training domain")
+    target: str = Field("REMICARE_WEBCAM_MEDIAPIPE", description="Target inference domain")
+    warning: bool = Field(True, description="Domain shift flag")
+    potentialShiftFeatures: Optional[List[str]] = Field(
+        default_factory=lambda: ["meanLeftX", "meanLeftY", "meanRightX", "meanRightY"],
+        description="Features susceptible to camera positioning and framing"
+    )
+
+
+class TransferExperimentResponse(BaseModel):
+    """Output for Phase 4.2 Research Transfer Experiment."""
+    model_config = ConfigDict(extra="allow")
+
+    sampleId: str
+    status: str = Field("TRANSFER_EXPERIMENT", description="Status code")
+    inputCompatible: bool = Field(True, description="True if input met feature contract")
+    prediction: str = Field(..., description="Model class output: NORMAL or STRABISMUS")
+    classProbability: Dict[str, float] = Field(..., description="Random Forest class probabilities")
+    domainShiftWarning: bool = Field(True, description="Explicit domain shift flag")
+    clinicalMeaning: Optional[Any] = Field(None, description="Always None; not a medical diagnosis")
+    model: TransferModelMetadata = Field(default_factory=TransferModelMetadata)
+    domainShift: TransferDomainShiftInfo = Field(default_factory=TransferDomainShiftInfo)
+    features: Optional[Dict[str, Optional[float]]] = Field(None, description="30 shared technical features for debug")
+    notice: str = Field(
+        "Research transfer experiment only — not a diagnosis.",
+        description="Mandatory scientific disclaimer"
+    )
+
+
+class TransferInconclusiveResponse(BaseModel):
+    """Response returned when time-series validation fails."""
+    model_config = ConfigDict(extra="allow")
+
+    sampleId: Optional[str] = None
+    status: str = Field("INCONCLUSIVE", description="Inconclusive status")
+    inputCompatible: bool = Field(False, description="Incompatible flag")
+    reason: str = Field("INVALID_TIME_SERIES", description="Failure reason")
+    details: Optional[List[str]] = Field(default_factory=list, description="Detailed validation errors")
+    notice: str = Field(
+        "Research transfer experiment only — not a diagnosis.",
+        description="Mandatory scientific disclaimer"
+    )
+

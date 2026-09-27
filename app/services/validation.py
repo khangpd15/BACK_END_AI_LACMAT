@@ -209,6 +209,13 @@ def validate_screening_request(request: ScreeningRequest) -> ValidationResult:
                 reason="INVALID_EYE_CONFIGURATION",
                 issues=all_issues,
             )
+        if cycle.coveredEye == cycle.trackedEye:
+            all_issues.append(f"Cycle {cycle.cycle}: coveredEye '{cycle.coveredEye}' cannot equal trackedEye '{cycle.trackedEye}'")
+            return ValidationResult(
+                is_valid=False,
+                reason="INVALID_EYE_CONFIGURATION",
+                issues=all_issues,
+            )
 
         if not cycle.samples or len(cycle.samples) == 0:
             all_issues.append(f"Cycle {cycle.cycle}: empty samples list")
