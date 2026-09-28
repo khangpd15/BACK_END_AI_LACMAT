@@ -31,6 +31,7 @@ from app.schemas import (
     ScreeningRequest,
     TransferDomainShiftInfo,
     TransferExperimentResponse,
+    TransferComparisonModelResult,
     TransferModelMetadata,
 )
 from app.services.shared_feature_contract import (
@@ -102,6 +103,7 @@ HORIZONTAL_DISPARITY_FEATURES: List[str] = [
 _PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REMICARE_MODEL_PATH = os.path.join(_PROJECT_ROOT, "app", "models", "remicare_transfer_model.joblib")
 KOREAN_FALLBACK_PATH = os.path.join(_PROJECT_ROOT, "app", "models", "korean_shared_model.joblib")
+FIFTEEN_FPS_MODEL_PATH = os.path.join(_PROJECT_ROOT, "app", "models", "remicare_15fps_candidate.joblib")
 
 
 # =============================================================================
@@ -121,7 +123,19 @@ class KoreanTransferService:
         self.ipd_scale_factor: Optional[float] = None
         self.experiment: str = "BASELINE"
         self.model_path: str = ""
+        self.fifteen_fps_artifact: Optional[Dict[str, Any]] = None
         self._load_model(model_file_path)
+        self._load_fifteen_fps_candidate()
+
+    def _load_fifteen_fps_candidate(self) -> None:
+        """Load the optional research comparison model without replacing B2."""
+        if not os.path.exists(FIFTEEN_FPS_MODEL_PATH):
+            self.fifteen_fps_artifact = None
+            return
+        artifact = joblib.load(FIFTEEN_FPS_MODEL_PATH)
+        if artifact.get("model") is None or not artifact.get("feature_names"):
+            raise ValueError("15 FPS candidate artifact is missing model or feature_names")
+        self.fifteen_fps_artifact = artifact
 
     def _load_model(self, override_path: Optional[str] = None) -> None:
         """Load the best available model artifact.
@@ -279,6 +293,57 @@ class KoreanTransferService:
             potentialShiftFeatures=HORIZONTAL_DISPARITY_FEATURES if self.coordinate_rescaling else VIEWPORT_POSITION_FEATURES,
         )
 
+        comparison_models = [
+            TransferComparisonModelResult(
+                key="korean_b2",
+                label="Korean B2 (60 Hz source)",
+                prediction=prediction_label,
+                classProbability=class_probabilities,
+                model=model_meta,
+                samplingProfile="Korean source approximately 60 Hz; B2 coordinate-rescaled transfer",
+                domainShiftWarning=True,
+                clinicalMeaning=None,
+                notice="Research-only Korean B2 output — not a medical diagnosis.",
+            )
+        ]
+
+        if self.fifteen_fps_artifact is not None:
+            candidate_names = list(self.fifteen_fps_artifact["feature_names"])
+            candidate_vector = []
+            for name in candidate_names:
+                value = features.get(name)
+                if value is None or not np.isfinite(value):
+                    raise ValueError(f"15 FPS candidate feature '{name}' is non-finite: {value}")
+                candidate_vector.append(float(value))
+            candidate_x = np.asarray([candidate_vector], dtype=float)
+            candidate_model = self.fifteen_fps_artifact["model"]
+            candidate_index = int(candidate_model.predict(candidate_x)[0])
+            candidate_label = "NORMAL" if candidate_index == 0 else "STRABISMUS"
+            candidate_probability = candidate_model.predict_proba(candidate_x)[0]
+            candidate_probabilities = {
+                "NORMAL": round(float(candidate_probability[0]), 4),
+                "STRABISMUS": round(float(candidate_probability[1]), 4),
+            }
+            comparison_models.append(
+                TransferComparisonModelResult(
+                    key="korean_15fps_candidate",
+                    label="Korean 15 FPS candidate",
+                    prediction=candidate_label,
+                    classProbability=candidate_probabilities,
+                    model=TransferModelMetadata(
+                        name=self.fifteen_fps_artifact.get("name", "Korean 15 FPS candidate"),
+                        version=self.fifteen_fps_artifact.get("version", "15fps-candidate"),
+                    ),
+                    samplingProfile="Korean recordings timestamp-downsampled to 15 FPS with four phase offsets",
+                    domainShiftWarning=True,
+                    clinicalMeaning=None,
+                    notice=(
+                        "Research-only sampling-matched output. No RemiCare labels were used; "
+                        "this is not a medical diagnosis or validated clinical probability."
+                    ),
+                )
+            )
+
         return TransferExperimentResponse(
             sampleId=request.sampleId,
             status="TRANSFER_EXPERIMENT",
@@ -290,6 +355,7 @@ class KoreanTransferService:
             model=model_meta,
             domainShift=domain_shift,
             features=features,
+            comparisonModels=comparison_models,
             notice=(
                 f"Research transfer experiment only — not a diagnosis. "
                 f"Experiment: {experiment_label}. {shift_note}"

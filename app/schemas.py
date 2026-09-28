@@ -136,6 +136,19 @@ class TransferDomainShiftInfo(BaseModel):
     )
 
 
+class TransferComparisonModelResult(BaseModel):
+    """One research-only model result in the side-by-side comparison."""
+    key: str
+    label: str
+    prediction: str
+    classProbability: Dict[str, float]
+    model: TransferModelMetadata
+    samplingProfile: str
+    domainShiftWarning: bool = True
+    clinicalMeaning: Optional[Any] = None
+    notice: str = "Research-only model output — not a medical diagnosis."
+
+
 class TransferExperimentResponse(BaseModel):
     """Output for Phase 4.2 Research Transfer Experiment."""
     model_config = ConfigDict(extra="allow")
@@ -150,6 +163,10 @@ class TransferExperimentResponse(BaseModel):
     model: TransferModelMetadata = Field(default_factory=TransferModelMetadata)
     domainShift: TransferDomainShiftInfo = Field(default_factory=TransferDomainShiftInfo)
     features: Optional[Dict[str, Optional[float]]] = Field(None, description="30 shared technical features for debug")
+    comparisonModels: List[TransferComparisonModelResult] = Field(
+        default_factory=list,
+        description="Side-by-side Korean B2 and sampling-matched research outputs",
+    )
     notice: str = Field(
         "Research transfer experiment only — not a diagnosis.",
         description="Mandatory scientific disclaimer"
@@ -169,4 +186,3 @@ class TransferInconclusiveResponse(BaseModel):
         "Research transfer experiment only — not a diagnosis.",
         description="Mandatory scientific disclaimer"
     )
-

@@ -1,0 +1,18 @@
+{
+  "classes": [
+    0,
+    1
+  ],
+  "decision_score": 0.8151841225016957,
+  "sigmoid_of_decision_score": 0.6932131078110482,
+  "predict_proba": {
+    "NORMAL": 0.30678689218895183,
+    "STRABISMUS": 0.6932131078110482
+  },
+  "sigmoid_matches_predict_proba": true,
+  "brief_reported_probability": {
+    "NORMAL": 0.002,
+    "STRABISMUS": 0.998
+  },
+  "brief_value_reproduced_from_repository_sample_and_current_artifact": false
+}

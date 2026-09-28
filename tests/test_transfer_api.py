@@ -260,3 +260,28 @@ def test_clinical_meaning_is_null(valid_payload):
 
     assert data["clinicalMeaning"] is None
     assert "not a diagnosis" in data["notice"].lower()
+
+
+def test_side_by_side_research_models(valid_payload):
+    """Return Korean B2 and the 15 FPS candidate without changing the primary result."""
+    response = client.post("/api/v1/transfer/strabismus", json=valid_payload)
+    assert response.status_code == 200
+    data = response.json()
+
+    comparisons = data["comparisonModels"]
+    assert [item["key"] for item in comparisons] == [
+        "korean_b2",
+        "korean_15fps_candidate",
+    ]
+    assert comparisons[0]["classProbability"] == data["classProbability"]
+    for item in comparisons:
+        probabilities = item["classProbability"]
+        assert item["prediction"] in ["NORMAL", "STRABISMUS"]
+        assert math.isclose(
+            probabilities["NORMAL"] + probabilities["STRABISMUS"],
+            1.0,
+            abs_tol=0.01,
+        )
+        assert item["domainShiftWarning"] is True
+        assert item["clinicalMeaning"] is None
+        assert "not a medical diagnosis" in item["notice"].lower()

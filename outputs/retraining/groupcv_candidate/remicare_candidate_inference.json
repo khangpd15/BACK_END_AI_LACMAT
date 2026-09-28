@@ -1,0 +1,15 @@
+{
+  "sample_id": "remicare-demo-sample-001",
+  "ground_truth": null,
+  "domain_shift": "WARNING",
+  "current_b2": {
+    "p_normal": 0.30678689218895183,
+    "p_strabismus": 0.6932131078110482
+  },
+  "groupcv_candidate": {
+    "decision_score": 2.8713659273574703,
+    "p_normal": 0.05358733574373986,
+    "p_strabismus": 0.9464126642562601
+  },
+  "interpretation": "Technical model output only; probability accuracy cannot be measured without a RemiCare clinical label."
+}

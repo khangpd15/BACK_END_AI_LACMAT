@@ -1,0 +1,339 @@
+{
+  "target_hz": 15.0,
+  "source_files_discovered": 338,
+  "augmented_rows_after_exclusion": 1324,
+  "unique_sessions_after_exclusion": 331,
+  "unique_participants_after_exclusion": 126,
+  "conflicting_participants_excluded": [
+    "김민경"
+  ],
+  "excluded_source_rows": [
+    {
+      "sampleId": "korean_strabismus_김민경1-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_strabismus_김민경2-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_strabismus_김민경3-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_strabismus_김민경4-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_strabismus_김민경5-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_normal_김민경-정상_all_gaze",
+      "participantId": "김민경",
+      "label": 0
+    }
+  ],
+  "extraction_error_count": 4,
+  "extraction_errors": [
+    "Missing shared feature after downsampling: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv offset=0.0",
+    "Missing shared feature after downsampling: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv offset=0.016666666666666666",
+    "Missing shared feature after downsampling: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv offset=0.03333333333333333",
+    "Missing shared feature after downsampling: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv offset=0.05"
+  ],
+  "selected_config": {
+    "feature_config": "15FPS_STABILITY_14",
+    "C": 0.03,
+    "class_weight": null,
+    "inner_brier": 0.19697019672806465
+  },
+  "nested_oof_metrics": {
+    "brier_score": 0.20807069373763762,
+    "log_loss": 0.7142449854069062,
+    "roc_auc": 0.6769305731142015,
+    "accuracy_at_0_5": 0.6737160120845922,
+    "balanced_accuracy_at_0_5": 0.5692109144542773,
+    "f1_at_0_5": 0.78159757330637,
+    "confusion_matrix_at_0_5": [
+      [
+        119,
+        301
+      ],
+      [
+        131,
+        773
+      ]
+    ]
+  },
+  "legacy_b2_configuration_same_15fps_folds": {
+    "brier_score": 0.23774120324881348,
+    "log_loss": 0.7727711392056571,
+    "roc_auc": 0.6770886009270964,
+    "accuracy_at_0_5": 0.6200906344410876,
+    "balanced_accuracy_at_0_5": 0.637658027812895,
+    "f1_at_0_5": 0.6794136392606756,
+    "confusion_matrix_at_0_5": [
+      [
+        288,
+        132
+      ],
+      [
+        371,
+        533
+      ]
+    ]
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "selected_config": {
+        "feature_config": "15FPS_NO_VIEWPORT_26",
+        "C": 3.0,
+        "class_weight": null,
+        "inner_brier": 0.1689437317612783
+      },
+      "train_participants": 101,
+      "validation_participants": 25,
+      "participant_overlap": []
+    },
+    {
+      "fold": 2,
+      "selected_config": {
+        "feature_config": "15FPS_STABILITY_14",
+        "C": 0.03,
+        "class_weight": null,
+        "inner_brier": 0.20379969687328153
+      },
+      "train_participants": 102,
+      "validation_participants": 24,
+      "participant_overlap": []
+    },
+    {
+      "fold": 3,
+      "selected_config": {
+        "feature_config": "15FPS_STABILITY_14",
+        "C": 0.03,
+        "class_weight": null,
+        "inner_brier": 0.19536324429767996
+      },
+      "train_participants": 101,
+      "validation_participants": 25,
+      "participant_overlap": []
+    },
+    {
+      "fold": 4,
+      "selected_config": {
+        "feature_config": "15FPS_STABILITY_14",
+        "C": 0.03,
+        "class_weight": null,
+        "inner_brier": 0.19516066538686858
+      },
+      "train_participants": 99,
+      "validation_participants": 27,
+      "participant_overlap": []
+    },
+    {
+      "fold": 5,
+      "selected_config": {
+        "feature_config": "15FPS_NO_VIEWPORT_26",
+        "C": 3.0,
+        "class_weight": null,
+        "inner_brier": 0.18477158575907715
+      },
+      "train_participants": 101,
+      "validation_participants": 25,
+      "participant_overlap": []
+    }
+  ],
+  "ranked_search": [
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.03,
+      "class_weight": null,
+      "inner_brier": 0.19697019672806465
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.1,
+      "class_weight": null,
+      "inner_brier": 0.19939572154657142
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.3,
+      "class_weight": null,
+      "inner_brier": 0.20045527672285496
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.1,
+      "class_weight": null,
+      "inner_brier": 0.20193085371790975
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 1.0,
+      "class_weight": null,
+      "inner_brier": 0.2019506871019118
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.3,
+      "class_weight": null,
+      "inner_brier": 0.20359291695745255
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.03,
+      "class_weight": null,
+      "inner_brier": 0.2040265805785828
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 3.0,
+      "class_weight": null,
+      "inner_brier": 0.2063649819474716
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 0.3,
+      "class_weight": null,
+      "inner_brier": 0.2064784386464356
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 0.1,
+      "class_weight": null,
+      "inner_brier": 0.20765636241202487
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 1.0,
+      "class_weight": null,
+      "inner_brier": 0.2080999618400428
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 1.0,
+      "class_weight": null,
+      "inner_brier": 0.2088145274063331
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 0.03,
+      "class_weight": null,
+      "inner_brier": 0.20945534566108256
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 3.0,
+      "class_weight": null,
+      "inner_brier": 0.21134943152825164
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 3.0,
+      "class_weight": null,
+      "inner_brier": 0.2147434802061193
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.03,
+      "class_weight": "balanced",
+      "inner_brier": 0.22441966185790369
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.3,
+      "class_weight": "balanced",
+      "inner_brier": 0.22627127036483297
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 1.0,
+      "class_weight": "balanced",
+      "inner_brier": 0.22715896468291621
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.1,
+      "class_weight": "balanced",
+      "inner_brier": 0.22787781570231316
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.1,
+      "class_weight": "balanced",
+      "inner_brier": 0.22927229738245863
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 3.0,
+      "class_weight": "balanced",
+      "inner_brier": 0.2303549400748907
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 0.3,
+      "class_weight": "balanced",
+      "inner_brier": 0.2312605275029324
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 1.0,
+      "class_weight": "balanced",
+      "inner_brier": 0.2325860544809094
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.03,
+      "class_weight": "balanced",
+      "inner_brier": 0.23290251236774684
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.3,
+      "class_weight": "balanced",
+      "inner_brier": 0.23300896495796986
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 0.1,
+      "class_weight": "balanced",
+      "inner_brier": 0.23430211903024672
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 3.0,
+      "class_weight": "balanced",
+      "inner_brier": 0.2371313846859568
+    },
+    {
+      "feature_config": "15FPS_B2_30",
+      "C": 0.03,
+      "class_weight": "balanced",
+      "inner_brier": 0.23771069473539924
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 1.0,
+      "class_weight": "balanced",
+      "inner_brier": 0.23819154563105663
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 3.0,
+      "class_weight": "balanced",
+      "inner_brier": 0.24166567490446728
+    }
+  ],
+  "mean_phase_offset_probability_std": 0.012505371669174483,
+  "max_phase_offset_probability_std": 0.31138654590258047,
+  "calibration_applied": false,
+  "threshold_tuned": false
+}
