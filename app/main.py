@@ -17,7 +17,9 @@ from app import __version__
 from app.api.screening import router as screening_router
 from app.api.transfer import router as transfer_router
 from app.api.cover_test_session import router as cover_test_session_router
+from app.api.cover_test import router as cover_test_v1_router
 from app.config import get_allowed_origins
+from app.db.database import init_db
 from app.services.korean_transfer import get_korean_transfer_service
 
 # Configure structured audit logging
@@ -31,8 +33,14 @@ logger = logging.getLogger("remicare.main")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan: Preload machine learning models once at startup."""
-    logger.info("Initializing RemiCare Strabismus AI Backend — Phase 5...")
+    """Application lifespan: Preload machine learning models and init database at startup."""
+    logger.info("Initializing RemiCare Strabismus AI Backend - Phase 5...")
+    try:
+        # Initialize database tables
+        await init_db()
+    except Exception as e:
+        logger.warning("Database init check note: %s", e)
+
     try:
         transfer_svc = get_korean_transfer_service()
         logger.info(
@@ -55,7 +63,7 @@ app = FastAPI(
         "Specialized AI backend for webcam-based Cover Test screening. "
         "Provides data integrity validation, time-series preprocessing, "
         "cycle-based movement feature extraction, and ML inference. "
-        "Screening result only — not a clinical diagnosis."
+        "Screening result only - not a clinical diagnosis."
     ),
     version=__version__,
     docs_url="/docs",
@@ -100,8 +108,10 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 # Register API routes
 app.include_router(screening_router)
 app.include_router(transfer_router)
+# Legacy endpoint maintained for compatibility
 app.include_router(cover_test_session_router, prefix="/api/cover-test")
-app.include_router(cover_test_session_router, prefix="/api/v1/cover-test")
+# New Phase 3 persistent cloud storage router
+app.include_router(cover_test_v1_router, prefix="/api/v1/cover-test")
 
 
 @app.get(

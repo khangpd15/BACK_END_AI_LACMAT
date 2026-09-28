@@ -31,6 +31,13 @@ DEFAULT_DEV_ORIGINS = (
 )
 FRONTEND_ORIGINS_RAW = os.getenv("REMICARE_FRONTEND_ORIGINS", DEFAULT_DEV_ORIGINS)
 
+# Database & Storage Configuration (Phase 3)
+DATABASE_URL = os.getenv("DATABASE_URL", "")
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+SUPABASE_STORAGE_BUCKET_RAW = os.getenv("SUPABASE_STORAGE_BUCKET_RAW", "cover-test-raw")
+ENABLE_AI_INFERENCE_ON_SAVE = os.getenv("ENABLE_AI_INFERENCE_ON_SAVE", "true").lower() in ("true", "1", "yes")
+
 
 def get_allowed_origins() -> List[str]:
     """Parse comma-separated origin string into a clean list of allowed CORS origins."""
