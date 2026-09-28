@@ -16,6 +16,7 @@ from fastapi.responses import JSONResponse
 from app import __version__
 from app.api.screening import router as screening_router
 from app.api.transfer import router as transfer_router
+from app.api.cover_test_session import router as cover_test_session_router
 from app.config import get_allowed_origins
 from app.services.korean_transfer import get_korean_transfer_service
 
@@ -31,16 +32,18 @@ logger = logging.getLogger("remicare.main")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan: Preload machine learning models once at startup."""
-    logger.info("Initializing RemiCare Strabismus AI Backend services...")
+    logger.info("Initializing RemiCare Strabismus AI Backend — Phase 5...")
     try:
         transfer_svc = get_korean_transfer_service()
         logger.info(
-            "Korean Shared Model successfully preloaded at startup (Features: %d, Model: %s)",
+            "Transfer model loaded: experiment=%s, version=%s, features=%d, path=%s",
+            transfer_svc.experiment,
+            transfer_svc.artifact.get("version") if transfer_svc.artifact else "Unknown",
             len(transfer_svc.feature_names),
-            transfer_svc.artifact.get("name") if transfer_svc.artifact else "Unknown",
+            transfer_svc.model_path,
         )
     except Exception as e:
-        logger.error("Failed to preload Korean Shared Model at startup: %s", e, exc_info=True)
+        logger.error("Failed to preload transfer model at startup: %s", e, exc_info=True)
     yield
     logger.info("Shutting down RemiCare Strabismus AI Backend...")
 
@@ -97,6 +100,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 # Register API routes
 app.include_router(screening_router)
 app.include_router(transfer_router)
+app.include_router(cover_test_session_router, prefix="/api/cover-test")
+app.include_router(cover_test_session_router, prefix="/api/v1/cover-test")
 
 
 @app.get(
@@ -106,9 +111,21 @@ app.include_router(transfer_router)
     description="Returns backend service health status, name, and version.",
 )
 async def health_check() -> Dict[str, Any]:
-    """Health check endpoint responding with operational status and version."""
+    """Health check endpoint responding with operational status, version, and active model info."""
+    try:
+        svc = get_korean_transfer_service()
+        model_info = {
+            "experiment": svc.experiment,
+            "version": svc.artifact.get("version") if svc.artifact else None,
+            "featureCount": len(svc.feature_names),
+            "coordinateRescaling": svc.coordinate_rescaling,
+            "ipdScaleFactor": svc.ipd_scale_factor,
+        }
+    except Exception:
+        model_info = {"status": "not_loaded"}
     return {
         "status": "ok",
         "service": "remicare-strabismus-ai",
         "version": __version__,
+        "model": model_info,
     }
