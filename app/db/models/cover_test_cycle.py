@@ -1,7 +1,11 @@
 """SQLAlchemy model for Cover Test Cycles."""
 
 import uuid
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
+
+if TYPE_CHECKING:
+    from app.db.models.cover_test_image import CoverTestImageModel
+    from app.db.models.cover_test_session import CoverTestSessionModel
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base

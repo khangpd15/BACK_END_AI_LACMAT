@@ -1,10 +1,12 @@
 """SQLAlchemy model for Cover Test Sessions."""
 
-from app.db.models import CoverTestResultModel
-from app.db.models import CoverTestImageModel
-from app.db.models import CoverTestCycleModel
 import uuid
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
+
+if TYPE_CHECKING:
+    from app.db.models.cover_test_cycle import CoverTestCycleModel
+    from app.db.models.cover_test_image import CoverTestImageModel
+    from app.db.models.cover_test_result import CoverTestResultModel
 from sqlalchemy import DateTime, Float, Integer, JSON, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship

@@ -1,8 +1,10 @@
 """SQLAlchemy model for Cover Test AI Transfer Experiment Results."""
 
-from app.db.models import CoverTestSessionModel
 import uuid
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
+
+if TYPE_CHECKING:
+    from app.db.models.cover_test_session import CoverTestSessionModel
 from sqlalchemy import Boolean, DateTime, ForeignKey, JSON, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
