@@ -128,13 +128,13 @@ class KoreanTransferService:
         self._load_fifteen_fps_candidate()
 
     def _load_fifteen_fps_candidate(self) -> None:
-        """Load the optional research comparison model without replacing B2."""
+        """Load the optional sampling-robust comparison model without replacing B2."""
         if not os.path.exists(FIFTEEN_FPS_MODEL_PATH):
             self.fifteen_fps_artifact = None
             return
         artifact = joblib.load(FIFTEEN_FPS_MODEL_PATH)
         if artifact.get("model") is None or not artifact.get("feature_names"):
-            raise ValueError("15 FPS candidate artifact is missing model or feature_names")
+            raise ValueError("Sampling-robust candidate artifact is missing model or feature_names")
         self.fifteen_fps_artifact = artifact
 
     def _load_model(self, override_path: Optional[str] = None) -> None:
@@ -313,7 +313,7 @@ class KoreanTransferService:
             for name in candidate_names:
                 value = features.get(name)
                 if value is None or not np.isfinite(value):
-                    raise ValueError(f"15 FPS candidate feature '{name}' is non-finite: {value}")
+                    raise ValueError(f"10-15 FPS candidate feature '{name}' is non-finite: {value}")
                 candidate_vector.append(float(value))
             candidate_x = np.asarray([candidate_vector], dtype=float)
             candidate_model = self.fifteen_fps_artifact["model"]
@@ -327,14 +327,17 @@ class KoreanTransferService:
             comparison_models.append(
                 TransferComparisonModelResult(
                     key="korean_15fps_candidate",
-                    label="Korean 15 FPS candidate",
+                    label=self.fifteen_fps_artifact.get("ui_label", "Korean 10-15 FPS candidate"),
                     prediction=candidate_label,
                     classProbability=candidate_probabilities,
                     model=TransferModelMetadata(
-                        name=self.fifteen_fps_artifact.get("name", "Korean 15 FPS candidate"),
+                        name=self.fifteen_fps_artifact.get("name", "Korean 10-15 FPS candidate"),
                         version=self.fifteen_fps_artifact.get("version", "15fps-candidate"),
                     ),
-                    samplingProfile="Korean recordings timestamp-downsampled to 15 FPS with four phase offsets",
+                    samplingProfile=self.fifteen_fps_artifact.get(
+                        "sampling_profile",
+                        "Korean recordings augmented across fixed and variable 10-15 FPS",
+                    ),
                     domainShiftWarning=True,
                     clinicalMeaning=None,
                     notice=(

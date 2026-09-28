@@ -1,0 +1,771 @@
+{
+  "target_hz_range": [
+    10.0,
+    15.0
+  ],
+  "fixed_rates_hz": [
+    10.0,
+    11.0,
+    12.0,
+    13.0,
+    14.0,
+    15.0
+  ],
+  "fixed_phase_fractions": [
+    0.0,
+    0.25,
+    0.5,
+    0.75
+  ],
+  "irregular_profile_count": 3,
+  "source_files_discovered": 338,
+  "augmented_rows_after_exclusion": 8937,
+  "unique_sessions_after_exclusion": 331,
+  "unique_participants_after_exclusion": 126,
+  "conflicting_participants_excluded": [
+    "김민경"
+  ],
+  "excluded_source_rows": [
+    {
+      "sampleId": "korean_strabismus_김민경1-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_strabismus_김민경2-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_strabismus_김민경3-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_strabismus_김민경4-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_strabismus_김민경5-우상_외_all_gaze",
+      "participantId": "김민경",
+      "label": 1
+    },
+    {
+      "sampleId": "korean_normal_김민경-정상_all_gaze",
+      "participantId": "김민경",
+      "label": 0
+    }
+  ],
+  "extraction_error_count": 27,
+  "extraction_errors": [
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_10hz_phase_0",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_10hz_phase_0.25",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_10hz_phase_0.5",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_10hz_phase_0.75",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_11hz_phase_0",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_11hz_phase_0.25",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_11hz_phase_0.5",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_11hz_phase_0.75",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_12hz_phase_0",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_12hz_phase_0.25",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_12hz_phase_0.5",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_12hz_phase_0.75",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_13hz_phase_0",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_13hz_phase_0.25",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_13hz_phase_0.5",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_13hz_phase_0.75",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_14hz_phase_0",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_14hz_phase_0.25",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_14hz_phase_0.5",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_14hz_phase_0.75",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_15hz_phase_0",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_15hz_phase_0.25",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_15hz_phase_0.5",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=fixed_15hz_phase_0.75",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=variable_10_15hz_drop_0",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=variable_10_15hz_drop_1",
+    "Missing shared feature: D:\\REMICARE-STRABISMUS-AI\\data\\korean_repo\\data\\exotropia\\이지유1-외20_all_gaze.csv profile=variable_10_15hz_drop_2"
+  ],
+  "selected_config": {
+    "feature_config": "15FPS_STABILITY_14",
+    "C": 0.01,
+    "class_weight": {
+      "0": 1.4,
+      "1": 1.0
+    },
+    "inner_objective": 0.2997261741664951,
+    "inner_brier": 0.1996858185862108,
+    "inner_balanced_accuracy_at_0_5": 0.6198365875357026,
+    "inner_profile_probability_std": 0.009999004928419849
+  },
+  "nested_oof_metrics": {
+    "brier_score": 0.2071061871628215,
+    "log_loss": 0.7367199520785622,
+    "roc_auc": 0.6736728987575704,
+    "accuracy_at_0_5": 0.6324269889224572,
+    "balanced_accuracy_at_0_5": 0.5726615785612836,
+    "f1_at_0_5": 0.7322520172793219,
+    "confusion_matrix_at_0_5": [
+      [
+        1160,
+        1675
+      ],
+      [
+        1610,
+        4492
+      ]
+    ]
+  },
+  "mean_profile_probability_std": 0.015601070437796174,
+  "previous_15fps_configuration_same_multirate_folds": {
+    "brier_score": 0.19863040055099765,
+    "log_loss": 0.5911304431016415,
+    "roc_auc": 0.6776977161332018,
+    "accuracy_at_0_5": 0.6951997314535079,
+    "balanced_accuracy_at_0_5": 0.5540423904730689,
+    "f1_at_0_5": 0.8081419918298351,
+    "confusion_matrix_at_0_5": [
+      [
+        476,
+        2359
+      ],
+      [
+        365,
+        5737
+      ]
+    ]
+  },
+  "previous_15fps_mean_profile_probability_std": 0.00807618510530312,
+  "folds": [
+    {
+      "fold": 1,
+      "selected_config": {
+        "feature_config": "15FPS_NO_VIEWPORT_26",
+        "C": 0.01,
+        "class_weight": {
+          "0": 1.4,
+          "1": 1.0
+        },
+        "inner_objective": 0.263599981880767,
+        "inner_brier": 0.18326471239414419,
+        "inner_balanced_accuracy_at_0_5": 0.7075367593323394,
+        "inner_profile_probability_std": 0.014438918639415273
+      },
+      "train_participants": 101,
+      "validation_participants": 25,
+      "participant_overlap": []
+    },
+    {
+      "fold": 2,
+      "selected_config": {
+        "feature_config": "15FPS_NO_VIEWPORT_26",
+        "C": 0.01,
+        "class_weight": null,
+        "inner_objective": 0.3176654049859736,
+        "inner_brier": 0.20574753662599762,
+        "inner_balanced_accuracy_at_0_5": 0.5858058795443694,
+        "inner_profile_probability_std": 0.016738676492136697
+      },
+      "train_participants": 102,
+      "validation_participants": 24,
+      "participant_overlap": []
+    },
+    {
+      "fold": 3,
+      "selected_config": {
+        "feature_config": "15FPS_STABILITY_14",
+        "C": 0.01,
+        "class_weight": {
+          "0": 1.4,
+          "1": 1.0
+        },
+        "inner_objective": 0.29818406880664144,
+        "inner_brier": 0.20206381742114943,
+        "inner_balanced_accuracy_at_0_5": 0.6384966919036901,
+        "inner_profile_probability_std": 0.011488848722829053
+      },
+      "train_participants": 102,
+      "validation_participants": 24,
+      "participant_overlap": []
+    },
+    {
+      "fold": 4,
+      "selected_config": {
+        "feature_config": "15FPS_NO_VIEWPORT_26",
+        "C": 0.1,
+        "class_weight": null,
+        "inner_objective": 0.2638528644452718,
+        "inner_brier": 0.1741155679499912,
+        "inner_balanced_accuracy_at_0_5": 0.6784832451499119,
+        "inner_profile_probability_std": 0.01871621556551721
+      },
+      "train_participants": 99,
+      "validation_participants": 27,
+      "participant_overlap": []
+    },
+    {
+      "fold": 5,
+      "selected_config": {
+        "feature_config": "15FPS_STABILITY_14",
+        "C": 0.01,
+        "class_weight": {
+          "0": 1.4,
+          "1": 1.0
+        },
+        "inner_objective": 0.30193130364762355,
+        "inner_brier": 0.20212882224518633,
+        "inner_balanced_accuracy_at_0_5": 0.6297441219172343,
+        "inner_profile_probability_std": 0.014477023763491545
+      },
+      "train_participants": 100,
+      "validation_participants": 26,
+      "participant_overlap": []
+    }
+  ],
+  "ranked_search": [
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.01,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.2997261741664951,
+      "inner_brier": 0.1996858185862108,
+      "inner_balanced_accuracy_at_0_5": 0.6198365875357026,
+      "inner_profile_probability_std": 0.009999004928419849
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.01,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.3052310497096566,
+      "inner_brier": 0.19706702200715887,
+      "inner_balanced_accuracy_at_0_5": 0.5866351391425138,
+      "inner_profile_probability_std": 0.009645624976252355
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.3,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.3061154644292724,
+      "inner_brier": 0.2023420976265933,
+      "inner_balanced_accuracy_at_0_5": 0.637879852039144,
+      "inner_profile_probability_std": 0.026486659624930242
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 1.0,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.306182754362102,
+      "inner_brier": 0.20277765754727917,
+      "inner_balanced_accuracy_at_0_5": 0.6445568197780587,
+      "inner_profile_probability_std": 0.029088603518674986
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.3,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.30637303401846694,
+      "inner_brier": 0.20087830763969552,
+      "inner_balanced_accuracy_at_0_5": 0.6299847044684803,
+      "inner_profile_probability_std": 0.025981804991783094
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.03,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.306394877969454,
+      "inner_brier": 0.2048114505557942,
+      "inner_balanced_accuracy_at_0_5": 0.6173432598211359,
+      "inner_profile_probability_std": 0.011838484737887596
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 1.0,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.30676466739927954,
+      "inner_brier": 0.20126073486777193,
+      "inner_balanced_accuracy_at_0_5": 0.6355129465748934,
+      "inner_profile_probability_std": 0.028764338350461834
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.01,
+      "class_weight": "balanced",
+      "inner_objective": 0.3070501015441431,
+      "inner_brier": 0.21774998353838768,
+      "inner_balanced_accuracy_at_0_5": 0.6639446863635654,
+      "inner_profile_probability_std": 0.010572579193293503
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.3,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.3073147341451055,
+      "inner_brier": 0.2049911418598663,
+      "inner_balanced_accuracy_at_0_5": 0.6449501334457086,
+      "inner_profile_probability_std": 0.0271222512933328
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 1.0,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.3074123665969976,
+      "inner_brier": 0.20551533464732682,
+      "inner_balanced_accuracy_at_0_5": 0.6516271011846233,
+      "inner_profile_probability_std": 0.029607614491653115
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.1,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.3086444652802671,
+      "inner_brier": 0.20551746294509615,
+      "inner_balanced_accuracy_at_0_5": 0.6354622215979149,
+      "inner_profile_probability_std": 0.023985115469299403
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.01,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.3093674335370528,
+      "inner_brier": 0.2058062914677138,
+      "inner_balanced_accuracy_at_0_5": 0.6197351375817453,
+      "inner_profile_probability_std": 0.01698985292955064
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.03,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.3094350583008082,
+      "inner_brier": 0.20211452062083687,
+      "inner_balanced_accuracy_at_0_5": 0.593678107099936,
+      "inner_profile_probability_std": 0.011480128909910686
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.1,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.3094419419815345,
+      "inner_brier": 0.2027006055112991,
+      "inner_balanced_accuracy_at_0_5": 0.6195392611321815,
+      "inner_profile_probability_std": 0.02325230350656159
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.1,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.30945281938432206,
+      "inner_brier": 0.20123631167096862,
+      "inner_balanced_accuracy_at_0_5": 0.6125220458553792,
+      "inner_profile_probability_std": 0.022694038354396456
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.01,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.30970051920643055,
+      "inner_brier": 0.19578985013552966,
+      "inner_balanced_accuracy_at_0_5": 0.5631112359725929,
+      "inner_profile_probability_std": 0.009376956128098237
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.03,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.3107378268898305,
+      "inner_brier": 0.20359959798953486,
+      "inner_balanced_accuracy_at_0_5": 0.610862168531785,
+      "inner_profile_probability_std": 0.019707542066483695
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 1.0,
+      "class_weight": null,
+      "inner_objective": 0.310831526005155,
+      "inner_brier": 0.19960757518106495,
+      "inner_balanced_accuracy_at_0_5": 0.6110681899767445,
+      "inner_profile_probability_std": 0.027981996636552348
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.03,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.3116666499021953,
+      "inner_brier": 0.2063411211322491,
+      "inner_balanced_accuracy_at_0_5": 0.6195158496043451,
+      "inner_profile_probability_std": 0.020408982342064952
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.03,
+      "class_weight": "balanced",
+      "inner_objective": 0.3117326166364304,
+      "inner_brier": 0.22192840988497578,
+      "inner_balanced_accuracy_at_0_5": 0.6657739070718421,
+      "inner_profile_probability_std": 0.012495367038830371
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.01,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.3118803820870676,
+      "inner_brier": 0.20298151690433572,
+      "inner_balanced_accuracy_at_0_5": 0.596944795617362,
+      "inner_profile_probability_std": 0.01627012817414476
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.03,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.31251197132558084,
+      "inner_brier": 0.20080010363537482,
+      "inner_balanced_accuracy_at_0_5": 0.5755841176195159,
+      "inner_profile_probability_std": 0.0112157941901701
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.1,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.3126849136535196,
+      "inner_brier": 0.2066258994113926,
+      "inner_balanced_accuracy_at_0_5": 0.6016754850088184,
+      "inner_profile_probability_std": 0.012955770988663214
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.1,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.31317871139991676,
+      "inner_brier": 0.20912526010052548,
+      "inner_balanced_accuracy_at_0_5": 0.6103837929796632,
+      "inner_profile_probability_std": 0.01329879908861407
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.3,
+      "class_weight": null,
+      "inner_objective": 0.3133241790203107,
+      "inner_brier": 0.19931499319019017,
+      "inner_balanced_accuracy_at_0_5": 0.5940776638416756,
+      "inner_profile_probability_std": 0.025057203581078925
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.03,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.31391415116462296,
+      "inner_brier": 0.20209521808400627,
+      "inner_balanced_accuracy_at_0_5": 0.5910084125423358,
+      "inner_profile_probability_std": 0.0191420724324013
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.1,
+      "class_weight": null,
+      "inner_objective": 0.3147846446494305,
+      "inner_brier": 0.19977174623618293,
+      "inner_balanced_accuracy_at_0_5": 0.5834410263613804,
+      "inner_profile_probability_std": 0.021746310007185417
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.1,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.3157900902656695,
+      "inner_brier": 0.2053363085420015,
+      "inner_balanced_accuracy_at_0_5": 0.5835869582182266,
+      "inner_profile_probability_std": 0.012701042556449342
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.1,
+      "class_weight": "balanced",
+      "inner_objective": 0.3161472842675957,
+      "inner_brier": 0.22565900918304463,
+      "inner_balanced_accuracy_at_0_5": 0.6660017792761155,
+      "inner_profile_probability_std": 0.013977439807159818
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.01,
+      "class_weight": null,
+      "inner_objective": 0.31657722650646375,
+      "inner_brier": 0.19491755455603793,
+      "inner_balanced_accuracy_at_0_5": 0.53119039815205,
+      "inner_profile_probability_std": 0.008914542976876612
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.01,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.3165960978211782,
+      "inner_brier": 0.20154195113727805,
+      "inner_balanced_accuracy_at_0_5": 0.5712170872937834,
+      "inner_profile_probability_std": 0.015716837014691985
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.3,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.31676386444077503,
+      "inner_brier": 0.2090866556731292,
+      "inner_balanced_accuracy_at_0_5": 0.5969674267609371,
+      "inner_profile_probability_std": 0.01383813091576012
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.3,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.3168394420993307,
+      "inner_brier": 0.211489267862659,
+      "inner_balanced_accuracy_at_0_5": 0.6068814284153518,
+      "inner_profile_probability_std": 0.014141062681019266
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 1.0,
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "inner_objective": 0.3182964829726914,
+      "inner_brier": 0.21103616130667863,
+      "inner_balanced_accuracy_at_0_5": 0.5998337781523622,
+      "inner_profile_probability_std": 0.01443753240820669
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 1.0,
+      "class_weight": "balanced",
+      "inner_objective": 0.3190667492825962,
+      "inner_brier": 0.2216151599540373,
+      "inner_balanced_accuracy_at_0_5": 0.6711304646407892,
+      "inner_profile_probability_std": 0.030468410977512368
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.03,
+      "class_weight": null,
+      "inner_objective": 0.31918600123764784,
+      "inner_brier": 0.19965405473013798,
+      "inner_balanced_accuracy_at_0_5": 0.5433394203305708,
+      "inner_profile_probability_std": 0.010733603180305144
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 1.0,
+      "class_weight": {
+        "0": 1.4,
+        "1": 1.0
+      },
+      "inner_objective": 0.31959817845654925,
+      "inner_brier": 0.21329918011705654,
+      "inner_balanced_accuracy_at_0_5": 0.6042250003901921,
+      "inner_profile_probability_std": 0.014710496874081486
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.3,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.3197708033682615,
+      "inner_brier": 0.20789374088265872,
+      "inner_balanced_accuracy_at_0_5": 0.5796733311482574,
+      "inner_profile_probability_std": 0.01359079054533428
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.3,
+      "class_weight": "balanced",
+      "inner_objective": 0.3202704768005998,
+      "inner_brier": 0.22202539746732117,
+      "inner_balanced_accuracy_at_0_5": 0.6632337563016029,
+      "inner_profile_probability_std": 0.028107036817358693
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.3,
+      "class_weight": "balanced",
+      "inner_objective": 0.3206848613789143,
+      "inner_brier": 0.22761460417145005,
+      "inner_balanced_accuracy_at_0_5": 0.6573707293471305,
+      "inner_profile_probability_std": 0.014825879088493643
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.01,
+      "class_weight": "balanced",
+      "inner_objective": 0.32100295713026317,
+      "inner_brier": 0.22509311933271853,
+      "inner_balanced_accuracy_at_0_5": 0.6529233194424935,
+      "inner_profile_probability_std": 0.018281335316335988
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.03,
+      "class_weight": "balanced",
+      "inner_objective": 0.32205763137564075,
+      "inner_brier": 0.22496992766529902,
+      "inner_balanced_accuracy_at_0_5": 0.655037380406112,
+      "inner_profile_probability_std": 0.021694097623739524
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.1,
+      "class_weight": null,
+      "inner_objective": 0.32260444436884766,
+      "inner_brier": 0.20418767760336215,
+      "inner_balanced_accuracy_at_0_5": 0.5508061369418302,
+      "inner_profile_probability_std": 0.012236602001886147
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 1.0,
+      "class_weight": {
+        "0": 1.15,
+        "1": 1.0
+      },
+      "inner_objective": 0.32262527391544354,
+      "inner_brier": 0.20988279229809292,
+      "inner_balanced_accuracy_at_0_5": 0.5773985110268296,
+      "inner_profile_probability_std": 0.014184218748116014
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.1,
+      "class_weight": "balanced",
+      "inner_objective": 0.32275333758932284,
+      "inner_brier": 0.22323289548717076,
+      "inner_balanced_accuracy_at_0_5": 0.652360662390161,
+      "inner_profile_probability_std": 0.025221215399384635
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 0.3,
+      "class_weight": null,
+      "inner_objective": 0.32482827771916556,
+      "inner_brier": 0.20690787118481604,
+      "inner_balanced_accuracy_at_0_5": 0.5546721605718656,
+      "inner_profile_probability_std": 0.013176893354631887
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 1.0,
+      "class_weight": "balanced",
+      "inner_objective": 0.32521338739597416,
+      "inner_brier": 0.22902594320880948,
+      "inner_balanced_accuracy_at_0_5": 0.6461527055922336,
+      "inner_profile_probability_std": 0.01545124117044619
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.03,
+      "class_weight": null,
+      "inner_objective": 0.32528428841279,
+      "inner_brier": 0.20074650358362556,
+      "inner_balanced_accuracy_at_0_5": 0.5381272338499477,
+      "inner_profile_probability_std": 0.018139186583302682
+    },
+    {
+      "feature_config": "15FPS_NO_VIEWPORT_26",
+      "C": 0.01,
+      "class_weight": null,
+      "inner_objective": 0.32598815504605166,
+      "inner_brier": 0.20034960752872308,
+      "inner_balanced_accuracy_at_0_5": 0.5270278285027548,
+      "inner_profile_probability_std": 0.014791009286034523
+    },
+    {
+      "feature_config": "15FPS_STABILITY_14",
+      "C": 1.0,
+      "class_weight": null,
+      "inner_objective": 0.3261002794848641,
+      "inner_brier": 0.20903769807600947,
+      "inner_balanced_accuracy_at_0_5": 0.5593380780696415,
+      "inner_profile_probability_std": 0.01379420185252999
+    }
+  ],
+  "calibration_applied": false,
+  "threshold_tuned": false,
+  "remicare_labels_used": 0
+}

@@ -263,7 +263,7 @@ def test_clinical_meaning_is_null(valid_payload):
 
 
 def test_side_by_side_research_models(valid_payload):
-    """Return Korean B2 and the 15 FPS candidate without changing the primary result."""
+    """Return Korean B2 and the 10-15 FPS candidate without changing the primary result."""
     response = client.post("/api/v1/transfer/strabismus", json=valid_payload)
     assert response.status_code == 200
     data = response.json()
@@ -274,6 +274,9 @@ def test_side_by_side_research_models(valid_payload):
         "korean_15fps_candidate",
     ]
     assert comparisons[0]["classProbability"] == data["classProbability"]
+    assert comparisons[1]["label"] == "Korean 10-15 FPS candidate"
+    assert "10-15 FPS" in comparisons[1]["samplingProfile"]
+    assert comparisons[1]["model"]["version"] == "remicare-transfer-10to15fps-candidate-v1.1.0"
     for item in comparisons:
         probabilities = item["classProbability"]
         assert item["prediction"] in ["NORMAL", "STRABISMUS"]
