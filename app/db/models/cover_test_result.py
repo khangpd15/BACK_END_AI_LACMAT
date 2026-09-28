@@ -5,7 +5,7 @@ from typing import List, Optional
 from sqlalchemy import Boolean, DateTime, ForeignKey, JSON, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.db.models.cover_test_session import GUID
+from app.db.models.cover_test_session import GUID, JSONType
 
 
 class CoverTestResultModel(Base):
@@ -30,10 +30,10 @@ class CoverTestResultModel(Base):
     status: Mapped[str] = mapped_column(String(30), default="TRANSFER_EXPERIMENT", nullable=False)
     input_compatible: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     prediction: Mapped[str] = mapped_column(String(30), nullable=False)  # 'NORMAL', 'STRABISMUS', 'INCONCLUSIVE'
-    class_probabilities: Mapped[dict] = mapped_column(JSON, nullable=False)
+    class_probabilities: Mapped[dict] = mapped_column(JSONType, nullable=False)
     domain_shift_warning: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    features_snapshot: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    comparison_models: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    features_snapshot: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
+    comparison_models: Mapped[list] = mapped_column(JSONType, default=list, nullable=False)
     notice: Mapped[str] = mapped_column(
         Text,
         default="Research transfer experiment only - not a medical diagnosis.",

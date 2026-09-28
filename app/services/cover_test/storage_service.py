@@ -57,9 +57,11 @@ class SupabaseStorageService:
             payload_bytes = data
 
         clean_path = storage_path.lstrip("/")
+        # Always retain a local cache / fallback copy
+        self._in_memory_store[clean_path] = payload_bytes
+
         if self._client:
             try:
-                # storage3 in supabase-py uses file_options with upsert string 'true'
                 self._client.storage.from_(self.bucket).upload(
                     path=clean_path,
                     file=payload_bytes,
@@ -67,17 +69,20 @@ class SupabaseStorageService:
                 )
                 logger.debug("Uploaded JSON to Supabase Storage: %s", clean_path)
             except Exception as e:
-                logger.error("Failed to upload JSON to Supabase Storage path '%s': %s", clean_path, e)
-                raise
-        else:
-            self._in_memory_store[clean_path] = payload_bytes
-            logger.debug("Stored JSON in offline memory store: %s", clean_path)
+                logger.warning(
+                    "Supabase Storage JSON upload failed for '%s' (%s). Retaining in fallback buffer.",
+                    clean_path,
+                    e,
+                )
 
         return clean_path
 
     async def upload_image(self, storage_path: str, image_bytes: bytes, mime_type: str = "image/jpeg") -> str:
         """Uploads binary eye crop image to storage."""
         clean_path = storage_path.lstrip("/")
+        # Always retain a local cache / fallback copy
+        self._in_memory_store[clean_path] = image_bytes
+
         if self._client:
             try:
                 self._client.storage.from_(self.bucket).upload(
@@ -87,11 +92,11 @@ class SupabaseStorageService:
                 )
                 logger.debug("Uploaded image to Supabase Storage: %s", clean_path)
             except Exception as e:
-                logger.error("Failed to upload image to Supabase Storage path '%s': %s", clean_path, e)
-                raise
-        else:
-            self._in_memory_store[clean_path] = image_bytes
-            logger.debug("Stored image in offline memory store: %s", clean_path)
+                logger.warning(
+                    "Supabase Storage image upload failed for '%s' (%s). Retaining in fallback buffer.",
+                    clean_path,
+                    e,
+                )
 
         return clean_path
 

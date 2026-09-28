@@ -5,7 +5,7 @@ from typing import Optional
 from sqlalchemy import DateTime, ForeignKey, Integer, JSON, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.database import Base
-from app.db.models.cover_test_session import GUID
+from app.db.models.cover_test_session import GUID, JSONType
 
 
 class CoverTestImageModel(Base):
@@ -35,7 +35,7 @@ class CoverTestImageModel(Base):
     height: Mapped[int] = mapped_column(Integer, nullable=False)
     file_size: Mapped[int] = mapped_column(Integer, nullable=False)
     upload_status: Mapped[str] = mapped_column(String(20), default="UPLOADED", nullable=False)
-    crop_region: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    crop_region: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     __table_args__ = (

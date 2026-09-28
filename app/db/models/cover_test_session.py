@@ -3,10 +3,12 @@
 import uuid
 from typing import List, Optional
 from sqlalchemy import DateTime, Float, Integer, JSON, String, Text, func
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import TypeDecorator, CHAR
 from app.db.database import Base
+
+JSONType = JSON().with_variant(JSONB, "postgresql")
 
 
 class GUID(TypeDecorator):
@@ -24,16 +26,21 @@ class GUID(TypeDecorator):
     def process_bind_param(self, value, dialect):
         if value is None:
             return value
-        if dialect.name == "postgresql":
-            return value if isinstance(value, uuid.UUID) else uuid.UUID(str(value))
-        return str(value)
+        if isinstance(value, uuid.UUID):
+            return value if dialect.name == "postgresql" else str(value)
+        val_str = str(value).strip().strip("{}")
+        try:
+            parsed = uuid.UUID(val_str)
+            return parsed if dialect.name == "postgresql" else str(parsed)
+        except (ValueError, AttributeError):
+            return str(value)
 
     def process_result_value(self, value, dialect):
         if value is None:
             return value
         if isinstance(value, uuid.UUID):
             return value
-        return uuid.UUID(str(value))
+        return uuid.UUID(str(value).strip().strip("{}"))
 
 
 class CoverTestSessionModel(Base):
@@ -51,7 +58,7 @@ class CoverTestSessionModel(Base):
     storage_root: Mapped[str] = mapped_column(Text, nullable=False)
     processing_status: Mapped[str] = mapped_column(String(30), default="SESSION_CREATED", nullable=False)
     error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    client_metadata: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
+    client_metadata: Mapped[dict] = mapped_column(JSONType, default=dict, nullable=False)
     updated_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),

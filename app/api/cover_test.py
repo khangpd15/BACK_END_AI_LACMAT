@@ -1,4 +1,4 @@
-﻿"""New API endpoint for RemiCare Cover Test persistent cloud storage and research inference."""
+"""New API endpoint for RemiCare Cover Test persistent cloud storage and research inference."""
 
 import json
 import logging
@@ -96,10 +96,19 @@ async def persist_cover_test_session(
             images_data[(c_num, eye_side)] = (b, ct)
 
     # 4. Delegate to Session Service
-    session_service = CoverTestSessionService(db_session=db)
-    return await session_service.persist_session(
-        metadata_input=metadata_obj,
-        raw_trajectories=raw_trajectories,
-        images_data=images_data,
-        run_inference=run_inference,
-    )
+    try:
+        session_service = CoverTestSessionService(db_session=db)
+        return await session_service.persist_session(
+            metadata_input=metadata_obj,
+            raw_trajectories=raw_trajectories,
+            images_data=images_data,
+            run_inference=run_inference,
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("[CoverTestPersistError] Unhandled session persistence error: %s", e, exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Cover test storage error: {str(e)}",
+        )

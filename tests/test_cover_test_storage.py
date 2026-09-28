@@ -1,4 +1,4 @@
-﻿"""Unit and integration test suite for Cover Test Cloud Storage and Persistence API."""
+"""Unit and integration test suite for Cover Test Cloud Storage and Persistence API."""
 
 import io
 import json
@@ -376,3 +376,78 @@ def test_happy_path_3_cycles_6_images():
     # In mock offline storage, verify that all 10 keys were stored
     for key in expected_storage_keys:
         assert key in storage._in_memory_store, f"Storage object '{key}' missing from Storage!"
+
+
+# =============================================================================
+# 10. DATABASE & PAYLOAD FIELD REGRESSION TESTS
+# =============================================================================
+
+def test_float_duration_and_eye_normalization():
+    """Verify float durationMs (e.g. from JS performance.now) and varied eye naming are accepted."""
+    session_uuid = str(uuid.uuid4())
+    cycle_1 = _create_valid_cycle(1, 5)
+    cycle_1["durationMs"] = 3450.789  # float duration
+    cycle_1["coveredEye"] = "cover_left"
+    cycle_1["trackedEye"] = "track_right"
+
+    metadata = {
+        "sessionId": session_uuid,
+        "cycleCount": 1,
+        "samplingRateHz": 15.0,
+    }
+    files = {
+        "session_metadata": (None, json.dumps(metadata)),
+        "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
+    }
+    resp = client.post("/api/v1/cover-test/sessions?run_inference=false", files=files)
+    assert resp.status_code == 201
+    assert resp.json()["success"] is True
+
+
+def test_orphaned_image_without_trajectory_does_not_break_fk():
+    """Verify uploading an image for a cycle without raw trajectory does not violate FK."""
+    session_uuid = str(uuid.uuid4())
+    cycle_1 = _create_valid_cycle(1, 5)
+
+    metadata = {
+        "sessionId": session_uuid,
+        "cycleCount": 1,
+    }
+    # Upload cycle 1 raw, but upload cycle 2 left eye image
+    files = {
+        "session_metadata": (None, json.dumps(metadata)),
+        "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
+        "cycle_2_left_eye": ("c2_left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
+    }
+    resp = client.post("/api/v1/cover-test/sessions?run_inference=false", files=files)
+    assert resp.status_code == 201
+    assert resp.json()["success"] is True
+    assert resp.json()["imagesSaved"] == 1
+
+
+def test_session_id_alias_resolution():
+    """Verify session_id / sampleId in metadata is properly recognized."""
+    session_uuid = str(uuid.uuid4())
+    cycle_1 = _create_valid_cycle(1, 5)
+
+    metadata = {
+        "session_id": session_uuid,  # snake_case alias
+        "cycleCount": 1,
+    }
+    files = {
+        "session_metadata": (None, json.dumps(metadata)),
+        "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
+    }
+    resp = client.post("/api/v1/cover-test/sessions?run_inference=false", files=files)
+    assert resp.status_code == 201
+    assert resp.json()["sessionId"] == session_uuid
+
+
+def test_format_async_db_url():
+    """Verify DATABASE_URL formatting converts postgres:// and handles sslmode for asyncpg."""
+    from app.db.database import format_async_db_url
+
+    assert "sqlite" in format_async_db_url("")
+    assert format_async_db_url("postgres://u:p@h:5432/d?sslmode=require") == "postgresql+asyncpg://u:p@h:5432/d?ssl=require"
+    assert format_async_db_url("postgresql://u:p@h:5432/d") == "postgresql+asyncpg://u:p@h:5432/d"
+

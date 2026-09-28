@@ -1,4 +1,4 @@
-﻿"""Core business logic service for Cover Test session persistence, validation, storage, and AI inference."""
+"""Core business logic service for Cover Test session persistence, validation, storage, and AI inference."""
 
 from datetime import datetime, timezone
 import json
@@ -62,19 +62,44 @@ VALID_EYES = {"LEFT", "RIGHT"}
 
 
 def validate_uuid_v4(val: str) -> uuid.UUID:
-    """Validates that a string is a strictly conforming UUID v4."""
+    """Validates that a string is a valid UUID format (v4, v7, etc.)."""
     if not val or not isinstance(val, str):
         raise HTTPException(
             status_code=422,
             detail="sessionId is required and must be a valid UUID string.",
         )
-    clean_val = val.strip()
-    if not UUID_V4_REGEX.match(clean_val):
+    clean_val = val.strip().strip("{}")
+    try:
+        return uuid.UUID(clean_val)
+    except (ValueError, AttributeError):
         raise HTTPException(
             status_code=422,
             detail=f"sessionId '{clean_val}' is not a valid UUID v4.",
         )
-    return uuid.UUID(clean_val)
+
+
+def normalize_covered_eye(eye_val: Any, cycle_num: int) -> str:
+    """Normalizes covered eye string to strictly match database check constraints."""
+    val = str(eye_val or "").strip().upper()
+    if val in {"LEFT", "COVER_LEFT", "OS", "L"}:
+        return "LEFT"
+    if val in {"RIGHT", "COVER_RIGHT", "OD", "R"}:
+        return "RIGHT"
+    if val in {"ALTERNATING", "ALT", "BOTH"}:
+        return "ALTERNATING"
+    return "LEFT" if cycle_num % 2 == 1 else "RIGHT"
+
+
+def normalize_tracked_eye(eye_val: Any, cycle_num: int) -> str:
+    """Normalizes tracked eye string to strictly match database check constraints."""
+    val = str(eye_val or "").strip().upper()
+    if val in {"RIGHT", "TRACK_RIGHT", "OD", "R"}:
+        return "RIGHT"
+    if val in {"LEFT", "TRACK_LEFT", "OS", "L"}:
+        return "LEFT"
+    if val in {"BOTH", "OU"}:
+        return "BOTH"
+    return "RIGHT" if cycle_num % 2 == 1 else "LEFT"
 
 
 def check_pii(data: Any, path: str = "") -> None:
@@ -291,11 +316,21 @@ class CoverTestSessionService:
             raw_cycle = raw_trajectories[cycle_num]
             samples = raw_cycle.get("samples") or []
             total, valid_cnt, v_ratio, mean_q = validate_cycle_samples(samples, cycle_num)
+            v_ratio = max(0.0, min(1.0, float(v_ratio)))
+            mean_q = max(0.0, min(1.0, float(mean_q)))
             total_samples_saved += total
 
-            covered_eye = str(raw_cycle.get("coveredEye") or (cycle_num % 2 == 1 and "LEFT" or "RIGHT")).upper()
-            tracked_eye = str(raw_cycle.get("trackedEye") or (cycle_num % 2 == 1 and "RIGHT" or "LEFT")).upper()
-            duration_ms = raw_cycle.get("durationMs", int(samples[-1].get("t", 0)) if samples else 0)
+            covered_eye = normalize_covered_eye(raw_cycle.get("coveredEye"), cycle_num)
+            tracked_eye = normalize_tracked_eye(raw_cycle.get("trackedEye"), cycle_num)
+
+            raw_dur = raw_cycle.get("durationMs")
+            if raw_dur is not None:
+                try:
+                    duration_ms = max(0, int(round(float(raw_dur))))
+                except (ValueError, TypeError):
+                    duration_ms = 0
+            else:
+                duration_ms = max(0, int(round(float(samples[-1].get("t", 0))))) if samples else 0
 
             # Upload raw.json to Supabase Storage
             cycle_folder_name = f"cycle_{cycle_num:02d}"
@@ -333,7 +368,7 @@ class CoverTestSessionService:
 
         # Save cycles to database
         db_cycles = await self.repo.upsert_cycles(session_uuid, cycles_to_save)
-        cycle_id_map = {c.cycle_number: c.cycle_id for c in db_cycles}
+        cycle_id_map = {c.cycle_number: c.cycle_id for c in db_cycles if c.cycle_id is not None}
 
         # 6. Process and validate eye images
         images_to_save = []
@@ -350,7 +385,29 @@ class CoverTestSessionService:
 
             await self.storage.upload_image(image_storage_path, img_bytes, "image/jpeg")
 
-            target_cycle_id = cycle_id_map.get(cycle_num, session_uuid)
+            # Determine valid cycle_id (NEVER fallback to session_uuid to avoid foreign key violation)
+            target_cycle_id = cycle_id_map.get(cycle_num)
+            if target_cycle_id is None:
+                logger.info("Auto-creating cycle %d placeholder for uploaded eye image", cycle_num)
+                stub_cycles = await self.repo.upsert_cycles(session_uuid, [{
+                    "cycle_number": cycle_num,
+                    "covered_eye": normalize_covered_eye(None, cycle_num),
+                    "tracked_eye": normalize_tracked_eye(None, cycle_num),
+                    "sample_count": 0,
+                    "valid_sample_count": 0,
+                    "valid_ratio": 0.0,
+                    "mean_tracking_quality": 0.0,
+                    "cycle_status": "COMPLETED",
+                    "raw_storage_path": f"{storage_prefix}/{cycle_folder_name}/raw.json",
+                    "duration_ms": 0,
+                }])
+                if stub_cycles and stub_cycles[0].cycle_id:
+                    target_cycle_id = stub_cycles[0].cycle_id
+                    cycle_id_map[cycle_num] = target_cycle_id
+                else:
+                    logger.warning("Could not associate image for cycle %d; skipping to prevent FK violation", cycle_num)
+                    continue
+
             images_to_save.append({
                 "cycle_id": target_cycle_id,
                 "cycle_number": cycle_num,

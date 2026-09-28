@@ -24,20 +24,49 @@ _engine: Optional[AsyncEngine] = None
 _session_factory: Optional[async_sessionmaker[AsyncSession]] = None
 
 
+def format_async_db_url(url: str) -> str:
+    """Ensures DATABASE_URL uses the asyncpg driver and formats SSL parameters properly."""
+    if not url:
+        return "sqlite+aiosqlite:///:memory:"
+    clean = url.strip()
+    if clean.startswith("postgres://"):
+        clean = clean.replace("postgres://", "postgresql+asyncpg://", 1)
+    elif clean.startswith("postgresql://") and not clean.startswith("postgresql+asyncpg://"):
+        clean = clean.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+    # asyncpg does not accept 'sslmode' query argument (which libpq / psycopg uses).
+    # Instead, asyncpg accepts 'ssl=require' or 'ssl=true'.
+    if "sslmode=require" in clean:
+        clean = clean.replace("sslmode=require", "ssl=require")
+    elif "sslmode=disable" in clean:
+        clean = clean.replace("sslmode=disable", "ssl=disable")
+    elif "sslmode=" in clean:
+        import re
+        clean = re.sub(r"sslmode=[^&]+", "ssl=require", clean)
+    return clean
+
+
 def get_engine() -> AsyncEngine:
     """Returns singleton async engine with lazy initialization."""
     global _engine
     if _engine is None:
-        db_url = DATABASE_URL.strip() if DATABASE_URL else ""
-        if not db_url:
-            # Fallback to in-memory async SQLite for offline development and unit tests
-            db_url = "sqlite+aiosqlite:///:memory:"
-            logger.info("DATABASE_URL not set; using in-memory SQLite: %s", db_url)
-        _engine = create_async_engine(
-            db_url,
-            echo=False,
-            future=True,
-        )
+        raw_url = DATABASE_URL.strip() if DATABASE_URL else ""
+        db_url = format_async_db_url(raw_url)
+        if "sqlite" in db_url:
+            logger.info("DATABASE_URL using SQLite: %s", db_url)
+            _engine = create_async_engine(
+                db_url,
+                echo=False,
+                future=True,
+            )
+        else:
+            logger.info("Initializing async PostgreSQL engine...")
+            _engine = create_async_engine(
+                db_url,
+                echo=False,
+                future=True,
+                pool_pre_ping=True,
+            )
     return _engine
 
 
