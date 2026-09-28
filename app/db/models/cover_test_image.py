@@ -1,5 +1,7 @@
 """SQLAlchemy model for Cover Test Protocol Images."""
 
+from app.db.models import CoverTestCycleModel
+from app.db.models import CoverTestSessionModel
 import uuid
 from typing import Optional
 from sqlalchemy import DateTime, ForeignKey, Integer, JSON, String, Text, UniqueConstraint, func

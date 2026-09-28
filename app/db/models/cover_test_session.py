@@ -1,5 +1,8 @@
 """SQLAlchemy model for Cover Test Sessions."""
 
+from app.db.models import CoverTestResultModel
+from app.db.models import CoverTestImageModel
+from app.db.models import CoverTestCycleModel
 import uuid
 from typing import List, Optional
 from sqlalchemy import DateTime, Float, Integer, JSON, String, Text, func
