@@ -13,6 +13,7 @@ from typing import List, Optional
 import numpy as np
 
 from app.schemas import CoverCycle, EyeSample, ScreeningRequest
+from app.services.cv.one_euro_filter import EyeTrajectoryOneEuroFilter
 
 
 @dataclass(frozen=True)
@@ -49,6 +50,12 @@ class ProcessedSample:
     # Relative displacement from baseline relative coordinate
     relativeSignedDx: Optional[float]
     relativeSignedDy: Optional[float]
+
+    # Temporal filtered coordinates via One Euro Filter
+    filteredTrackedEyeX: Optional[float] = None
+    filteredTrackedEyeY: Optional[float] = None
+    filteredSignedDx: Optional[float] = None
+    filteredSignedDy: Optional[float] = None
 
 
 @dataclass(frozen=True)
@@ -154,6 +161,7 @@ def preprocess_cycle(cycle: CoverCycle) -> ProcessedCycle:
     baseline = compute_cycle_baseline(cycle)
     tracked_eye = cycle.trackedEye
 
+    trajectory_filter = EyeTrajectoryOneEuroFilter(min_cutoff=0.8, beta=0.007)
     processed_samples: List[ProcessedSample] = []
 
     for raw_s in cycle.samples:
@@ -166,6 +174,34 @@ def preprocess_cycle(cycle: CoverCycle) -> ProcessedCycle:
             t_x = raw_s.rightX
             t_y = raw_s.rightY
             t_valid = bool(raw_s.rightValid and t_x is not None and t_y is not None)
+
+        # Apply One Euro Filter to continuous eye trajectory
+        t_sec = float(raw_s.t) / 1000.0 if raw_s.t is not None else 0.0
+        left_tup = (
+            (float(raw_s.leftX), float(raw_s.leftY))
+            if (raw_s.leftValid and raw_s.leftX is not None and raw_s.leftY is not None)
+            else None
+        )
+        right_tup = (
+            (float(raw_s.rightX), float(raw_s.rightY))
+            if (raw_s.rightValid and raw_s.rightX is not None and raw_s.rightY is not None)
+            else None
+        )
+        filt_left, filt_right = trajectory_filter.process_frame(t_sec, left_tup, right_tup)
+
+        if tracked_eye == "LEFT" and filt_left:
+            filt_tx, filt_ty = filt_left
+        elif tracked_eye == "RIGHT" and filt_right:
+            filt_tx, filt_ty = filt_right
+        else:
+            filt_tx, filt_ty = None, None
+
+        if filt_tx is not None and filt_ty is not None:
+            filt_signed_dx = filt_tx - baseline.baselineTrackedX
+            filt_signed_dy = filt_ty - baseline.baselineTrackedY
+        else:
+            filt_signed_dx = None
+            filt_signed_dy = None
 
         # Relative inter-ocular coordinates: right - left
         if (
@@ -227,6 +263,10 @@ def preprocess_cycle(cycle: CoverCycle) -> ProcessedCycle:
             absDy=abs_dy,
             relativeSignedDx=rel_signed_dx,
             relativeSignedDy=rel_signed_dy,
+            filteredTrackedEyeX=filt_tx,
+            filteredTrackedEyeY=filt_ty,
+            filteredSignedDx=filt_signed_dx,
+            filteredSignedDy=filt_signed_dy,
         )
         processed_samples.append(processed_s)
 

@@ -1,3 +1,4 @@
+import asyncio
 """Core business logic service for Cover Test session persistence, validation, storage, and AI inference."""
 
 from datetime import datetime, timezone
@@ -310,6 +311,8 @@ class CoverTestSessionService:
         # 5. Process and validate cycles
         cycles_to_save = []
         manifest_cycles = []
+        raw_uploads = []
+        img_uploads = []
         total_samples_saved = 0
 
         for cycle_num in sorted(raw_trajectories.keys()):
@@ -345,7 +348,7 @@ class CoverTestSessionService:
                 "durationMs": duration_ms,
                 "samples": samples,
             }
-            await self.storage.upload_raw_json(raw_json_storage_path, clean_raw_payload)
+            raw_uploads.append((raw_json_storage_path, clean_raw_payload))
 
             cycles_to_save.append({
                 "cycle_number": cycle_num,
@@ -383,7 +386,7 @@ class CoverTestSessionService:
             image_storage_path = f"{storage_prefix}/{cycle_folder_name}/{filename}"
             capture_event = "UNCOVER_LEFT" if norm_eye == "LEFT" else "UNCOVER_RIGHT"
 
-            await self.storage.upload_image(image_storage_path, img_bytes, "image/jpeg")
+            img_uploads.append((image_storage_path, img_bytes))
 
             # Determine valid cycle_id (NEVER fallback to session_uuid to avoid foreign key violation)
             target_cycle_id = cycle_id_map.get(cycle_num)
@@ -425,7 +428,7 @@ class CoverTestSessionService:
 
         saved_images = await self.repo.upsert_images(session_uuid, images_to_save)
 
-        # 7. Upload manifest.json to Storage
+        # 7. Upload manifest.json and execute all storage uploads concurrently
         manifest_payload = {
             "sessionId": session_id_str,
             "createdAt": now_utc.isoformat(),
@@ -435,7 +438,17 @@ class CoverTestSessionService:
             "imagesCount": len(saved_images),
             "storageRoot": storage_root,
         }
-        await self.storage.upload_raw_json(f"{storage_prefix}/manifest.json", manifest_payload)
+
+        # Concurrently upload JSON trajectories, eye images, and manifest
+        upload_tasks = [
+            self.storage.upload_raw_json(p, d) for p, d in raw_uploads
+        ] + [
+            self.storage.upload_image(p, b, "image/jpeg") for p, b in img_uploads
+        ] + [
+            self.storage.upload_raw_json(f"{storage_prefix}/manifest.json", manifest_payload)
+        ]
+        if upload_tasks:
+            await asyncio.gather(*upload_tasks)
 
         # Commit DB transaction so raw data and metadata are guaranteed persisted
         await self.db_session.commit()

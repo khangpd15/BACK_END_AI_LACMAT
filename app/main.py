@@ -11,6 +11,8 @@ from typing import Any, Dict
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
+import time
 from fastapi.responses import JSONResponse
 
 from app import __version__
@@ -83,6 +85,34 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
+
+# Enable HTTP response compression for payloads >= 1KB
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+@app.middleware("http")
+async def performance_measurement_middleware(request: Request, call_next):
+    """Development and production non-invasive performance measurement middleware."""
+    start_time = time.perf_counter()
+    response = await call_next(request)
+    duration_ms = (time.perf_counter() - start_time) * 1000.0
+
+    # Attach Server-Timing header for client-side DevTools and metrics inspection
+    response.headers["Server-Timing"] = f"total;dur={duration_ms:.1f}"
+
+    content_length = response.headers.get("content-length")
+    size_str = f"{int(content_length)}B" if content_length else "chunked"
+
+    if not request.url.path.startswith("/docs") and not request.url.path.startswith("/redoc"):
+        logger.info(
+            "[RemiCare API Perf] %s %s | status=%d | time=%.1fms | size=%s",
+            request.method,
+            request.url.path,
+            response.status_code,
+            duration_ms,
+            size_str,
+        )
+    return response
+
 
 def _sanitize_validation_errors(obj: Any) -> Any:
     """Recursively replace non-finite float numbers with strings for JSON response safety."""

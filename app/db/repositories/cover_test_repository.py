@@ -107,14 +107,14 @@ class CoverTestRepository:
         cycles_data: List[Dict[str, Any]],
     ) -> List[CoverTestCycleModel]:
         saved_cycles = []
+        # Batch select all existing cycles for this session (Eliminates N+1 queries)
+        stmt = select(CoverTestCycleModel).where(CoverTestCycleModel.session_id == session_id)
+        result = await self.session.execute(stmt)
+        existing_cycles_map = {c.cycle_number: c for c in result.scalars().all()}
+
         for c in cycles_data:
             c_num = int(c["cycle_number"])
-            stmt = select(CoverTestCycleModel).where(
-                CoverTestCycleModel.session_id == session_id,
-                CoverTestCycleModel.cycle_number == c_num,
-            )
-            result = await self.session.execute(stmt)
-            existing = result.scalars().first()
+            existing = existing_cycles_map.get(c_num)
 
             s_count = max(0, int(c.get("sample_count", 0)))
             v_count = max(0, min(s_count, int(c.get("valid_sample_count", 0))))
@@ -168,20 +168,18 @@ class CoverTestRepository:
         images_data: List[Dict[str, Any]],
     ) -> List[CoverTestImageModel]:
         saved_images = []
+        # Batch select all existing images for this session (Eliminates N+1 queries)
+        stmt = select(CoverTestImageModel).where(CoverTestImageModel.session_id == session_id)
+        result = await self.session.execute(stmt)
+        existing_images_map = {(img.cycle_number, img.eye): img for img in result.scalars().all()}
+
         for img in images_data:
             c_id = img["cycle_id"]
             if not isinstance(c_id, uuid.UUID):
                 c_id = uuid.UUID(str(c_id))
             eye = str(img["eye"]).strip().upper()
             c_num = int(img["cycle_number"])
-
-            stmt = select(CoverTestImageModel).where(
-                CoverTestImageModel.session_id == session_id,
-                CoverTestImageModel.cycle_number == c_num,
-                CoverTestImageModel.eye == eye,
-            )
-            result = await self.session.execute(stmt)
-            existing = result.scalars().first()
+            existing = existing_images_map.get((c_num, eye))
 
             clean_crop = sanitize_json_data(img.get("crop_region"))
 

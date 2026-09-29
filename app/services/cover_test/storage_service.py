@@ -1,3 +1,4 @@
+import asyncio
 """Supabase Storage service for Cover Test raw JSON trajectories and eye crops."""
 
 import json
@@ -62,7 +63,8 @@ class SupabaseStorageService:
 
         if self._client:
             try:
-                self._client.storage.from_(self.bucket).upload(
+                await asyncio.to_thread(
+                    self._client.storage.from_(self.bucket).upload,
                     path=clean_path,
                     file=payload_bytes,
                     file_options={"content-type": "application/json", "upsert": "true"},
@@ -85,7 +87,8 @@ class SupabaseStorageService:
 
         if self._client:
             try:
-                self._client.storage.from_(self.bucket).upload(
+                await asyncio.to_thread(
+                    self._client.storage.from_(self.bucket).upload,
                     path=clean_path,
                     file=image_bytes,
                     file_options={"content-type": mime_type, "upsert": "true"},

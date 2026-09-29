@@ -16,6 +16,10 @@ import math
 from typing import Any, Dict, List
 import numpy as np
 
+from app.services.kinematics.refixation_detector import (
+    RefixationEvent,
+    RefixationEventDetector,
+)
 from app.services.preprocessing import ProcessedCycle, ProcessedData
 
 
@@ -71,6 +75,27 @@ def extract_cycle_features(cycle: ProcessedCycle) -> Dict[str, Any]:
             "baselineStdY": cycle.baseline.baselineStdY,
             "baselineTrackedX": cycle.baseline.baselineTrackedX,
             "baselineTrackedY": cycle.baseline.baselineTrackedY,
+            # Kinematics & Refixation Saccade Event Metrics
+            "hasRefixation": False,
+            "refixationConfidence": 0.0,
+            "refixationPeakVelocity": 0.0,
+            "refixationPeakAcceleration": 0.0,
+            "refixationPeakJerk": 0.0,
+            "refixationSettlingTime": 0.0,
+            "refixationOvershootRatio": 0.0,
+            "refixationEvent": RefixationEvent(
+                has_refixation=False,
+                confidence=0.0,
+                peak_displacement=0.0,
+                peak_velocity=0.0,
+                peak_acceleration=0.0,
+                peak_jerk=0.0,
+                time_to_peak_ms=0.0,
+                movement_duration_ms=0.0,
+                settling_time_ms=0.0,
+                overshoot_ratio=0.0,
+                direction_sign=0,
+            ).to_dict(),
         }
 
     dxs = np.array([s.signedDx for s in valid_tracking], dtype=float)
@@ -119,6 +144,10 @@ def extract_cycle_features(cycle: ProcessedCycle) -> Dict[str, Any]:
     mean_velocity = float(np.mean(velocities)) if velocities else 0.0
     peak_velocity = float(np.max(velocities)) if velocities else 0.0
 
+    # Saccadic refixation event analysis
+    detector = RefixationEventDetector()
+    refix_event = detector.analyze_uncover_trajectory(ts, dxs)
+
     return {
         "cycle": cycle.cycle,
         "coveredEye": cycle.coveredEye,
@@ -152,6 +181,15 @@ def extract_cycle_features(cycle: ProcessedCycle) -> Dict[str, Any]:
         "baselineStdY": round(cycle.baseline.baselineStdY, 6),
         "baselineTrackedX": round(cycle.baseline.baselineTrackedX, 6),
         "baselineTrackedY": round(cycle.baseline.baselineTrackedY, 6),
+        # Kinematics & Refixation Saccade Event Metrics
+        "hasRefixation": refix_event.has_refixation,
+        "refixationConfidence": refix_event.confidence,
+        "refixationPeakVelocity": refix_event.peak_velocity,
+        "refixationPeakAcceleration": refix_event.peak_acceleration,
+        "refixationPeakJerk": refix_event.peak_jerk,
+        "refixationSettlingTime": refix_event.settling_time_ms,
+        "refixationOvershootRatio": refix_event.overshoot_ratio,
+        "refixationEvent": refix_event.to_dict(),
     }
 
 
@@ -218,6 +256,8 @@ def extract_sample_aggregated_features(
 
     all_baseline_std_x = [cf["baselineStdX"] for cf in cycle_features]
     all_baseline_std_y = [cf["baselineStdY"] for cf in cycle_features]
+    refix_confidences = [cf.get("refixationConfidence", 0.0) for cf in cycle_features]
+    has_refix_count = sum(1 for cf in cycle_features if cf.get("hasRefixation", False))
 
     return {
         "global_meanDx": round(float(np.mean(all_mean_dx)), 6),
@@ -234,6 +274,8 @@ def extract_sample_aggregated_features(
         "global_meanTimeToPeak": round(float(np.mean(all_time_to_peaks)), 2),
         "global_meanBaselineStdX": round(float(np.mean(all_baseline_std_x)), 6),
         "global_meanBaselineStdY": round(float(np.mean(all_baseline_std_y)), 6),
+        "global_hasRefixationCount": has_refix_count,
+        "global_meanRefixationConfidence": round(float(np.mean(refix_confidences)), 4) if refix_confidences else 0.0,
         "cycleConsistency": consistency.get("cycleConsistency", 0.0),
     }
 
