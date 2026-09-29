@@ -149,11 +149,36 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
             raise
 
 
+async def auto_migrate_schema(conn) -> None:
+    """Safely synchronizes table columns and indexes for PostgreSQL/SQLite without dropping data."""
+    try:
+        dialect_name = conn.dialect.name
+        if dialect_name == "postgresql":
+            ddl_statements = [
+                "ALTER TABLE cover_test_results ADD COLUMN IF NOT EXISTS model_source VARCHAR(50) DEFAULT 'fps_10_15_model';",
+                "ALTER TABLE cover_test_results ADD COLUMN IF NOT EXISTS confidence REAL;",
+                "ALTER TABLE cover_test_results DROP COLUMN IF EXISTS image_url;",
+                "ALTER TABLE cover_test_results DROP COLUMN IF EXISTS cloudinary_public_id;",
+                "DROP TABLE IF EXISTS cover_test_images CASCADE;",
+                "CREATE INDEX IF NOT EXISTS idx_cover_test_results_model_source ON cover_test_results (model_source);",
+                "CREATE INDEX IF NOT EXISTS idx_cover_test_results_prediction ON cover_test_results (prediction);",
+            ]
+            for stmt in ddl_statements:
+                try:
+                    await conn.execute(text(stmt))
+                except Exception as stmt_err:
+                    logger.warning("[AutoMigrateWarning] Non-blocking DDL notice: %s (%s)", stmt, stmt_err)
+            logger.info("[AutoMigrate] PostgreSQL schema auto-migration completed successfully.")
+    except Exception as e:
+        logger.warning("[AutoMigrateError] Error executing auto-migration: %s", e)
+
+
 async def init_db() -> None:
-    """Initializes tables in database if they do not exist."""
+    """Initializes tables in database if they do not exist and applies non-destructive auto-migrations."""
     engine = get_engine()
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        await auto_migrate_schema(conn)
     logger.info("Database tables initialized successfully.")
 
 

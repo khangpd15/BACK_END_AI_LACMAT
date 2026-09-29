@@ -4,7 +4,7 @@ import logging
 import uuid
 import math
 from typing import Any, Dict, List, Optional
-from sqlalchemy import select, update
+from sqlalchemy import select, update, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import (
     CoverTestCycleModel,
@@ -173,13 +173,33 @@ class CoverTestRepository:
         if prediction_val not in ("NORMAL", "STRABISMUS", "INCONCLUSIVE"):
             prediction_val = "INCONCLUSIVE"
 
-        stmt = select(CoverTestResultModel).where(
-            CoverTestResultModel.session_id == session_id,
-            CoverTestResultModel.model_name == model_name,
-            CoverTestResultModel.model_version == model_version,
-        )
-        result = await self.session.execute(stmt)
-        existing = result.scalars().first()
+        try:
+            stmt = select(CoverTestResultModel).where(
+                CoverTestResultModel.session_id == session_id,
+                CoverTestResultModel.model_name == model_name,
+                CoverTestResultModel.model_version == model_version,
+            )
+            result = await self.session.execute(stmt)
+            existing = result.scalars().first()
+        except Exception as query_err:
+            err_str = str(query_err).lower()
+            if "model_source" in err_str or "confidence" in err_str or "undefinedcolumn" in err_str:
+                logger.warning("[AutoHeal] Missing columns detected in cover_test_results. Executing auto-migration on the fly...")
+                await self.session.rollback()
+                await self.session.execute(text("ALTER TABLE cover_test_results ADD COLUMN IF NOT EXISTS model_source VARCHAR(50) DEFAULT 'fps_10_15_model';"))
+                await self.session.execute(text("ALTER TABLE cover_test_results ADD COLUMN IF NOT EXISTS confidence REAL;"))
+                await self.session.execute(text("ALTER TABLE cover_test_results DROP COLUMN IF EXISTS image_url;"))
+                await self.session.execute(text("ALTER TABLE cover_test_results DROP COLUMN IF EXISTS cloudinary_public_id;"))
+                await self.session.commit()
+                stmt = select(CoverTestResultModel).where(
+                    CoverTestResultModel.session_id == session_id,
+                    CoverTestResultModel.model_name == model_name,
+                    CoverTestResultModel.model_version == model_version,
+                )
+                result = await self.session.execute(stmt)
+                existing = result.scalars().first()
+            else:
+                raise query_err
 
         clean_probs = sanitize_json_data(result_data.get("class_probabilities", {}))
         clean_features = sanitize_json_data(result_data.get("features_snapshot"))
