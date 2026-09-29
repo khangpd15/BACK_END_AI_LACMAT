@@ -2,6 +2,7 @@
 
 import io
 import json
+import os
 import uuid
 import pytest
 from fastapi.testclient import TestClient
@@ -16,7 +17,11 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def setup_test_db():
-    """Ensure in-memory SQLite tables are created before each test."""
+    """Ensure in-memory SQLite tables are created before each test and Cloudinary is mocked."""
+    from app.services.cover_test.cloudinary_service import get_cloudinary_service
+    c_svc = get_cloudinary_service()
+    c_svc.mock_mode = True
+    c_svc._configured = True
     import anyio
     anyio.run(init_db)
 
@@ -295,8 +300,8 @@ def test_raw_data_survives_ai_failure():
         "cycle_1_left_eye": ("left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
     }
 
-    # Mock KoreanTransferService.predict_transfer raising an exception
-    with patch("app.services.korean_transfer.KoreanTransferService.predict_transfer", side_effect=RuntimeError("AI Model OOM")):
+    # Mock FpsModelService.aggregate_and_predict raising an exception
+    with patch("app.services.fps_model_service.FpsModelService.aggregate_and_predict", side_effect=RuntimeError("AI Model OOM")):
         resp = client.post("/api/v1/cover-test/sessions?run_inference=true", files=files)
         # Raw data must still be persisted with HTTP 201 and PARTIAL_SUCCESS
         assert resp.status_code == 201
@@ -450,4 +455,164 @@ def test_format_async_db_url():
     assert "sqlite" in format_async_db_url("")
     assert format_async_db_url("postgres://u:p@h:5432/d?sslmode=require") == "postgresql+asyncpg://u:p@h:5432/d?ssl=require"
     assert format_async_db_url("postgresql://u:p@h:5432/d") == "postgresql+asyncpg://u:p@h:5432/d"
+
+
+# =============================================================================
+# 11. 10-15 FPS MODEL & CLOUDINARY INTEGRATION TESTS
+# =============================================================================
+
+def test_10_15_fps_model_result_fields_and_db_persistence():
+    """Verify 10-15 FPS model is saved to database with Cloudinary URL, and Korean model is not the primary result."""
+    session_uuid = str(uuid.uuid4())
+    cycle_1 = _create_valid_cycle(1, 20)
+    cycle_2 = _create_valid_cycle(2, 20)
+
+    metadata = {
+        "sessionId": session_uuid,
+        "cycleCount": 2,
+        "samplingRateHz": 15.0,
+    }
+    files = {
+        "session_metadata": (None, json.dumps(metadata)),
+        "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
+        "cycle_1_left_eye": ("c1_left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
+        "cycle_2_raw": ("raw.json", json.dumps(cycle_2), "application/json"),
+        "cycle_2_right_eye": ("c2_right.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
+    }
+
+    resp = client.post("/api/v1/cover-test/sessions?run_inference=true", files=files)
+    assert resp.status_code == 201
+    data = resp.json()
+    assert data["success"] is True
+    assert data["processingStatus"] == "COMPLETED"
+    assert data["aiResult"] is not None
+
+    ai = data["aiResult"]
+    # Model source must be 10-15 FPS model
+    assert ai["modelSource"] == "fps_10_15_model"
+    assert ai["prediction"] in ("NORMAL", "STRABISMUS")
+    assert "NORMAL" in ai["classProbabilities"]
+    assert "STRABISMUS" in ai["classProbabilities"]
+    assert ai["imageUrl"].startswith("https://res.cloudinary.com/")
+    assert ai["cloudinaryPublicId"] is not None
+    assert "notice" in ai
+    assert "10-15 FPS" in ai["notice"]
+
+    # Verify Database record directly in cover_test_results
+    import anyio
+    from sqlalchemy import select
+    from app.db.database import get_session_factory
+    from app.db.models.cover_test_result import CoverTestResultModel
+
+    async def _verify_db():
+        factory = get_session_factory()
+        async with factory() as db:
+            stmt = select(CoverTestResultModel).where(CoverTestResultModel.session_id == uuid.UUID(session_uuid))
+            res = await db.execute(stmt)
+            record = res.scalars().first()
+            assert record is not None
+            assert record.model_source == "fps_10_15_model"
+            assert record.prediction == ai["prediction"]
+            assert record.class_probabilities == ai["classProbabilities"]
+            assert record.image_url == ai["imageUrl"]
+            assert record.cloudinary_public_id == ai["cloudinaryPublicId"]
+            assert record.model_name in ("remicare-fps-10-15", "Korean 10-15 FPS robust transfer candidate")
+
+    anyio.run(_verify_db)
+
+
+def test_cloudinary_upload_failure_blocks_db_insert():
+    """Verify that when Cloudinary upload fails, NO record is inserted into cover_test_results."""
+    session_uuid = str(uuid.uuid4())
+    cycle_1 = _create_valid_cycle(1, 15)
+
+    metadata = {
+        "sessionId": session_uuid,
+        "cycleCount": 1,
+        "samplingRateHz": 15.0,
+    }
+    files = {
+        "session_metadata": (None, json.dumps(metadata)),
+        "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
+        "cycle_1_left_eye": ("c1_left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
+    }
+
+    from app.services.cover_test.cloudinary_service import CloudinaryService
+
+    with patch.object(CloudinaryService, "upload_image", side_effect=RuntimeError("Cloudinary connection reset")):
+        resp = client.post("/api/v1/cover-test/sessions?run_inference=true", files=files)
+        assert resp.status_code == 201
+        data = resp.json()
+        assert data["success"] is True
+        assert data["saved"] is True
+        # Processing status must be PARTIAL_SUCCESS (raw data saved, but no AI result)
+        assert data["processingStatus"] == "PARTIAL_SUCCESS"
+        assert data["aiResult"] is None
+        assert "IMAGE_UPLOAD_FAILED" in data["message"]
+
+    # Verify no record was inserted in cover_test_results
+    import anyio
+    from sqlalchemy import select
+    from app.db.database import get_session_factory
+    from app.db.models.cover_test_result import CoverTestResultModel
+
+    async def _verify_no_record():
+        factory = get_session_factory()
+        async with factory() as db:
+            stmt = select(CoverTestResultModel).where(CoverTestResultModel.session_id == uuid.UUID(session_uuid))
+            res = await db.execute(stmt)
+            record = res.scalars().first()
+            assert record is None, "Record must NOT be inserted if Cloudinary upload failed!"
+
+    anyio.run(_verify_no_record)
+
+
+def test_db_insert_failure_cleans_up_cloudinary_image():
+    """Verify that if DB insert fails after Cloudinary upload, the image is cleaned up to prevent orphan image."""
+    session_uuid = str(uuid.uuid4())
+    cycle_1 = _create_valid_cycle(1, 15)
+
+    metadata = {
+        "sessionId": session_uuid,
+        "cycleCount": 1,
+        "samplingRateHz": 15.0,
+    }
+    files = {
+        "session_metadata": (None, json.dumps(metadata)),
+        "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
+        "cycle_1_left_eye": ("c1_left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
+    }
+
+    from app.services.cover_test.cloudinary_service import CloudinaryService
+    from app.db.repositories.cover_test_repository import CoverTestRepository
+
+    deleted_pids = []
+
+    def mock_delete(self, public_id):
+        deleted_pids.append(public_id)
+        return True
+
+    with patch.object(CoverTestRepository, "upsert_result", side_effect=RuntimeError("Simulated DB Disk Full")):
+        with patch.object(CloudinaryService, "delete_image", new=mock_delete):
+            resp = client.post("/api/v1/cover-test/sessions?run_inference=true", files=files)
+            # Should result in 500 error and exception must NOT be swallowed silently
+            assert resp.status_code == 500
+            # Image cleanup must have been called
+            assert len(deleted_pids) == 1
+            assert session_uuid in deleted_pids[0]
+
+
+def test_korean_model_separate_endpoint_unaffected():
+    """Verify Korean model endpoint /api/v1/transfer/strabismus works for research without inserting to DB."""
+    sample_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "raw", "sample.json")
+    with open(sample_file, "r", encoding="utf-8") as f:
+        valid_payload = json.load(f)
+
+    resp = client.post("/api/v1/transfer/strabismus", json=valid_payload)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["status"] == "TRANSFER_EXPERIMENT"
+    assert data["prediction"] in ("NORMAL", "STRABISMUS")
+    assert "classProbability" in data
+    assert data["domainShiftWarning"] is True
 

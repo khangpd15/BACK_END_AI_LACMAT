@@ -230,8 +230,9 @@ class CoverTestRepository:
         session_id: uuid.UUID,
         result_data: Dict[str, Any],
     ) -> CoverTestResultModel:
-        model_name = str(result_data.get("model_name", "korean_shared_model"))[:100]
-        model_version = str(result_data.get("model_version", "shared-v1.0.0"))[:50]
+        model_name = str(result_data.get("model_name", "remicare-fps-10-15"))[:100]
+        model_version = str(result_data.get("model_version", "10-15fps-v1.1.0"))[:50]
+        model_source = str(result_data.get("model_source", "fps_10_15_model"))[:50]
         prediction_val = result_data.get("prediction", "NORMAL")
         if prediction_val not in ("NORMAL", "STRABISMUS", "INCONCLUSIVE"):
             prediction_val = "INCONCLUSIVE"
@@ -247,20 +248,30 @@ class CoverTestRepository:
         clean_probs = sanitize_json_data(result_data.get("class_probabilities", {}))
         clean_features = sanitize_json_data(result_data.get("features_snapshot"))
         clean_comparisons = sanitize_json_data(result_data.get("comparison_models", []))
+        raw_conf = result_data.get("confidence")
+        conf_val = float(raw_conf) if raw_conf is not None and not (math.isnan(float(raw_conf)) or math.isinf(float(raw_conf))) else None
+        image_url_val = result_data.get("image_url")
+        cloudinary_pid_val = result_data.get("cloudinary_public_id")
 
         if existing:
+            existing.model_source = model_source
             existing.feature_schema_version = str(result_data.get("feature_schema_version", "shared-v1.0.0"))[:50]
-            existing.status = str(result_data.get("status", "TRANSFER_EXPERIMENT"))[:30]
+            existing.status = str(result_data.get("status", "COMPLETED"))[:30]
             existing.input_compatible = bool(result_data.get("input_compatible", True))
             existing.prediction = prediction_val
             existing.class_probabilities = clean_probs
-            existing.domain_shift_warning = bool(result_data.get("domain_shift_warning", True))
+            existing.confidence = conf_val
+            if image_url_val is not None:
+                existing.image_url = str(image_url_val)
+            if cloudinary_pid_val is not None:
+                existing.cloudinary_public_id = str(cloudinary_pid_val)[:255]
+            existing.domain_shift_warning = bool(result_data.get("domain_shift_warning", False))
             existing.features_snapshot = clean_features
             existing.comparison_models = clean_comparisons
             existing.notice = str(
                 result_data.get(
                     "notice",
-                    "Research transfer experiment only - not a medical diagnosis.",
+                    "Screening result derived from 10-15 FPS model consensus aggregation.",
                 )
             )
             await self.session.flush()
@@ -278,18 +289,22 @@ class CoverTestRepository:
             session_id=session_id,
             model_name=model_name,
             model_version=model_version,
+            model_source=model_source,
             feature_schema_version=str(result_data.get("feature_schema_version", "shared-v1.0.0"))[:50],
-            status=str(result_data.get("status", "TRANSFER_EXPERIMENT"))[:30],
+            status=str(result_data.get("status", "COMPLETED"))[:30],
             input_compatible=bool(result_data.get("input_compatible", True)),
             prediction=prediction_val,
             class_probabilities=clean_probs,
-            domain_shift_warning=bool(result_data.get("domain_shift_warning", True)),
+            confidence=conf_val,
+            image_url=str(image_url_val) if image_url_val is not None else None,
+            cloudinary_public_id=str(cloudinary_pid_val)[:255] if cloudinary_pid_val is not None else None,
+            domain_shift_warning=bool(result_data.get("domain_shift_warning", False)),
             features_snapshot=clean_features,
             comparison_models=clean_comparisons,
             notice=str(
                 result_data.get(
                     "notice",
-                    "Research transfer experiment only - not a medical diagnosis.",
+                    "Screening result derived from 10-15 FPS model consensus aggregation.",
                 )
             ),
         )

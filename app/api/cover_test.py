@@ -40,6 +40,7 @@ async def persist_cover_test_session(
     cycle_3_raw: Optional[UploadFile] = File(None),
     cycle_3_left_eye: Optional[UploadFile] = File(None),
     cycle_3_right_eye: Optional[UploadFile] = File(None),
+    representative_image: Optional[UploadFile] = File(None, description="Representative image for Cloudinary storage and DB result association"),
     run_inference: bool = Query(True, description="Whether to execute AI inference after storage"),
     db: AsyncSession = Depends(get_db_session),
 ) -> CoverTestSessionResponse:
@@ -95,6 +96,12 @@ async def persist_cover_test_session(
             ct = img_file.content_type or "image/jpeg"
             images_data[(c_num, eye_side)] = (b, ct)
 
+    rep_tuple = None
+    if representative_image is not None and representative_image.filename:
+        r_b = await representative_image.read()
+        r_ct = representative_image.content_type or "image/jpeg"
+        rep_tuple = (r_b, r_ct)
+
     # 4. Delegate to Session Service
     try:
         session_service = CoverTestSessionService(db_session=db)
@@ -102,6 +109,7 @@ async def persist_cover_test_session(
             metadata_input=metadata_obj,
             raw_trajectories=raw_trajectories,
             images_data=images_data,
+            representative_image=rep_tuple,
             run_inference=run_inference,
         )
     except HTTPException:
