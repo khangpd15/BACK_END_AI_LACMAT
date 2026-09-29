@@ -8,7 +8,6 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import (
     CoverTestCycleModel,
-    CoverTestImageModel,
     CoverTestResultModel,
     CoverTestSessionModel,
 )
@@ -162,69 +161,6 @@ class CoverTestRepository:
         await self.session.flush()
         return saved_cycles
 
-    async def upsert_images(
-        self,
-        session_id: uuid.UUID,
-        images_data: List[Dict[str, Any]],
-    ) -> List[CoverTestImageModel]:
-        saved_images = []
-        # Batch select all existing images for this session (Eliminates N+1 queries)
-        stmt = select(CoverTestImageModel).where(CoverTestImageModel.session_id == session_id)
-        result = await self.session.execute(stmt)
-        existing_images_map = {(img.cycle_number, img.eye): img for img in result.scalars().all()}
-
-        for img in images_data:
-            c_id = img["cycle_id"]
-            if not isinstance(c_id, uuid.UUID):
-                c_id = uuid.UUID(str(c_id))
-            eye = str(img["eye"]).strip().upper()
-            c_num = int(img["cycle_number"])
-            existing = existing_images_map.get((c_num, eye))
-
-            clean_crop = sanitize_json_data(img.get("crop_region"))
-
-            if existing:
-                existing.cycle_id = c_id
-                existing.capture_event = str(img["capture_event"])[:30]
-                existing.timestamp = img["timestamp"]
-                existing.storage_path = str(img["storage_path"])
-                existing.mime_type = str(img.get("mime_type", "image/jpeg"))[:30]
-                existing.width = int(img["width"])
-                existing.height = int(img["height"])
-                existing.file_size = int(img["file_size"])
-                existing.upload_status = str(img.get("upload_status", "UPLOADED"))[:20]
-                existing.crop_region = clean_crop
-                saved_images.append(existing)
-            else:
-                img_id = img.get("image_id")
-                if img_id is None or not isinstance(img_id, uuid.UUID):
-                    try:
-                        img_id = uuid.UUID(str(img_id)) if img_id else uuid.uuid4()
-                    except Exception:
-                        img_id = uuid.uuid4()
-
-                new_img = CoverTestImageModel(
-                    image_id=img_id,
-                    session_id=session_id,
-                    cycle_id=c_id,
-                    cycle_number=c_num,
-                    eye=eye,
-                    capture_event=str(img["capture_event"])[:30],
-                    timestamp=img["timestamp"],
-                    storage_path=str(img["storage_path"]),
-                    mime_type=str(img.get("mime_type", "image/jpeg"))[:30],
-                    width=int(img["width"]),
-                    height=int(img["height"]),
-                    file_size=int(img["file_size"]),
-                    upload_status=str(img.get("upload_status", "UPLOADED"))[:20],
-                    crop_region=clean_crop,
-                )
-                self.session.add(new_img)
-                saved_images.append(new_img)
-
-        await self.session.flush()
-        return saved_images
-
     async def upsert_result(
         self,
         session_id: uuid.UUID,
@@ -250,8 +186,6 @@ class CoverTestRepository:
         clean_comparisons = sanitize_json_data(result_data.get("comparison_models", []))
         raw_conf = result_data.get("confidence")
         conf_val = float(raw_conf) if raw_conf is not None and not (math.isnan(float(raw_conf)) or math.isinf(float(raw_conf))) else None
-        image_url_val = result_data.get("image_url")
-        cloudinary_pid_val = result_data.get("cloudinary_public_id")
 
         if existing:
             existing.model_source = model_source
@@ -261,10 +195,6 @@ class CoverTestRepository:
             existing.prediction = prediction_val
             existing.class_probabilities = clean_probs
             existing.confidence = conf_val
-            if image_url_val is not None:
-                existing.image_url = str(image_url_val)
-            if cloudinary_pid_val is not None:
-                existing.cloudinary_public_id = str(cloudinary_pid_val)[:255]
             existing.domain_shift_warning = bool(result_data.get("domain_shift_warning", False))
             existing.features_snapshot = clean_features
             existing.comparison_models = clean_comparisons
@@ -296,8 +226,6 @@ class CoverTestRepository:
             prediction=prediction_val,
             class_probabilities=clean_probs,
             confidence=conf_val,
-            image_url=str(image_url_val) if image_url_val is not None else None,
-            cloudinary_public_id=str(cloudinary_pid_val)[:255] if cloudinary_pid_val is not None else None,
             domain_shift_warning=bool(result_data.get("domain_shift_warning", False)),
             features_snapshot=clean_features,
             comparison_models=clean_comparisons,

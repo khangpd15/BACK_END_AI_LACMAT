@@ -79,30 +79,6 @@ class SupabaseStorageService:
 
         return clean_path
 
-    async def upload_image(self, storage_path: str, image_bytes: bytes, mime_type: str = "image/jpeg") -> str:
-        """Uploads binary eye crop image to storage."""
-        clean_path = storage_path.lstrip("/")
-        # Always retain a local cache / fallback copy
-        self._in_memory_store[clean_path] = image_bytes
-
-        if self._client:
-            try:
-                await asyncio.to_thread(
-                    self._client.storage.from_(self.bucket).upload,
-                    path=clean_path,
-                    file=image_bytes,
-                    file_options={"content-type": mime_type, "upsert": "true"},
-                )
-                logger.debug("Uploaded image to Supabase Storage: %s", clean_path)
-            except Exception as e:
-                logger.warning(
-                    "Supabase Storage image upload failed for '%s' (%s). Retaining in fallback buffer.",
-                    clean_path,
-                    e,
-                )
-
-        return clean_path
-
     async def object_exists(self, storage_path: str) -> bool:
         """Checks if an object exists in storage."""
         clean_path = storage_path.lstrip("/")

@@ -232,36 +232,6 @@ def validate_cycle_samples(samples: List[Dict[str, Any]], cycle_num: int) -> Tup
     return total, valid_count, v_ratio, mean_q
 
 
-def validate_image_payload(
-    file_bytes: bytes,
-    content_type: str,
-    eye: str,
-    cycle_num: int,
-) -> Tuple[int, int, int]:
-    """Validates JPEG image payload size and MIME type.
-    
-    Returns (width, height, file_size).
-    """
-    if not file_bytes or len(file_bytes) == 0:
-        raise HTTPException(
-            status_code=422,
-            detail=f"Cycle {cycle_num}, {eye} eye image: image file is empty (0 bytes).",
-        )
-    size = len(file_bytes)
-    if size > 5 * 1024 * 1024:
-        raise HTTPException(
-            status_code=422,
-            detail=f"Cycle {cycle_num}, {eye} eye image: size {size} exceeds 5MB limit.",
-        )
-    clean_ct = (content_type or "").lower().split(";")[0].strip()
-    if clean_ct not in {"image/jpeg", "image/jpg", "application/octet-stream"}:
-        raise HTTPException(
-            status_code=422,
-            detail=f"Cycle {cycle_num}, {eye} eye image: invalid MIME '{content_type}'. Must be image/jpeg.",
-        )
-    return 256, 256, size
-
-
 class CoverTestSessionService:
     """Orchestrates validation, persistence, storage, and AI inference for a Cover Test session."""
 
@@ -278,7 +248,7 @@ class CoverTestSessionService:
         self,
         metadata_input: CoverTestSessionMetadataInput,
         raw_trajectories: Dict[int, Dict[str, Any]],
-        images_data: Dict[Tuple[int, str], Tuple[bytes, str]],
+        images_data: Optional[Dict[Tuple[int, str], Tuple[bytes, str]]] = None,
         representative_image: Optional[Tuple[bytes, str]] = None,
         run_inference: bool = True,
     ) -> CoverTestSessionResponse:
@@ -372,105 +342,47 @@ class CoverTestSessionService:
 
         # Save cycles to database
         db_cycles = await self.repo.upsert_cycles(session_uuid, cycles_to_save)
-        cycle_id_map = {c.cycle_number: c.cycle_id for c in db_cycles if c.cycle_id is not None}
 
-        # 6. Process and validate eye images
-        images_to_save = []
-        for (cycle_num, eye_side), (img_bytes, mime_type) in images_data.items():
-            norm_eye = eye_side.strip().upper()
-            if norm_eye not in VALID_EYES:
-                continue
-            width, height, file_size = validate_image_payload(img_bytes, mime_type, norm_eye, cycle_num)
+        # 6. Privacy Gate: Customer eye & face images are NEVER stored in DB or cloud storage
+        # (Images contain sensitive biometric PII and are strictly omitted from persistence)
 
-            filename = "left_eye.jpg" if norm_eye == "LEFT" else "right_eye.jpg"
-            cycle_folder_name = f"cycle_{cycle_num:02d}"
-            image_storage_path = f"{storage_prefix}/{cycle_folder_name}/{filename}"
-            capture_event = "UNCOVER_LEFT" if norm_eye == "LEFT" else "UNCOVER_RIGHT"
-
-            img_uploads.append((image_storage_path, img_bytes))
-
-            # Determine valid cycle_id (NEVER fallback to session_uuid to avoid foreign key violation)
-            target_cycle_id = cycle_id_map.get(cycle_num)
-            if target_cycle_id is None:
-                logger.info("Auto-creating cycle %d placeholder for uploaded eye image", cycle_num)
-                stub_cycles = await self.repo.upsert_cycles(session_uuid, [{
-                    "cycle_number": cycle_num,
-                    "covered_eye": normalize_covered_eye(None, cycle_num),
-                    "tracked_eye": normalize_tracked_eye(None, cycle_num),
-                    "sample_count": 0,
-                    "valid_sample_count": 0,
-                    "valid_ratio": 0.0,
-                    "mean_tracking_quality": 0.0,
-                    "cycle_status": "COMPLETED",
-                    "raw_storage_path": f"{storage_prefix}/{cycle_folder_name}/raw.json",
-                    "duration_ms": 0,
-                }])
-                if stub_cycles and stub_cycles[0].cycle_id:
-                    target_cycle_id = stub_cycles[0].cycle_id
-                    cycle_id_map[cycle_num] = target_cycle_id
-                else:
-                    logger.warning("Could not associate image for cycle %d; skipping to prevent FK violation", cycle_num)
-                    continue
-
-            images_to_save.append({
-                "cycle_id": target_cycle_id,
-                "cycle_number": cycle_num,
-                "eye": norm_eye,
-                "capture_event": capture_event,
-                "timestamp": now_utc,
-                "storage_path": image_storage_path,
-                "mime_type": "image/jpeg",
-                "width": width,
-                "height": height,
-                "file_size": file_size,
-                "upload_status": "UPLOADED",
-                "crop_region": {"width": width, "height": height},
-            })
-
-        saved_images = await self.repo.upsert_images(session_uuid, images_to_save)
-
-        # 7. Upload manifest.json and execute all storage uploads concurrently
+        # 7. Upload manifest.json and execute raw JSON storage uploads concurrently
         manifest_payload = {
             "sessionId": session_id_str,
             "createdAt": now_utc.isoformat(),
             "cycleCount": len(cycles_to_save),
             "samplingRateHz": metadata_input.samplingRateHz,
             "cycles": manifest_cycles,
-            "imagesCount": len(saved_images),
+            "imagesCount": 0,
             "storageRoot": storage_root,
         }
 
-        # Concurrently upload JSON trajectories, eye images, and manifest
+        # Concurrently upload JSON trajectories and manifest
         upload_tasks = [
             self.storage.upload_raw_json(p, d) for p, d in raw_uploads
-        ] + [
-            self.storage.upload_image(p, b, "image/jpeg") for p, b in img_uploads
         ] + [
             self.storage.upload_raw_json(f"{storage_prefix}/manifest.json", manifest_payload)
         ]
         if upload_tasks:
             await asyncio.gather(*upload_tasks)
 
-        # Commit DB transaction so raw data and metadata are guaranteed persisted
+        # Commit DB transaction so raw numeric trajectories and metadata are guaranteed persisted
         await self.db_session.commit()
         logger.info(
-            "[CoverTestSessionPersisted] sessionId=%s, cycles=%d, images=%d, storage=%s",
+            "[CoverTestSessionPersisted] sessionId=%s, cycles=%d, images=0 (PII protected), storage=%s",
             session_id_str,
             len(cycles_to_save),
-            len(saved_images),
             storage_root,
         )
 
-        # 8. 10-15 FPS Model Inference & Cloudinary Representative Image Persistence
+        # 8. 10-15 FPS Model Inference & Final Consensus Persistence (No Images Saved)
         ai_result_payload = None
         processing_status = "COMPLETED"
 
         should_infer = run_inference and ENABLE_AI_INFERENCE_ON_SAVE
         if should_infer:
-            from app.services.cover_test.cloudinary_service import get_cloudinary_service
             from app.services.fps_model_service import get_fps_model_service
 
-            cloudinary_svc = get_cloudinary_service()
             fps_svc = get_fps_model_service()
 
             # Step 1: Finalize result from 10-15 FPS Model with temporal consensus aggregation
@@ -485,7 +397,7 @@ class CoverTestSessionService:
                 logger.error("[MODEL]\nsource = fps_10_15\ninference = failed\nerror = %s", model_err)
                 fps_res = None
 
-            # If 10-15 FPS model inference fails -> DO NOT proceed to image upload or DB result insert
+            # If 10-15 FPS model inference fails -> DO NOT proceed to DB result insert
             if fps_res is None or (fps_res.prediction == "INCONCLUSIVE" and fps_res.total_frames_evaluated == 0):
                 logger.warning(
                     "[AIInferenceFailed] sessionId=%s: 10-15 FPS model failed to evaluate frames. Preserving raw data with PARTIAL_SUCCESS.",
@@ -494,161 +406,90 @@ class CoverTestSessionService:
                 processing_status = "PARTIAL_SUCCESS"
                 ai_result_payload = None
             else:
-                # Step 2: Determine representative image to capture and store
-                rep_bytes = None
-                rep_mime = "image/jpeg"
-                if representative_image is not None and representative_image[0]:
-                    rep_bytes, rep_mime = representative_image
-                elif images_data:
-                    first_key = sorted(images_data.keys())[0]
-                    rep_bytes, rep_mime = images_data[first_key]
+                # Step 2: Optional Korean Shared Model for comparison_models only (Research UI)
+                comparison_models_list = []
+                try:
+                    from app.schemas import CoverCycle, EyeSample, ScreeningRequest
+                    from app.services.korean_transfer import get_korean_transfer_service
 
-                if not rep_bytes:
-                    logger.warning("[IMAGE]\ncapture = failed (no image available for representative capture)")
-                    processing_status = "PARTIAL_SUCCESS"
-                    ai_result_payload = None
-                    await self.repo.update_session_status(
-                        session_uuid,
-                        processing_status="PARTIAL_SUCCESS",
-                        error_message="IMAGE_UPLOAD_FAILED: No representative image captured",
+                    cycles_payload = []
+                    for c_num in sorted(raw_trajectories.keys()):
+                        c_dict = raw_trajectories[c_num]
+                        samples_list = [EyeSample(**s) for s in c_dict.get("samples", [])]
+                        cycles_payload.append(
+                            CoverCycle(
+                                cycle=c_num,
+                                coveredEye=str(c_dict.get("coveredEye", "LEFT")).upper(),
+                                trackedEye=str(c_dict.get("trackedEye", "RIGHT")).upper(),
+                                samples=samples_list,
+                            )
+                        )
+                    screening_req = ScreeningRequest(
+                        sampleId=session_id_str,
+                        test="COVER_TEST",
+                        cycles=cycles_payload,
+                    )
+                    transfer_svc = get_korean_transfer_service()
+                    korean_resp = transfer_svc.predict_transfer(screening_req)
+                    comparison_models_list.append({
+                        "key": "korean_shared_model",
+                        "label": "Korean Baseline (Research Only)",
+                        "prediction": korean_resp.prediction,
+                        "classProbability": korean_resp.classProbability,
+                        "samplingProfile": "60 Hz infrared lab tracker baseline",
+                        "domainShiftWarning": True,
+                        "clinicalMeaning": None,
+                        "notice": "Research transfer experiment only - not a medical diagnosis.",
+                    })
+                except Exception as kor_err:
+                    logger.debug("Korean comparison model generation skipped: %s", kor_err)
+
+                # Step 3: INSERT 1 record into cover_test_results with 10-15 FPS prediction (NO image stored)
+                try:
+                    result_record = await self.repo.upsert_result(
+                        session_id=session_uuid,
+                        result_data={
+                            "model_name": fps_res.model_name,
+                            "model_version": fps_res.model_version,
+                            "model_source": "fps_10_15_model",
+                            "feature_schema_version": "shared-v1.0.0",
+                            "status": fps_res.status,
+                            "input_compatible": True,
+                            "prediction": fps_res.prediction,
+                            "class_probabilities": fps_res.class_probabilities,
+                            "confidence": fps_res.confidence,
+                            "domain_shift_warning": False,
+                            "features_snapshot": fps_res.features_snapshot,
+                            "comparison_models": comparison_models_list,
+                            "notice": fps_res.notice,
+                        },
                     )
                     await self.db_session.commit()
-                else:
-                    logger.info("[IMAGE]\ncapture = success")
+                    logger.info("[DATABASE]\ninsert = success\nrecord_id = %s", str(result_record.result_id))
 
-                    # Step 3: Upload representative image to Cloudinary BEFORE database insert
-                    public_id_to_cleanup = None
-                    cloudinary_success = False
-                    secure_url = None
-                    public_id = None
+                    ai_result_payload = {
+                        "status": fps_res.status,
+                        "modelSource": "fps_10_15_model",
+                        "prediction": fps_res.prediction,
+                        "classProbability": fps_res.class_probabilities,
+                        "classProbabilities": fps_res.class_probabilities,
+                        "confidence": fps_res.confidence,
+                        "model": {
+                            "name": fps_res.model_name,
+                            "version": fps_res.model_version,
+                            "source": "fps_10_15_model",
+                        },
+                        "agreementRatio": fps_res.agreement_ratio,
+                        "isReliable": fps_res.is_reliable,
+                        "features": fps_res.features_snapshot,
+                        "comparisonModels": comparison_models_list,
+                        "notice": fps_res.notice,
+                    }
+                    processing_status = "COMPLETED"
 
-                    try:
-                        upload_res = cloudinary_svc.upload_image(
-                            file_bytes=rep_bytes,
-                            public_id=f"session_{session_id_str}_rep",
-                            tags=["remicare", "cover_test", session_id_str],
-                        )
-                        secure_url = upload_res.secure_url
-                        public_id = upload_res.public_id
-                        public_id_to_cleanup = public_id
-                        cloudinary_success = True
-                        logger.info("[CLOUDINARY]\nupload = success\nsecure_url = %s", secure_url)
-                    except Exception as cloud_err:
-                        logger.error("[CLOUDINARY]\nupload = failed\nerror = %s", cloud_err)
-                        # Cloudinary upload failed -> DO NOT insert main result!
-                        processing_status = "PARTIAL_SUCCESS"
-                        ai_result_payload = None
-                        await self.repo.update_session_status(
-                            session_uuid,
-                            processing_status="PARTIAL_SUCCESS",
-                            error_message=f"IMAGE_UPLOAD_FAILED: {cloud_err}",
-                        )
-                        await self.db_session.commit()
-                        return CoverTestSessionResponse(
-                            success=True,
-                            sessionId=session_id_str,
-                            saved=True,
-                            processingStatus="PARTIAL_SUCCESS",
-                            storageRoot=storage_root,
-                            cyclesSaved=len(cycles_to_save),
-                            imagesSaved=len(saved_images),
-                            aiResult=None,
-                            message=f"Session raw data persisted, but Cloudinary upload failed: IMAGE_UPLOAD_FAILED: {cloud_err}",
-                        )
-
-                    # Step 4: Optional Korean Shared Model for comparison_models only (Research UI)
-                    comparison_models_list = []
-                    try:
-                        from app.schemas import CoverCycle, EyeSample, ScreeningRequest
-                        from app.services.korean_transfer import get_korean_transfer_service
-
-                        cycles_payload = []
-                        for c_num in sorted(raw_trajectories.keys()):
-                            c_dict = raw_trajectories[c_num]
-                            samples_list = [EyeSample(**s) for s in c_dict.get("samples", [])]
-                            cycles_payload.append(
-                                CoverCycle(
-                                    cycle=c_num,
-                                    coveredEye=str(c_dict.get("coveredEye", "LEFT")).upper(),
-                                    trackedEye=str(c_dict.get("trackedEye", "RIGHT")).upper(),
-                                    samples=samples_list,
-                                )
-                            )
-                        screening_req = ScreeningRequest(
-                            sampleId=session_id_str,
-                            test="COVER_TEST",
-                            cycles=cycles_payload,
-                        )
-                        transfer_svc = get_korean_transfer_service()
-                        korean_resp = transfer_svc.predict_transfer(screening_req)
-                        comparison_models_list.append({
-                            "key": "korean_shared_model",
-                            "label": "Korean Baseline (Research Only)",
-                            "prediction": korean_resp.prediction,
-                            "classProbability": korean_resp.classProbability,
-                            "samplingProfile": "60 Hz infrared lab tracker baseline",
-                            "domainShiftWarning": True,
-                            "clinicalMeaning": None,
-                            "notice": "Research transfer experiment only - not a medical diagnosis.",
-                        })
-                    except Exception as kor_err:
-                        logger.debug("Korean comparison model generation skipped: %s", kor_err)
-
-                    # Step 5: INSERT 1 record into cover_test_results with 10-15 FPS prediction + Cloudinary URL
-                    try:
-                        result_record = await self.repo.upsert_result(
-                            session_id=session_uuid,
-                            result_data={
-                                "model_name": fps_res.model_name,
-                                "model_version": fps_res.model_version,
-                                "model_source": "fps_10_15_model",
-                                "feature_schema_version": "shared-v1.0.0",
-                                "status": fps_res.status,
-                                "input_compatible": True,
-                                "prediction": fps_res.prediction,
-                                "class_probabilities": fps_res.class_probabilities,
-                                "confidence": fps_res.confidence,
-                                "image_url": secure_url,
-                                "cloudinary_public_id": public_id,
-                                "domain_shift_warning": False,
-                                "features_snapshot": fps_res.features_snapshot,
-                                "comparison_models": comparison_models_list,
-                                "notice": fps_res.notice,
-                            },
-                        )
-                        await self.db_session.commit()
-                        logger.info("[DATABASE]\ninsert = success\nrecord_id = %s", str(result_record.result_id))
-                        public_id_to_cleanup = None  # DB insert succeeded; keep Cloudinary image
-
-                        ai_result_payload = {
-                            "status": fps_res.status,
-                            "modelSource": "fps_10_15_model",
-                            "prediction": fps_res.prediction,
-                            "classProbability": fps_res.class_probabilities,
-                            "classProbabilities": fps_res.class_probabilities,
-                            "confidence": fps_res.confidence,
-                            "imageUrl": secure_url,
-                            "cloudinaryPublicId": public_id,
-                            "model": {
-                                "name": fps_res.model_name,
-                                "version": fps_res.model_version,
-                                "source": "fps_10_15_model",
-                            },
-                            "agreementRatio": fps_res.agreement_ratio,
-                            "isReliable": fps_res.is_reliable,
-                            "features": fps_res.features_snapshot,
-                            "comparisonModels": comparison_models_list,
-                            "notice": fps_res.notice,
-                        }
-                        processing_status = "COMPLETED"
-
-                    except Exception as db_insert_err:
-                        logger.error("[DATABASE]\ninsert = failed\nerror = %s", db_insert_err)
-                        # DB insert failed after Cloudinary upload -> cleanup Cloudinary image
-                        if public_id_to_cleanup:
-                            cloudinary_svc.delete_image(public_id_to_cleanup)
-                            logger.info("[CLOUDINARY] Cleaned up uploaded image %s due to DB insert failure", public_id_to_cleanup)
-                        raise db_insert_err
+                except Exception as db_insert_err:
+                    logger.error("[DATABASE]\ninsert = failed\nerror = %s", db_insert_err)
+                    raise db_insert_err
 
         # Update final processing status
         await self.repo.update_session_status(session_uuid, processing_status)
@@ -661,7 +502,7 @@ class CoverTestSessionService:
             processingStatus=processing_status,
             storageRoot=storage_root,
             cyclesSaved=len(cycles_to_save),
-            imagesSaved=len(saved_images),
+            imagesSaved=0,
             aiResult=ai_result_payload,
-            message="Cover test session data persisted successfully.",
+            message="Cover test session numeric trajectory data persisted and 10-15 FPS model consensus completed.",
         )

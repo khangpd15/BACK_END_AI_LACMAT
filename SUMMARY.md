@@ -50,18 +50,17 @@ Dự án đã trải qua 5 giai đoạn phát triển lớn (Phases 1 đến 5),
   - Động học từng chu kỳ: vận tốc trung bình, vận tốc đỉnh ($peakVelocity$), thời gian đạt đỉnh chuyển vị ($timeToPeak$), tổng thời gian mắt vận động ($movementDuration$).
   - Chỉ số lặp lại đa chu kỳ ($cycleConsistency$): Đánh giá tính tái lập của chuyển động phục hồi qua 3 chu kỳ lặp lại.
 
-### 1.2. Hệ Thống Lưu Trữ Đám Mây & Cơ Sở Dữ Liệu (Phase 3)
+### 1.2. Hệ Thống Lưu Trữ Đám Mây & Cơ Sở Dữ Liệu (Phase 3 & Quyền Riêng Tư Khách Hàng)
 - **Cơ sở dữ liệu bất đồng bộ PostgreSQL / Supabase (`app/db/`):**
-  - Xây dựng 4 bảng quan hệ chuẩn hóa:
+  - Quản lý dữ liệu qua 3 bảng quan hệ chuẩn hóa (Tuyệt đối không lưu trữ ảnh khuôn mặt / mắt sinh trắc học của khách hàng):
     1. `cover_test_sessions`: Quản lý phiên khám, tần số lấy mẫu (Hz), thiết bị, phiên bản schema.
-    2. `cover_test_cycles`: Chi tiết từng chu kỳ (mắt che, mắt theo dõi, số frame hợp lệ, đường dẫn file thô).
-    3. `cover_test_images`: Quản lý ảnh chụp vùng mắt (left/right eye crop) lúc vừa bỏ che (Uncover event).
-    4. `cover_test_results`: Lưu trữ kết quả suy luận AI, phân phối xác suất, cờ cảnh báo Domain Shift, snapshot đặc trưng kỹ thuật.
+    2. `cover_test_cycles`: Chi tiết từng chu kỳ (mắt che, mắt theo dõi, số frame hợp lệ, đường dẫn file số liệu thô).
+    3. `cover_test_results`: Lưu trữ kết quả rà soát chính từ **Mô hình 10-15 FPS** (`model_source = "fps_10_15_model"`, độ tin cậy `confidence`, phân phối xác suất `class_probabilities`), snapshot đặc trưng kỹ thuật, và kết quả Korean model chỉ để nghiên cứu so sánh (`comparison_models`). Cột `image_url` và bảng `cover_test_images` đã được xóa bỏ vĩnh viễn vì ảnh là dữ liệu sinh trắc học cá nhân của khách hàng.
 - **Supabase Object Storage Service (`app/services/cover_test/storage_service.py`):**
-  - Tự động phân cấp lưu trữ theo cấu trúc thư mục y tế: `cover-test-raw/{YYYY}/{MM}/{sessionId}/cycle_0{N}/raw.json` và ảnh mống mắt `left_eye.jpg`, `right_eye.jpg`, kèm theo file tổng kết `manifest.json`.
+  - Tự động phân cấp lưu trữ theo cấu trúc thư mục y tế: `cover-test-raw/{YYYY}/{MM}/{sessionId}/cycle_0{N}/raw.json` kèm file tổng kết `manifest.json`. Toàn bộ dữ liệu lưu trữ là tọa độ số landmark, không lưu bất kỳ file ảnh nhị phân nào.
   - Hỗ trợ cơ chế Offline Mock Store tự động khi không có internet/chưa cấu hình API Key.
-- **Chiến lược "Bảo Toàn Dữ Liệu Thô" (Data Resilience):**
-  - Dữ liệu thô và ảnh luôn được cam kết lưu thành công vào Database và Storage trước khi gọi mô hình AI. Nếu mô hình AI gặp sự cố, hệ thống trả về mã `PARTIAL_SUCCESS`, tuyệt đối không làm mất dữ liệu ghi hình của bệnh nhân.
+- **Chiến lược "Bảo Toàn Quyền Riêng Tư & Dữ Liệu Số":**
+  - Dữ liệu chuỗi thời gian số liệu thô luôn được cam kết lưu thành công vào Database và Storage trước khi gọi mô hình AI. Nếu mô hình AI gặp sự cố, hệ thống trả về mã `PARTIAL_SUCCESS`. Tuyệt đối không lưu trữ hay rò rỉ hình ảnh cá nhân của người bệnh.
 - **Cơ chế Keep-Alive & Supabase Pooler Resilience (`app/services/keep_alive.py`, `app/db/database.py`):**
   - Worker nền tự động ping định kỳ 10 phút chống Render ngủ đông (loại bỏ Cold Start 50s cho Front-end).
   - Tự động nhận diện Supabase Pooler IPv4 (`aws-0-[region].pooler.supabase.com:6543`), tắt `statement_cache_size=0` cho `asyncpg` và cảnh báo trực tiếp nếu phát hiện IPv6 Direct URL gây ra `[Errno 101] Network is unreachable`.

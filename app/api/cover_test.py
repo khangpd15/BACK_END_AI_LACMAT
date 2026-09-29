@@ -40,7 +40,7 @@ async def persist_cover_test_session(
     cycle_3_raw: Optional[UploadFile] = File(None),
     cycle_3_left_eye: Optional[UploadFile] = File(None),
     cycle_3_right_eye: Optional[UploadFile] = File(None),
-    representative_image: Optional[UploadFile] = File(None, description="Representative image for Cloudinary storage and DB result association"),
+    representative_image: Optional[UploadFile] = File(None, description="Deprecated/Ignored: Biometric images are not persisted to protect customer privacy"),
     run_inference: bool = Query(True, description="Whether to execute AI inference after storage"),
     db: AsyncSession = Depends(get_db_session),
 ) -> CoverTestSessionResponse:
@@ -80,27 +80,8 @@ async def persist_cover_test_session(
             detail="At least one cycle raw trajectory (cycle_1_raw) is required.",
         )
 
-    # 3. Extract eye crop images
-    image_files = [
-        (1, "LEFT", cycle_1_left_eye),
-        (1, "RIGHT", cycle_1_right_eye),
-        (2, "LEFT", cycle_2_left_eye),
-        (2, "RIGHT", cycle_2_right_eye),
-        (3, "LEFT", cycle_3_left_eye),
-        (3, "RIGHT", cycle_3_right_eye),
-    ]
-    images_data = {}
-    for c_num, eye_side, img_file in image_files:
-        if img_file is not None and img_file.filename:
-            b = await img_file.read()
-            ct = img_file.content_type or "image/jpeg"
-            images_data[(c_num, eye_side)] = (b, ct)
-
-    rep_tuple = None
-    if representative_image is not None and representative_image.filename:
-        r_b = await representative_image.read()
-        r_ct = representative_image.content_type or "image/jpeg"
-        rep_tuple = (r_b, r_ct)
+    # 3. Customer Privacy Protection: Eye and facial images are NOT read or stored in DB
+    # (Biometric customer PII is omitted from persistence)
 
     # 4. Delegate to Session Service
     try:
@@ -108,8 +89,6 @@ async def persist_cover_test_session(
         return await session_service.persist_session(
             metadata_input=metadata_obj,
             raw_trajectories=raw_trajectories,
-            images_data=images_data,
-            representative_image=rep_tuple,
             run_inference=run_inference,
         )
     except HTTPException:

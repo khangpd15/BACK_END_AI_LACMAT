@@ -14,7 +14,7 @@ from app.db.models.cover_test_session import GUID, JSONType
 class CoverTestResultModel(Base):
     """Database model for cover_test_results.
     
-    Stores primary screening results from 10-15 FPS model + Cloudinary representative image.
+    Stores primary screening results from 10-15 FPS model (no biometric/facial images stored to preserve customer privacy).
     Korean model results are kept for research comparison only (in comparison_models).
     """
     __tablename__ = "cover_test_results"
@@ -35,8 +35,6 @@ class CoverTestResultModel(Base):
     prediction: Mapped[str] = mapped_column(String(30), nullable=False)  # 'NORMAL', 'STRABISMUS', 'INCONCLUSIVE'
     class_probabilities: Mapped[dict] = mapped_column(JSONType, nullable=False)
     confidence: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    cloudinary_public_id: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     domain_shift_warning: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     features_snapshot: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     comparison_models: Mapped[list] = mapped_column(JSONType, default=list, nullable=False)

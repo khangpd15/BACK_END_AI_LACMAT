@@ -4,7 +4,6 @@ import uuid
 from typing import TYPE_CHECKING, List, Optional
 
 if TYPE_CHECKING:
-    from app.db.models.cover_test_image import CoverTestImageModel
     from app.db.models.cover_test_session import CoverTestSessionModel
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -41,8 +40,3 @@ class CoverTestCycleModel(Base):
 
     # Relationships
     session: Mapped["CoverTestSessionModel"] = relationship("CoverTestSessionModel", back_populates="cycles")
-    images: Mapped[List["CoverTestImageModel"]] = relationship(
-        "CoverTestImageModel",
-        back_populates="cycle",
-        cascade="all, delete-orphan",
-    )

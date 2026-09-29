@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, List, Optional
 
 if TYPE_CHECKING:
     from app.db.models.cover_test_cycle import CoverTestCycleModel
-    from app.db.models.cover_test_image import CoverTestImageModel
     from app.db.models.cover_test_result import CoverTestResultModel
 from sqlalchemy import DateTime, Float, Integer, JSON, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
@@ -77,11 +76,6 @@ class CoverTestSessionModel(Base):
         back_populates="session",
         cascade="all, delete-orphan",
         order_by="CoverTestCycleModel.cycle_number",
-    )
-    images: Mapped[List["CoverTestImageModel"]] = relationship(
-        "CoverTestImageModel",
-        back_populates="session",
-        cascade="all, delete-orphan",
     )
     result: Mapped[Optional["CoverTestResultModel"]] = relationship(
         "CoverTestResultModel",

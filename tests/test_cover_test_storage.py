@@ -17,11 +17,7 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def setup_test_db():
-    """Ensure in-memory SQLite tables are created before each test and Cloudinary is mocked."""
-    from app.services.cover_test.cloudinary_service import get_cloudinary_service
-    c_svc = get_cloudinary_service()
-    c_svc.mock_mode = True
-    c_svc._configured = True
+    """Ensure in-memory SQLite tables are created before each test."""
     import anyio
     anyio.run(init_db)
 
@@ -220,32 +216,36 @@ def test_pii_in_metadata_rejected(pii_key):
 # 6. IMAGE VALIDATION TESTS
 # =============================================================================
 
-def test_empty_image_rejected():
+def test_images_are_strictly_omitted_for_customer_privacy():
+    """Verify that any uploaded eye/face images are safely omitted and not stored."""
     valid_uuid = str(uuid.uuid4())
     cycle_1 = _create_valid_cycle(1, 5)
     metadata = {"sessionId": valid_uuid}
     files = {
         "session_metadata": (None, json.dumps(metadata)),
         "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
-        "cycle_1_left_eye": ("left.jpg", b"", "image/jpeg"),  # 0 bytes
+        "cycle_1_left_eye": ("left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
     }
     resp = client.post("/api/v1/cover-test/sessions?run_inference=false", files=files)
-    assert resp.status_code == 422
-    assert "empty" in resp.json()["detail"]
+    assert resp.status_code == 201
+    data = resp.json()
+    assert data["success"] is True
+    assert data["imagesSaved"] == 0
 
 
-def test_invalid_image_mime_rejected():
+def test_empty_or_malformed_image_safely_ignored():
+    """Verify that empty or arbitrary image payload does not cause errors since images are not parsed."""
     valid_uuid = str(uuid.uuid4())
     cycle_1 = _create_valid_cycle(1, 5)
     metadata = {"sessionId": valid_uuid}
     files = {
         "session_metadata": (None, json.dumps(metadata)),
         "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
-        "cycle_1_left_eye": ("left.png", b"fake_png_data", "image/png"),  # Invalid MIME
+        "cycle_1_left_eye": ("left.png", b"arbitrary_binary_data", "image/png"),
     }
     resp = client.post("/api/v1/cover-test/sessions?run_inference=false", files=files)
-    assert resp.status_code == 422
-    assert "invalid MIME" in resp.json()["detail"]
+    assert resp.status_code == 201
+    assert resp.json()["imagesSaved"] == 0
 
 
 # =============================================================================
@@ -353,13 +353,13 @@ def test_happy_path_3_cycles_6_images():
     assert data["success"] is True
     assert data["saved"] is True
     assert data["cyclesSaved"] == 3
-    assert data["imagesSaved"] == 6
+    assert data["imagesSaved"] == 0
     assert data["processingStatus"] == "COMPLETED"
     assert data["aiResult"] is not None
     assert "notice" in data["aiResult"]
     assert "not a medical diagnosis" in data["aiResult"]["notice"]
 
-    # Verify Storage Objects: 1 manifest.json + 3 raw.json + 6 eye images = exactly 10 Storage objects!
+    # Verify Storage Objects: 1 manifest.json + 3 raw.json = exactly 4 Storage objects (NO images stored!)
     year_str = resp.json()["storageRoot"].split("/")[1]
     month_str = resp.json()["storageRoot"].split("/")[2]
     prefix = f"{year_str}/{month_str}/{session_uuid}"
@@ -367,20 +367,17 @@ def test_happy_path_3_cycles_6_images():
     expected_storage_keys = [
         f"{prefix}/manifest.json",
         f"{prefix}/cycle_01/raw.json",
-        f"{prefix}/cycle_01/left_eye.jpg",
-        f"{prefix}/cycle_01/right_eye.jpg",
         f"{prefix}/cycle_02/raw.json",
-        f"{prefix}/cycle_02/left_eye.jpg",
-        f"{prefix}/cycle_02/right_eye.jpg",
         f"{prefix}/cycle_03/raw.json",
-        f"{prefix}/cycle_03/left_eye.jpg",
-        f"{prefix}/cycle_03/right_eye.jpg",
     ]
-    assert len(expected_storage_keys) == 10
+    assert len(expected_storage_keys) == 4
 
-    # In mock offline storage, verify that all 10 keys were stored
+    # In mock offline storage, verify that all 4 keys were stored and zero .jpg files
     for key in expected_storage_keys:
         assert key in storage._in_memory_store, f"Storage object '{key}' missing from Storage!"
+    for k in storage._in_memory_store.keys():
+        if prefix in k:
+            assert not k.endswith(".jpg"), f"Customer image file '{k}' was saved to storage!"
 
 
 # =============================================================================
@@ -427,7 +424,7 @@ def test_orphaned_image_without_trajectory_does_not_break_fk():
     resp = client.post("/api/v1/cover-test/sessions?run_inference=false", files=files)
     assert resp.status_code == 201
     assert resp.json()["success"] is True
-    assert resp.json()["imagesSaved"] == 1
+    assert resp.json()["imagesSaved"] == 0
 
 
 def test_session_id_alias_resolution():
@@ -462,7 +459,7 @@ def test_format_async_db_url():
 # =============================================================================
 
 def test_10_15_fps_model_result_fields_and_db_persistence():
-    """Verify 10-15 FPS model is saved to database with Cloudinary URL, and Korean model is not the primary result."""
+    """Verify 10-15 FPS model is saved to database without any customer images, and Korean model is not the primary result."""
     session_uuid = str(uuid.uuid4())
     cycle_1 = _create_valid_cycle(1, 20)
     cycle_2 = _create_valid_cycle(2, 20)
@@ -475,9 +472,7 @@ def test_10_15_fps_model_result_fields_and_db_persistence():
     files = {
         "session_metadata": (None, json.dumps(metadata)),
         "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
-        "cycle_1_left_eye": ("c1_left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
         "cycle_2_raw": ("raw.json", json.dumps(cycle_2), "application/json"),
-        "cycle_2_right_eye": ("c2_right.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
     }
 
     resp = client.post("/api/v1/cover-test/sessions?run_inference=true", files=files)
@@ -485,6 +480,7 @@ def test_10_15_fps_model_result_fields_and_db_persistence():
     data = resp.json()
     assert data["success"] is True
     assert data["processingStatus"] == "COMPLETED"
+    assert data["imagesSaved"] == 0
     assert data["aiResult"] is not None
 
     ai = data["aiResult"]
@@ -493,8 +489,7 @@ def test_10_15_fps_model_result_fields_and_db_persistence():
     assert ai["prediction"] in ("NORMAL", "STRABISMUS")
     assert "NORMAL" in ai["classProbabilities"]
     assert "STRABISMUS" in ai["classProbabilities"]
-    assert ai["imageUrl"].startswith("https://res.cloudinary.com/")
-    assert ai["cloudinaryPublicId"] is not None
+    assert "imageUrl" not in ai or ai.get("imageUrl") is None
     assert "notice" in ai
     assert "10-15 FPS" in ai["notice"]
 
@@ -514,15 +509,53 @@ def test_10_15_fps_model_result_fields_and_db_persistence():
             assert record.model_source == "fps_10_15_model"
             assert record.prediction == ai["prediction"]
             assert record.class_probabilities == ai["classProbabilities"]
-            assert record.image_url == ai["imageUrl"]
-            assert record.cloudinary_public_id == ai["cloudinaryPublicId"]
             assert record.model_name in ("remicare-fps-10-15", "Korean 10-15 FPS robust transfer candidate")
 
     anyio.run(_verify_db)
 
 
-def test_cloudinary_upload_failure_blocks_db_insert():
-    """Verify that when Cloudinary upload fails, NO record is inserted into cover_test_results."""
+def test_customer_privacy_no_images_saved_in_database():
+    """Verify that customer eye and face images are NEVER saved into the database or storage (PII protection)."""
+    session_uuid = str(uuid.uuid4())
+    cycle_1 = _create_valid_cycle(1, 15)
+
+    metadata = {
+        "sessionId": session_uuid,
+        "cycleCount": 1,
+        "samplingRateHz": 15.0,
+    }
+    # Even if client uploads eye images, backend must omit them to safeguard customer privacy
+    files = {
+        "session_metadata": (None, json.dumps(metadata)),
+        "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
+        "cycle_1_left_eye": ("c1_left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
+    }
+
+    resp = client.post("/api/v1/cover-test/sessions?run_inference=true", files=files)
+    assert resp.status_code == 201
+    data = resp.json()
+    assert data["success"] is True
+    assert data["saved"] is True
+    assert data["imagesSaved"] == 0
+
+    import anyio
+    from sqlalchemy import text
+    from app.db.database import get_session_factory
+
+    async def _verify_zero_images_in_db():
+        factory = get_session_factory()
+        async with factory() as db:
+            try:
+                res = await db.execute(text("SELECT count(*) FROM cover_test_images"))
+                assert res.scalar() == 0
+            except Exception:
+                pass  # Table does not exist, which is expected
+
+    anyio.run(_verify_zero_images_in_db)
+
+
+def test_10_15_fps_model_ai_failure_aborts_db_result_insert():
+    """Verify that when 10-15 FPS model fails, NO record is inserted into cover_test_results."""
     session_uuid = str(uuid.uuid4())
     cycle_1 = _create_valid_cycle(1, 15)
 
@@ -534,21 +567,19 @@ def test_cloudinary_upload_failure_blocks_db_insert():
     files = {
         "session_metadata": (None, json.dumps(metadata)),
         "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
-        "cycle_1_left_eye": ("c1_left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
     }
 
-    from app.services.cover_test.cloudinary_service import CloudinaryService
+    from app.services.fps_model_service import FpsModelService
 
-    with patch.object(CloudinaryService, "upload_image", side_effect=RuntimeError("Cloudinary connection reset")):
+    with patch.object(FpsModelService, "aggregate_and_predict", side_effect=RuntimeError("Feature extraction error")):
         resp = client.post("/api/v1/cover-test/sessions?run_inference=true", files=files)
         assert resp.status_code == 201
         data = resp.json()
         assert data["success"] is True
         assert data["saved"] is True
-        # Processing status must be PARTIAL_SUCCESS (raw data saved, but no AI result)
+        # Processing status must be PARTIAL_SUCCESS (raw numeric trajectories saved, but no AI result inserted)
         assert data["processingStatus"] == "PARTIAL_SUCCESS"
         assert data["aiResult"] is None
-        assert "IMAGE_UPLOAD_FAILED" in data["message"]
 
     # Verify no record was inserted in cover_test_results
     import anyio
@@ -562,44 +593,9 @@ def test_cloudinary_upload_failure_blocks_db_insert():
             stmt = select(CoverTestResultModel).where(CoverTestResultModel.session_id == uuid.UUID(session_uuid))
             res = await db.execute(stmt)
             record = res.scalars().first()
-            assert record is None, "Record must NOT be inserted if Cloudinary upload failed!"
+            assert record is None, "Record must NOT be inserted if model failed!"
 
     anyio.run(_verify_no_record)
-
-
-def test_db_insert_failure_cleans_up_cloudinary_image():
-    """Verify that if DB insert fails after Cloudinary upload, the image is cleaned up to prevent orphan image."""
-    session_uuid = str(uuid.uuid4())
-    cycle_1 = _create_valid_cycle(1, 15)
-
-    metadata = {
-        "sessionId": session_uuid,
-        "cycleCount": 1,
-        "samplingRateHz": 15.0,
-    }
-    files = {
-        "session_metadata": (None, json.dumps(metadata)),
-        "cycle_1_raw": ("raw.json", json.dumps(cycle_1), "application/json"),
-        "cycle_1_left_eye": ("c1_left.jpg", _dummy_jpeg_bytes(), "image/jpeg"),
-    }
-
-    from app.services.cover_test.cloudinary_service import CloudinaryService
-    from app.db.repositories.cover_test_repository import CoverTestRepository
-
-    deleted_pids = []
-
-    def mock_delete(self, public_id):
-        deleted_pids.append(public_id)
-        return True
-
-    with patch.object(CoverTestRepository, "upsert_result", side_effect=RuntimeError("Simulated DB Disk Full")):
-        with patch.object(CloudinaryService, "delete_image", new=mock_delete):
-            resp = client.post("/api/v1/cover-test/sessions?run_inference=true", files=files)
-            # Should result in 500 error and exception must NOT be swallowed silently
-            assert resp.status_code == 500
-            # Image cleanup must have been called
-            assert len(deleted_pids) == 1
-            assert session_uuid in deleted_pids[0]
 
 
 def test_korean_model_separate_endpoint_unaffected():
