@@ -21,7 +21,12 @@ from app.api.transfer import router as transfer_router
 from app.api.cover_test_session import router as cover_test_session_router
 from app.api.cover_test import router as cover_test_v1_router
 from app.config import get_allowed_origins
-from app.db.database import init_db
+from app.db.database import check_db_connection, init_db
+from app.services.keep_alive import (
+    get_keep_alive_service,
+    start_keep_alive,
+    stop_keep_alive,
+)
 from app.services.korean_transfer import get_korean_transfer_service
 
 # Configure structured audit logging
@@ -35,7 +40,7 @@ logger = logging.getLogger("remicare.main")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan: Preload machine learning models and init database at startup."""
+    """Application lifespan: Preload machine learning models, init DB, and start keep-alive worker."""
     logger.info("Initializing RemiCare Strabismus AI Backend - Phase 5...")
     try:
         # Initialize database tables
@@ -54,8 +59,15 @@ async def lifespan(app: FastAPI):
         )
     except Exception as e:
         logger.error("Failed to preload transfer model at startup: %s", e, exc_info=True)
+
+    # Start automated keep-alive self-ping and DB pool warming worker
+    start_keep_alive()
+
     yield
+
+    # Clean graceful shutdown
     logger.info("Shutting down RemiCare Strabismus AI Backend...")
+    await stop_keep_alive()
 
 
 # Initialize FastAPI application
@@ -145,12 +157,41 @@ app.include_router(cover_test_v1_router, prefix="/api/v1/cover-test")
 
 
 @app.get(
+    "/ping",
+    tags=["System"],
+    summary="Fast keep-alive ping endpoint",
+    description=(
+        "Ultra-lightweight endpoint for automated keep-alive services, Render self-ping, "
+        "and uptime monitoring. Returns immediately with minimal overhead to prevent spin-downs."
+    ),
+)
+async def ping() -> Dict[str, Any]:
+    """Fast keep-alive ping responding with alive status and timestamp."""
+    return {
+        "status": "alive",
+        "service": "remicare-strabismus-ai",
+        "timestamp": time.time(),
+    }
+
+
+@app.get(
+    "/health/db",
+    tags=["System"],
+    summary="Database connectivity diagnostics",
+    description="Tests live connection to PostgreSQL / Supabase with SELECT 1 and returns connection diagnostics.",
+)
+async def db_health() -> Dict[str, Any]:
+    """Diagnostics endpoint testing database connection and checking for network/Errno 101 issues."""
+    return await check_db_connection()
+
+
+@app.get(
     "/health",
     tags=["System"],
     summary="Health check endpoint",
-    description="Returns backend service health status, name, and version.",
+    description="Returns backend service health status, model info, keep-alive metrics, and optional DB status.",
 )
-async def health_check() -> Dict[str, Any]:
+async def health_check(check_db: bool = False) -> Dict[str, Any]:
     """Health check endpoint responding with operational status, version, and active model info."""
     try:
         svc = get_korean_transfer_service()
@@ -163,9 +204,21 @@ async def health_check() -> Dict[str, Any]:
         }
     except Exception:
         model_info = {"status": "not_loaded"}
-    return {
+
+    keep_alive_info = get_keep_alive_service().get_status()
+
+    result: Dict[str, Any] = {
         "status": "ok",
         "service": "remicare-strabismus-ai",
         "version": __version__,
         "model": model_info,
+        "keepAlive": keep_alive_info,
     }
+
+    if check_db:
+        db_res = await check_db_connection()
+        result["database"] = db_res
+        if not db_res.get("connected", False):
+            result["status"] = "degraded"
+
+    return result

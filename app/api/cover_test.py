@@ -107,8 +107,20 @@ async def persist_cover_test_session(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error("[CoverTestPersistError] Unhandled session persistence error: %s", e, exc_info=True)
+        err_str = str(e)
+        logger.error("[CoverTestPersistError] Unhandled session persistence error: %s", err_str, exc_info=True)
+        if "101" in err_str or "unreachable" in err_str.lower():
+            err_detail = (
+                "Database connection error [Errno 101 Network is unreachable]. "
+                "Backend on Render cannot connect to Supabase IPv6 direct hostname. "
+                "Please configure DATABASE_URL in Render Dashboard using Supavisor Connection Pooler (IPv4): "
+                "postgresql+asyncpg://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres"
+            )
+        else:
+            err_detail = f"Cover test storage error: {err_str}"
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Cover test storage error: {str(e)}",
+            detail=err_detail,
         )
+

@@ -3,7 +3,7 @@
 > **Ngày cập nhật:** Tháng 9/2026  
 > **Dự án:** RemiCare AI Backend (Phát hiện & Sàng lọc Lác mắt qua Webcam / Cover Test)  
 > **Ngôn ngữ & Nền tảng:** Python 3.11, FastAPI, SQLAlchemy (Async), PostgreSQL / Supabase Storage, Scikit-Learn  
-> **Trạng thái kiểm thử:** 98/98 Unit & Integration Tests **PASS (100%)**  
+> **Trạng thái kiểm thử:** 117/117 Unit & Integration Tests **PASS (100%)**  
 > **Tuyên bố y khoa bắt buộc:** Hệ thống đóng vai trò là công cụ nghiên cứu chuyển giao (Research Transfer Experiment) và sàng lọc sơ bộ hỗ trợ, **KHÔNG PHẢI** là chẩn đoán y khoa độc lập, không thay thế bác sĩ nhãn khoa chuyên khoa.
 
 ---
@@ -32,8 +32,8 @@ Dự án đã trải qua 5 giai đoạn phát triển lớn (Phases 1 đến 5),
                                                             ▼
  ┌─────────────────┐     ┌──────────────────┐     ┌──────────────────┐
  │    Hiện Tại:    │     │  Phase 5 (Tiếp)  │     │     Phase 5      │
- │ 89/89 Tests Pass│ <── │ 10-15 FPS Model  │ <── │ IPD Rescaling    │
- │ Sẵn sàng chạy   │     │ & Multi-Model API│     │ (B1 & B2 Models) │
+ │108/108 Tests    │ <── │ 10-15 FPS Model  │ <── │ IPD Rescaling    │
+ │ PASS (100%)     │     │ & Multi-Model API│     │ (B1 & B2 Models) │
  └─────────────────┘     └──────────────────┘     └──────────────────┘
 ```
 
@@ -62,6 +62,10 @@ Dự án đã trải qua 5 giai đoạn phát triển lớn (Phases 1 đến 5),
   - Hỗ trợ cơ chế Offline Mock Store tự động khi không có internet/chưa cấu hình API Key.
 - **Chiến lược "Bảo Toàn Dữ Liệu Thô" (Data Resilience):**
   - Dữ liệu thô và ảnh luôn được cam kết lưu thành công vào Database và Storage trước khi gọi mô hình AI. Nếu mô hình AI gặp sự cố, hệ thống trả về mã `PARTIAL_SUCCESS`, tuyệt đối không làm mất dữ liệu ghi hình của bệnh nhân.
+- **Cơ chế Keep-Alive & Supabase Pooler Resilience (`app/services/keep_alive.py`, `app/db/database.py`):**
+  - Worker nền tự động ping định kỳ 10 phút chống Render ngủ đông (loại bỏ Cold Start 50s cho Front-end).
+  - Tự động nhận diện Supabase Pooler IPv4 (`aws-0-[region].pooler.supabase.com:6543`), tắt `statement_cache_size=0` cho `asyncpg` và cảnh báo trực tiếp nếu phát hiện IPv6 Direct URL gây ra `[Errno 101] Network is unreachable`.
+
 
 ### 1.3. Nghiên Cứu Chuyển Giao Tri Thức Từ Dữ Liệu Hàn Quốc (Phase 4)
 - **Chuẩn hóa Hợp đồng 30 Đặc Trưng Kỹ Thuật (`shared-v1.0.0`):**
@@ -84,20 +88,35 @@ Dự án đã trải qua 5 giai đoạn phát triển lớn (Phases 1 đến 5),
 - **Hệ thống API so sánh đa mô hình (`comparisonModels`):** Endpoint trả về đồng thời kết quả của mô hình chính và các mô hình đối chứng để hỗ trợ bác sĩ/nhà nghiên cứu đánh giá trực quan.
 
 ### 1.5. Trạng Thái Kiểm Thử Phần Mềm (Test Suite)
-- Toàn bộ **98/98 tests đã vượt qua (PASS 100%)** bao gồm:
+- Toàn bộ **108/108 tests đã vượt qua (PASS 100%)** bao gồm:
   - `test_cover_test_storage.py`: 26 tests (Lưu trữ DB, tải ảnh, kiểm tra PII, UUID, roll-back).
-  - `test_cv_pipeline.py`: 9 tests (One Euro Filter, Canthal Geometry, Quality Gate, Refixation Saccade Detector).
+  - `test_cv_pipeline.py`: 19 tests (One Euro Filter, Canthal Geometry, Quality Gate, Refixation Saccade Detector, MediaPipe Landmarker, Eye ROI Align, Gaze/Fixation Tracking, Temporal Aggregation).
   - `test_feature_contract.py`: 5 tests (Bảo toàn 30 đặc trưng, không thiếu, không thừa).
   - `test_korean_adapter.py`: 8 tests (Đọc file CSV Hàn Quốc, ánh xạ nhãn nhị phân).
   - `test_screening.py`: 15 tests (Toàn trình pipeline sàng lọc, xử lý lỗi mờ nét, mất dấu mắt).
   - `test_shared_model.py`: 14 tests (Huấn luyện, không rò rỉ nhãn, đánh giá độ chính xác).
   - `test_transfer_api.py`: 21 tests (Bảo mật endpoint, từ chối dữ liệu chứa nhãn trước, xử lý non-finite float).
 
-### 1.6. Nâng Cấp Nền Tảng Computer Vision & Động Học Vi Saccade (Giai đoạn Mới)
+### 1.6. Nâng Cấp Nền Tảng Computer Vision & Động Học Vi Saccade
 - **Bộ lọc One Euro thích ứng vận tốc (`app/services/cv/one_euro_filter.py`):** Triệt tiêu hoàn toàn nhiễu jitter rung hình khi người dùng giữ yên mắt, đồng thời tự động nới rộng tần số cắt khi có chuyển động giật mắt nhanh (saccade) để bảo toàn trên 95% biên độ đỉnh chuyển vị mà không gây trễ pha (latency < 15ms).
 - **Chuẩn hóa giải phẫu hốc mắt (`app/services/cv/canthal_normalizer.py`):** Ánh xạ độ lệch tâm mống mắt theo chiều rộng hốc mắt giữa khóe mắt trong và ngoài (Palpebral fissure width). Giúp hệ thống hoàn toàn bất biến theo khoảng cách người dùng ngồi gần hay xa camera.
-- **Cổng kiểm duyệt chất lượng đa chiều (`app/services/cv/quality_gate.py`):** Tự động phát hiện và loại bỏ các khung hình chớp mắt (thông qua chỉ số EAR), rung mờ (độ biến thiên Laplacian), xoay nghiêng đầu (Yaw, Pitch, Roll) và người dùng ngồi quá xa/quá gần.
+- **Cổng kiểm duyệt chất lượng đa chiều (`app/services/cv/quality_gate.py`):** Tự động phát hiện và loại bỏ các khung hình chớp mắt (thông qua chỉ số EAR), rung mờ (độ biến thiên Laplacian), xoay nghiêng đầu (Yaw, Pitch, Roll), ánh sáng quá tối/lóa (luminance bounds), che khuất mắt (occlusions), và khoảng cách vật lý ($D_{cm} = \frac{4095}{\text{irisDistancePx}}$).
 - **Bộ phát hiện biến cố tái định thị lâm sàng (`app/services/kinematics/refixation_detector.py`):** Phân tích các đạo hàm bậc cao ($v(t), a(t), jerk(t)$, settling time, overshoot) để phân biệt chính xác giữa dao động sinh lý tự nhiên (physiological tremor/drift) và chuyển động giật bắt tiêu điểm bệnh lý của mắt lác.
+
+### 1.7. Tích Hợp Các Kỹ Thuật Chọn Lọc Từ Nghiên Cứu InsightEye
+- **MediaPipe Face & Iris Landmark Extractor (`app/services/cv/mediapipe_eye_extractor.py`):**
+  - Trích xuất 468/478 điểm mốc giải phẫu: tâm mống mắt (468, 473), đường viền mống mắt (469-472, 474-477), khóe mắt trong/ngoài (362, 263, 133, 33), mí trên/dưới (386, 374, 159, 145).
+  - Ước tính khoảng cách thực tế giữa mắt và camera qua công thức quang học $D_{cm} = \frac{4095}{\text{irisDistancePx}}$.
+- **Eye ROI Alignment & Cropping (`app/services/cv/eye_roi.py`):**
+  - Tự động xoay khung ảnh theo trục nối 2 khóe mắt ($\theta = \text{atan2}(\Delta y, \Delta x)$) để triệt tiêu góc nghiêng đầu trong mặt phẳng (in-plane roll).
+  - Cắt vùng mắt theo tỷ lệ giải phẫu mở rộng ($1.8\times$ chiều rộng khóe mắt, $2.0\times$ chiều cao) và chuẩn hóa kích thước cố định (128x64 px).
+- **Gaze & Fixation Tracking (`app/services/cv/gaze_tracker.py`):**
+  - Chiếu vector tọa độ tâm mống mắt lên đoạn nối khóe mắt để trích xuất tỷ lệ hướng nhìn chuẩn hóa $gaze_x, gaze_y \in [0, 1]$.
+  - Thuật toán I-DT (Identification by Dispersion-Threshold) qua cửa sổ trượt để phát hiện pha mắt đang nhìn chăm chú cố định (`is_fixating = True`) và tách biệt với các pha chuyển động đảo mắt nhanh saccade (`is_saccade = True`).
+- **Temporal Consensus Aggregation & Majority Voting (`app/services/cv/temporal_aggregator.py`):**
+  - Thay vì suy luận dựa trên một khung hình đơn lẻ dễ bị nhiễu chớp mắt hoặc rung động vi thể, hệ thống tổng hợp suy luận từ nhiều khung hình đạt chuẩn Quality Gate.
+  - Áp dụng cơ chế bỏ phiếu đa số (Hard Majority Vote) kết hợp tính trọng số xác suất mềm (Soft Probability-Weighted Voting) ưu tiên các khung hình có độ ổn định định thị cao.
+  - Tự động chuyển về trạng thái an toàn `INCONCLUSIVE` nếu số khung hình đạt chuẩn không đủ ngưỡng tối thiểu tin cậy.
 
 ---
 

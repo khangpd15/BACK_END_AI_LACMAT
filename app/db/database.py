@@ -2,7 +2,12 @@
 
 from contextlib import asynccontextmanager
 import logging
-from typing import AsyncGenerator, Optional
+import re
+import time
+from typing import Any, AsyncGenerator, Dict, Optional
+from urllib.parse import urlparse
+
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -10,7 +15,13 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import DeclarativeBase
-from app.config import DATABASE_URL
+from app.config import (
+    DATABASE_URL,
+    DB_MAX_OVERFLOW,
+    DB_POOL_RECYCLE,
+    DB_POOL_SIZE,
+    DB_POOL_TIMEOUT,
+)
 
 logger = logging.getLogger("remicare.db")
 
@@ -41,9 +52,47 @@ def format_async_db_url(url: str) -> str:
     elif "sslmode=disable" in clean:
         clean = clean.replace("sslmode=disable", "ssl=disable")
     elif "sslmode=" in clean:
-        import re
         clean = re.sub(r"sslmode=[^&]+", "ssl=require", clean)
     return clean
+
+
+def get_db_connect_args(url: str) -> Dict[str, Any]:
+    """Inspects connection URL and returns connect_args for asyncpg.
+    
+    Specifically detects Supabase Pooler (port 6543 or pooler.supabase.com)
+    and disables prepared statement cache to prevent transaction pooling errors.
+    Also warns if an IPv6-only direct Supabase endpoint is detected on Render.
+    """
+    connect_args: Dict[str, Any] = {}
+    if not url:
+        return connect_args
+
+    clean = url.strip().lower()
+    
+    # Check if direct Supabase endpoint is used (causes Errno 101 on Render)
+    if "db." in clean and "supabase.co" in clean:
+        logger.warning(
+            "========================================================================\n"
+            "[SUPABASE DIRECT CONNECTION DETECTED]\n"
+            "URL contains 'db.*.supabase.co'. Direct Supabase connections use IPv6.\n"
+            "On Render (which does not support outbound IPv6), this triggers:\n"
+            "    --> OSError: [Errno 101] Network is unreachable\n"
+            "RECOMMENDED ACTION: In your Render Environment Variables, change DATABASE_URL\n"
+            "to use the Supabase Connection Pooler (Supavisor IPv4):\n"
+            "    postgresql+asyncpg://postgres.[REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres\n"
+            "========================================================================"
+        )
+
+    # Supabase Connection Pooler (Supavisor) detection
+    if "pooler.supabase.com" in clean or ":6543" in clean:
+        logger.info(
+            "[SupabasePooler] Supavisor connection pooler detected. "
+            "Disabling asyncpg prepared statement cache for transaction pooling."
+        )
+        connect_args["statement_cache_size"] = 0
+        connect_args["prepared_statement_cache_size"] = 0
+
+    return connect_args
 
 
 def get_engine() -> AsyncEngine:
@@ -61,11 +110,17 @@ def get_engine() -> AsyncEngine:
             )
         else:
             logger.info("Initializing async PostgreSQL engine...")
+            connect_args = get_db_connect_args(raw_url)
             _engine = create_async_engine(
                 db_url,
                 echo=False,
                 future=True,
                 pool_pre_ping=True,
+                pool_recycle=DB_POOL_RECYCLE,
+                pool_size=DB_POOL_SIZE,
+                max_overflow=DB_MAX_OVERFLOW,
+                pool_timeout=DB_POOL_TIMEOUT,
+                connect_args=connect_args,
             )
     return _engine
 
@@ -100,3 +155,38 @@ async def init_db() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     logger.info("Database tables initialized successfully.")
+
+
+async def check_db_connection() -> Dict[str, Any]:
+    """Checks database connectivity with a lightweight SELECT 1 query."""
+    engine = get_engine()
+    start_time = time.perf_counter()
+    try:
+        async with engine.connect() as conn:
+            result = await conn.execute(text("SELECT 1"))
+            val = result.scalar()
+        latency_ms = (time.perf_counter() - start_time) * 1000.0
+        return {
+            "status": "healthy",
+            "latency_ms": round(latency_ms, 2),
+            "connected": True,
+            "result": val,
+        }
+    except Exception as e:
+        latency_ms = (time.perf_counter() - start_time) * 1000.0
+        error_msg = str(e)
+        is_errno_101 = "101" in error_msg or "network is unreachable" in error_msg.lower()
+        logger.warning("[DBHealthCheckFailed] %s", error_msg)
+        return {
+            "status": "unhealthy",
+            "latency_ms": round(latency_ms, 2),
+            "connected": False,
+            "error": error_msg,
+            "is_errno_101": is_errno_101,
+            "remediation": (
+                "Errno 101 Network is unreachable indicates Render cannot route to direct Supabase IPv6 address. "
+                "Update DATABASE_URL to use Supavisor IPv4 Pooler: aws-0-[region].pooler.supabase.com:6543 (or port 5432)."
+                if is_errno_101 else None
+            ),
+        }
+
