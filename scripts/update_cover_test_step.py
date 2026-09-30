@@ -203,7 +203,7 @@ ai_card_ui = """          {/* Phase 4.2: AI Transfer Experiment Card */}
 
                 <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '8px 12px', borderRadius: '6px', fontSize: '0.8rem', color: 'var(--text-dim)', lineHeight: '1.6' }}>
                   <div>• <strong>Mô hình:</strong> {aiTransferState.result.model?.name || 'korean_shared_model'} ({aiTransferState.result.model?.version || 'shared-v1.0.0'}, 30 đặc trưng kỹ thuật)</div>
-                  <div>• <strong>Domain shift:</strong> <span style={{ color: '#f59e0b', fontWeight: 600 }}>WARNING</span> (Korean IR Eye-tracker 60Hz → RemiCare Webcam 15Hz)</div>
+                  <div>• <strong>Domain shift:</strong> <span style={{ color: '#f59e0b', fontWeight: 600 }}>WARNING</span> (Korean eye-tracking research data → RemiCare webcam 10–15 FPS)</div>
                   <div>• <strong>Ý nghĩa lâm sàng:</strong> None (Clinical meaning: null)</div>
                 </div>
               </div>

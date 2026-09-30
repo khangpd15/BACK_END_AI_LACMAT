@@ -1,7 +1,7 @@
 """Shared Feature Contract for Phase 4 Cross-Domain Transfer.
 
 Freezes the explicit mathematical definitions for features shared between:
-- Korean Infrared Eye Tracker (60Hz continuous binocular tracking)
+- Korean Eye Tracking Research Data (10–15 FPS transfer pipeline)
 - RemiCare Webcam + MediaPipe (30FPS Cover Test)
 
 Explicitly handles:
@@ -608,8 +608,8 @@ def run_shared_transfer_inference(
             "riskLevel": "HIGH",
             "potentialShiftFeatures": potential_shift,
             "warning": (
-                "Source domain is laboratory infrared eye tracker (~60Hz, calibrated physical pupil). "
-                "Target domain is consumer webcam (~30FPS, MediaPipe landmark estimation). "
+                "Source domain is Korean eye-tracking research data. "
+                "Target domain is RemiCare webcam 10–15 FPS. "
                 "Feature distributions may diverge significantly."
             ),
         },

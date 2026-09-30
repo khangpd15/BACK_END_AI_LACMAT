@@ -3,12 +3,14 @@
 > **Ngày cập nhật:** Tháng 9/2026  
 > **Dự án:** RemiCare AI Backend (Phát hiện & Sàng lọc Lác mắt qua Webcam / Cover Test)  
 > **Ngôn ngữ & Nền tảng:** Python 3.11, FastAPI, SQLAlchemy (Async), PostgreSQL / Supabase Storage, Scikit-Learn  
-> **Trạng thái kiểm thử:** 117/117 Unit & Integration Tests **PASS (100%)**  
+> **Trạng thái kiểm thử:** 121/121 Unit & Integration Tests **PASS (100%)**  
+> **Tài liệu Y khoa & Cơ sở Sinh học:** Xem chi tiết tại [docs/CO_SO_LAM_SANG.md](docs/CO_SO_LAM_SANG.md)  
 > **Tuyên bố y khoa bắt buộc:** Hệ thống đóng vai trò là công cụ nghiên cứu chuyển giao (Research Transfer Experiment) và sàng lọc sơ bộ hỗ trợ, **KHÔNG PHẢI** là chẩn đoán y khoa độc lập, không thay thế bác sĩ nhãn khoa chuyên khoa.
 
 ---
 
 ## MỤC LỤC
+0. [Cơ Sở Lâm Sàng & Cơ Chế Sinh Học Thị Giác (Tài liệu Y Khoa)](docs/CO_SO_LAM_SANG.md)
 1. [Dự Án Đã Làm Được Tới Đâu (Tiến Độ Hiện Tại)](#1-dự-án-đã-làm-được-tới-đâu-tiến-độ-hiện-tại)
 2. [Kiến Trúc & Cách Thức Hoạt Động (System Workflow)](#2-kiến-trúc--cách-thức-hoạt-động-system-workflow)
 3. [Lấy Gì So Sánh Với Cái Gì (Cơ Chế So Sánh & Cơ Sở Toán Học)](#3-lấy-gì-so-sánh-với-cái-gì-cơ-chế-so-sánh--cơ-sở-toán-học)

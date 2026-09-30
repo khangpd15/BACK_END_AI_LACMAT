@@ -273,8 +273,8 @@ class KoreanTransferService:
 
         # Build response
         model_meta = TransferModelMetadata(
-            name=self.artifact.get("name", "remicare_transfer_model"),
-            version=self.artifact.get("version", "remicare-transfer-v1.0.0"),
+            name="Korean 10–15 FPS Transfer Research Model",
+            version="remicare-transfer-10to15fps-candidate-v1.1.0",
         )
 
         experiment_label = self.experiment
@@ -293,20 +293,6 @@ class KoreanTransferService:
             potentialShiftFeatures=HORIZONTAL_DISPARITY_FEATURES if self.coordinate_rescaling else VIEWPORT_POSITION_FEATURES,
         )
 
-        comparison_models = [
-            TransferComparisonModelResult(
-                key="korean_b2",
-                label="Korean B2 (60 Hz source)",
-                prediction=prediction_label,
-                classProbability=class_probabilities,
-                model=model_meta,
-                samplingProfile="Korean source approximately 60 Hz; B2 coordinate-rescaled transfer",
-                domainShiftWarning=True,
-                clinicalMeaning=None,
-                notice="Research-only Korean B2 output — not a medical diagnosis.",
-            )
-        ]
-
         if self.fifteen_fps_artifact is not None:
             candidate_names = list(self.fifteen_fps_artifact["feature_names"])
             candidate_vector = []
@@ -324,43 +310,84 @@ class KoreanTransferService:
                 "NORMAL": round(float(candidate_probability[0]), 4),
                 "STRABISMUS": round(float(candidate_probability[1]), 4),
             }
-            comparison_models.append(
+
+            candidate_label_name = self.fifteen_fps_artifact.get("ui_label", "Korean 10–15 FPS candidate")
+            candidate_sampling_profile = self.fifteen_fps_artifact.get(
+                "sampling_profile",
+                "Korean recordings augmented across fixed and variable 10–15 FPS with simulated frame drops",
+            )
+            candidate_meta = TransferModelMetadata(
+                name=self.fifteen_fps_artifact.get("name", "Korean 10-15 FPS robust transfer candidate"),
+                version=self.fifteen_fps_artifact.get("version", "remicare-transfer-10to15fps-candidate-v1.1.0"),
+            )
+
+            primary_prediction = candidate_label
+            primary_probabilities = candidate_probabilities
+            active_model_meta = candidate_meta
+
+            comparison_models = [
                 TransferComparisonModelResult(
                     key="korean_15fps_candidate",
-                    label=self.fifteen_fps_artifact.get("ui_label", "Korean 10-15 FPS candidate"),
+                    label=candidate_label_name,
                     prediction=candidate_label,
                     classProbability=candidate_probabilities,
-                    model=TransferModelMetadata(
-                        name=self.fifteen_fps_artifact.get("name", "Korean 10-15 FPS candidate"),
-                        version=self.fifteen_fps_artifact.get("version", "15fps-candidate"),
-                    ),
-                    samplingProfile=self.fifteen_fps_artifact.get(
-                        "sampling_profile",
-                        "Korean recordings augmented across fixed and variable 10-15 FPS",
-                    ),
+                    model=candidate_meta,
+                    samplingProfile=candidate_sampling_profile,
                     domainShiftWarning=True,
                     clinicalMeaning=None,
                     notice=(
                         "Research-only sampling-matched output. No RemiCare labels were used; "
                         "this is not a medical diagnosis or validated clinical probability."
                     ),
+                ),
+                TransferComparisonModelResult(
+                    key="korean_b2",
+                    label="Korean B2 (60 Hz source)",
+                    prediction=prediction_label,
+                    classProbability=class_probabilities,
+                    model=TransferModelMetadata(
+                        name="Korean B2 (60 Hz source)",
+                        version="remicare-transfer-b2-v1.0.0",
+                    ),
+                    samplingProfile="Korean source approximately 60 Hz; B2 coordinate-rescaled transfer",
+                    domainShiftWarning=True,
+                    clinicalMeaning=None,
+                    notice="Research-only Korean transfer output - not a medical diagnosis.",
+                ),
+            ]
+        else:
+            primary_prediction = prediction_label
+            primary_probabilities = class_probabilities
+            active_model_meta = model_meta
+
+            comparison_models = [
+                TransferComparisonModelResult(
+                    key="korean_15fps_candidate",
+                    label="Korean 10–15 FPS candidate",
+                    prediction=prediction_label,
+                    classProbability=class_probabilities,
+                    model=model_meta,
+                    samplingProfile="Korean recordings augmented across fixed and variable 10–15 FPS with simulated frame drops",
+                    domainShiftWarning=True,
+                    clinicalMeaning=None,
+                    notice="Research-only output. Not a medical diagnosis.",
                 )
-            )
+            ]
 
         return TransferExperimentResponse(
             sampleId=request.sampleId,
             status="TRANSFER_EXPERIMENT",
             inputCompatible=True,
-            prediction=prediction_label,
-            classProbability=class_probabilities,
+            prediction=primary_prediction,
+            classProbability=primary_probabilities,
             domainShiftWarning=True,
             clinicalMeaning=None,
-            model=model_meta,
+            model=active_model_meta,
             domainShift=domain_shift,
             features=features,
             comparisonModels=comparison_models,
             notice=(
-                f"Research transfer experiment only — not a diagnosis. "
+                f"Research transfer experiment only – not a diagnosis. "
                 f"Experiment: {experiment_label}. {shift_note}"
             ),
         )

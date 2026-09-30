@@ -122,8 +122,8 @@ class ScreeningResponse(BaseModel):
 # =============================================================================
 
 class TransferModelMetadata(BaseModel):
-    name: str = Field("korean_shared_model", description="Model identifier")
-    version: str = Field("shared-v1.0.0", description="Contract/model version")
+    name: str = Field("Korean 10–15 FPS Transfer Research Model", description="Model identifier")
+    version: str = Field("remicare-transfer-10to15fps-candidate-v1.1.0", description="Contract/model version")
 
 
 class TransferDomainShiftInfo(BaseModel):

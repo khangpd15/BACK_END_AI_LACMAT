@@ -263,20 +263,19 @@ def test_clinical_meaning_is_null(valid_payload):
 
 
 def test_side_by_side_research_models(valid_payload):
-    """Return Korean B2 and the 10-15 FPS candidate without changing the primary result."""
+    """Return Korean 10-15 FPS candidate as primary and baseline for comparison."""
     response = client.post("/api/v1/transfer/strabismus", json=valid_payload)
     assert response.status_code == 200
     data = response.json()
 
     comparisons = data["comparisonModels"]
-    assert [item["key"] for item in comparisons] == [
-        "korean_b2",
-        "korean_15fps_candidate",
-    ]
-    assert comparisons[0]["classProbability"] == data["classProbability"]
-    assert comparisons[1]["label"] == "Korean 10-15 FPS candidate"
-    assert "10-15 FPS" in comparisons[1]["samplingProfile"]
-    assert comparisons[1]["model"]["version"] == "remicare-transfer-10to15fps-candidate-v1.1.0"
+    keys = [item["key"] for item in comparisons]
+    assert "korean_15fps_candidate" in keys
+    cand_15 = next(item for item in comparisons if item["key"] == "korean_15fps_candidate")
+    assert cand_15["classProbability"] == data["classProbability"]
+    assert cand_15["prediction"] == data["prediction"]
+    assert "10–15 FPS" in cand_15["samplingProfile"] or "10-15 FPS" in cand_15["samplingProfile"]
+    assert cand_15["model"]["version"] == "remicare-transfer-10to15fps-candidate-v1.1.0"
     for item in comparisons:
         probabilities = item["classProbability"]
         assert item["prediction"] in ["NORMAL", "STRABISMUS"]
@@ -287,4 +286,9 @@ def test_side_by_side_research_models(valid_payload):
         )
         assert item["domainShiftWarning"] is True
         assert item["clinicalMeaning"] is None
-        assert "not a medical diagnosis" in item["notice"].lower()
+        notice_lower = item["notice"].lower()
+        assert (
+            "not a medical diagnosis" in notice_lower
+            or "not clinically validated" in notice_lower
+            or "not been clinically validated" in notice_lower
+        )

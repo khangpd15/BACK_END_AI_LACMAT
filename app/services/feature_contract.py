@@ -308,7 +308,7 @@ FEATURE_SPECS: Dict[str, FeatureSpec] = {
         formula="1000.0 / medianIntervalMs",
         source="t",
         dtype="float64",
-        description="Hardware sampling rate (60Hz for eye tracker vs 30Hz for webcam)",
+        description="Hardware sampling rate (research eye-tracking data vs webcam 10-15 FPS)",
         category="UNAVAILABLE",
     ),
     "meanIntervalMs": FeatureSpec(
@@ -316,7 +316,7 @@ FEATURE_SPECS: Dict[str, FeatureSpec] = {
         formula="mean(dt * 1000.0)",
         source="t",
         dtype="float64",
-        description="Hardware inter-frame interval (16.6ms for 60Hz vs 33.3ms for 30Hz)",
+        description="Hardware inter-frame interval (research data vs webcam 10-15 FPS)",
         category="UNAVAILABLE",
     ),
     "timeToPeak": FeatureSpec(

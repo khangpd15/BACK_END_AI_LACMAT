@@ -431,37 +431,83 @@ class CoverTestSessionService:
                     )
                     transfer_svc = get_korean_transfer_service()
                     korean_resp = transfer_svc.predict_transfer(screening_req)
-                    comparison_models_list.append({
-                        "key": "korean_shared_model",
-                        "label": "Korean Baseline (Research Only)",
-                        "prediction": korean_resp.prediction,
-                        "classProbability": korean_resp.classProbability,
-                        "samplingProfile": "60 Hz infrared lab tracker baseline",
-                        "domainShiftWarning": True,
-                        "clinicalMeaning": None,
-                        "notice": "Research transfer experiment only - not a medical diagnosis.",
-                    })
+                    cand_15 = next((cm for cm in getattr(korean_resp, "comparisonModels", []) if cm.key == "korean_15fps_candidate"), None)
+                    korean_b2_cm = next((cm for cm in getattr(korean_resp, "comparisonModels", []) if cm.key == "korean_b2"), None)
+                    if cand_15:
+                        comparison_models_list.append({
+                            "key": "korean_15fps_candidate",
+                            "label": cand_15.label,
+                            "prediction": cand_15.prediction,
+                            "classProbability": cand_15.classProbability,
+                            "samplingProfile": cand_15.samplingProfile,
+                            "domainShiftWarning": True,
+                            "clinicalMeaning": None,
+                            "notice": cand_15.notice,
+                            "model": {
+                                "name": cand_15.model.name,
+                                "version": cand_15.model.version,
+                            },
+                        })
+                    else:
+                        pred_10_15 = korean_resp.prediction if korean_resp else fps_res.prediction
+                        prob_10_15 = korean_resp.classProbability if korean_resp else fps_res.class_probabilities
+                        comparison_models_list.append({
+                            "key": "korean_15fps_candidate",
+                            "label": "Korean 10–15 FPS candidate",
+                            "prediction": pred_10_15,
+                            "classProbability": prob_10_15,
+                            "samplingProfile": "Korean recordings augmented across fixed and variable 10–15 FPS with simulated frame drops",
+                            "domainShiftWarning": True,
+                            "clinicalMeaning": None,
+                            "notice": "Research transfer experiment only - not a medical diagnosis.",
+                            "model": {
+                                "name": "Korean 10-15 FPS robust transfer candidate",
+                                "version": "remicare-transfer-10to15fps-candidate-v1.1.0",
+                            },
+                        })
+                    if korean_b2_cm:
+                        comparison_models_list.append({
+                            "key": "korean_b2",
+                            "label": korean_b2_cm.label,
+                            "prediction": korean_b2_cm.prediction,
+                            "classProbability": korean_b2_cm.classProbability,
+                            "samplingProfile": korean_b2_cm.samplingProfile,
+                            "domainShiftWarning": True,
+                            "clinicalMeaning": None,
+                            "notice": korean_b2_cm.notice,
+                            "model": {
+                                "name": korean_b2_cm.model.name,
+                                "version": korean_b2_cm.model.version,
+                            },
+                        })
                 except Exception as kor_err:
                     logger.debug("Korean comparison model generation skipped: %s", kor_err)
 
                 # Step 3: INSERT 1 record into cover_test_results with 10-15 FPS prediction (NO image stored)
+                target_prediction = cand_15.prediction if cand_15 else fps_res.prediction
+                target_probabilities = cand_15.classProbability if cand_15 else fps_res.class_probabilities
+                target_model_name = cand_15.model.name if cand_15 else fps_res.model_name
+                target_model_version = cand_15.model.version if cand_15 else fps_res.model_version
+                target_sampling_profile = cand_15.samplingProfile if cand_15 else "Korean recordings augmented across fixed and variable 10–15 FPS with simulated frame drops"
+                target_notice = fps_res.notice
+
                 try:
                     result_record = await self.repo.upsert_result(
                         session_id=session_uuid,
                         result_data={
-                            "model_name": fps_res.model_name,
-                            "model_version": fps_res.model_version,
+                            "model_name": target_model_name,
+                            "model_version": target_model_version,
                             "model_source": "fps_10_15_model",
                             "feature_schema_version": "shared-v1.0.0",
                             "status": fps_res.status,
                             "input_compatible": True,
-                            "prediction": fps_res.prediction,
-                            "class_probabilities": fps_res.class_probabilities,
-                            "confidence": fps_res.confidence,
+                            "prediction": target_prediction,
+                            "class_probabilities": target_probabilities,
+                            "confidence": float(target_probabilities.get(target_prediction, 0.5)),
                             "domain_shift_warning": False,
                             "features_snapshot": fps_res.features_snapshot,
                             "comparison_models": comparison_models_list,
-                            "notice": fps_res.notice,
+                            "notice": target_notice,
                         },
                     )
                     await self.db_session.commit()
@@ -470,20 +516,21 @@ class CoverTestSessionService:
                     ai_result_payload = {
                         "status": fps_res.status,
                         "modelSource": "fps_10_15_model",
-                        "prediction": fps_res.prediction,
-                        "classProbability": fps_res.class_probabilities,
-                        "classProbabilities": fps_res.class_probabilities,
-                        "confidence": fps_res.confidence,
+                        "prediction": target_prediction,
+                        "classProbability": target_probabilities,
+                        "classProbabilities": target_probabilities,
+                        "confidence": float(target_probabilities.get(target_prediction, 0.5)),
                         "model": {
-                            "name": fps_res.model_name,
-                            "version": fps_res.model_version,
+                            "name": target_model_name,
+                            "version": target_model_version,
                             "source": "fps_10_15_model",
                         },
-                        "agreementRatio": fps_res.agreement_ratio,
-                        "isReliable": fps_res.is_reliable,
-                        "features": fps_res.features_snapshot,
+                        "samplingProfile": target_sampling_profile,
+                        "agreementRatio": fps_res.agreement_ratio if fps_res else 1.0,
+                        "isReliable": fps_res.is_reliable if fps_res else True,
+                        "features": fps_res.features_snapshot if fps_res else {},
                         "comparisonModels": comparison_models_list,
-                        "notice": fps_res.notice,
+                        "notice": target_notice,
                     }
                     processing_status = "COMPLETED"
 
