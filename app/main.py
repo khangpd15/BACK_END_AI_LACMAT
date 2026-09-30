@@ -1,4 +1,4 @@
-"""RemiCare Strabismus AI Backend - Main Application Entrypoint.
+﻿"""RemiCare Strabismus AI Backend - Main Application Entrypoint.
 
 Provides FastAPI application initialization, CORS configuration,
 health check endpoint, and API router registration.
@@ -16,7 +16,6 @@ import time
 from fastapi.responses import JSONResponse
 
 from app import __version__
-from app.api.screening import router as screening_router
 from app.api.transfer import router as transfer_router
 from app.api.cover_test_session import router as cover_test_session_router
 from app.api.cover_test import router as cover_test_v1_router
@@ -148,7 +147,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 # Register API routes
-app.include_router(screening_router)
 app.include_router(transfer_router)
 # Legacy endpoint maintained for compatibility
 app.include_router(cover_test_session_router, prefix="/api/cover-test")
@@ -222,3 +220,4 @@ async def health_check(check_db: bool = False) -> Dict[str, Any]:
             result["status"] = "degraded"
 
     return result
+
