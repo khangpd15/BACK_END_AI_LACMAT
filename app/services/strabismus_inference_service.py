@@ -41,6 +41,54 @@ IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32).reshape(1, 3, 
 IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32).reshape(1, 3, 1, 1)
 
 
+
+def validate_bilateral_eye_roi_contract(
+    img_bgr: np.ndarray,
+    orig_w: int,
+    orig_h: int
+) -> Tuple[bool, str, str]:
+    """Safety guard: validates that the input image satisfies the Bilateral Eye ROI contract.
+    
+    MODEL INPUT CONTRACT:
+    - Input: Bilateral ocular ROI (covers both eyes, inner/outer canthi, glabella; no full face).
+    - Expected shape: 224x224x3 (or pre-cropped ocular strip with aspect ratio >= 1.4).
+    - Color: RGB.
+    - Normalization: ImageNet (Mean=[0.485, 0.456, 0.406], Std=[0.229, 0.224, 0.225]).
+    - Inference augmentation: NONE.
+    - Expected content: Both eyes visible, primary frontal gaze.
+    - Defensive rejection: uncropped full-face webcam images (e.g. 640x480, 1280x720, or portrait < 0.8).
+    """
+    aspect_ratio = orig_w / float(max(1, orig_h))
+    
+    # 1. Reject full webcam face images: e.g. 640x480, 1280x720, or portrait orientation
+    if (orig_w >= 450 and orig_h >= 340 and aspect_ratio < 2.0) or (aspect_ratio < 0.75):
+        return False, "FULL_FACE_NOT_ACCEPTED", (
+            f"Kích thước ảnh {orig_w}x{orig_h} (tỉ lệ {aspect_ratio:.2f}) là ảnh toàn khuôn mặt. "
+            f"Mô hình yêu cầu vùng cắt 2 mắt (Bilateral Eye ROI)."
+        )
+    
+    # 2. Reject tiny crops
+    if orig_w < 80 or orig_h < 35:
+        return False, "ROI_TOO_SMALL", f"Kích thước ROI {orig_w}x{orig_h} quá nhỏ để phân tích."
+        
+    # 3. Bilateral ocular symmetry & contrast check
+    if cv2 is not None and len(img_bgr.shape) == 3:
+        gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+        h, w = gray.shape[:2]
+        left_quarter = gray[:, :int(w * 0.40)]
+        right_quarter = gray[:, int(w * 0.60):]
+        
+        left_std = float(np.std(left_quarter))
+        right_std = float(np.std(right_quarter))
+        
+        if left_std < 6.0 or right_std < 6.0:
+            return False, "LOW_BILATERAL_CONTRAST", (
+                f"Độ tương phản 2 vùng mắt không đồng đều (L={left_std:.1f}, R={right_std:.1f})."
+            )
+            
+    return True, "PASS", "Hợp lệ chuẩn Bilateral Eye ROI"
+
+
 class StrabismusInferenceService:
     """Production service for bilateral strabismus screening using ONNX Runtime."""
 
@@ -151,19 +199,26 @@ class StrabismusInferenceService:
         return tensor.astype(np.float32)
 
     def predict(self, image_bytes: bytes) -> Dict[str, Any]:
-        """Performs Quality Gate check and Deep Learning screening on raw image bytes.
+        """Performs Defensive ROI Contract validation, Quality Gate check and Deep Learning screening.
         
         Zero biometric image storage: buffers are held transiently in RAM and discarded.
         
         Returns:
             Dict matching specification:
             - status: "NORMAL" | "SUSPICIOUS" | "INCONCLUSIVE"
-            - strabismus_probability: Optional[float]
+            - prediction: "NORMAL" | "STRABISMUS" | "INCONCLUSIVE"
             - confidence: Optional[float]
+            - confidence_type: "MODEL_SOFTMAX"
+            - screening_status: "AI_SIGNAL"
+            - strabismus_probability: Optional[float]
+            - prob_normal: Optional[float]
+            - prob_strabismus: Optional[float]
+            - quality: "PASS" | "FAIL"
             - quality_score: float
             - threshold: float (0.20)
             - model_version: str
             - inference_latency_ms: Optional[int]
+            - disclaimer: str
             - reason: Optional[str] (when INCONCLUSIVE)
         """
         start_time = time.perf_counter()
@@ -175,7 +230,8 @@ class StrabismusInferenceService:
         try:
             pil_img = Image.open(BytesIO(image_bytes))
             pil_img.load()  # Force decode
-            # Convert to BGR array for OpenCV quality gate
+            orig_w, orig_h = pil_img.size
+            # Convert to BGR array for OpenCV quality gate and defensive check
             rgb_arr = np.array(pil_img.convert("RGB"))
             if cv2 is not None:
                 img_bgr = cv2.cvtColor(rgb_arr, cv2.COLOR_RGB2BGR)
@@ -185,22 +241,58 @@ class StrabismusInferenceService:
             logger.warning("[StrabismusInferenceService] Malformed image decode error: %s", decode_err)
             return {
                 "status": "INCONCLUSIVE",
+                "prediction": "INCONCLUSIVE",
                 "reason": "IMAGE_QUALITY_FAILED",
+                "quality": "FAIL",
                 "quality_score": 0.0,
-                "strabismus_probability": None,
                 "confidence": None,
+                "confidence_type": "MODEL_SOFTMAX",
+                "screening_status": "AI_SIGNAL",
+                "strabismus_probability": None,
+                "prob_normal": None,
+                "prob_strabismus": None,
                 "threshold": self.threshold,
                 "model_version": self.model_version,
                 "inference_latency_ms": int(round((time.perf_counter() - start_time) * 1000.0)),
+                "disclaimer": "Độ tự tin thể hiện mức độ tự tin toán học của mô hình đối với mẫu ảnh, không phải xác suất mắc bệnh.",
             }
 
         try:
-            # 2. Quality Gate Evaluation
+            # 2. Defensive Preprocessing: Validate Bilateral Eye ROI Contract
+            is_valid_roi, roi_reason, roi_msg = validate_bilateral_eye_roi_contract(img_bgr, orig_w, orig_h)
+            if not is_valid_roi:
+                logger.warning(
+                    "[StrabismusInferenceService] Rejected by ROI Safety Guard: reason=%s, msg=%s, dims=%dx%d",
+                    roi_reason,
+                    roi_msg,
+                    orig_w,
+                    orig_h,
+                )
+                return {
+                    "status": "INCONCLUSIVE",
+                    "prediction": "INCONCLUSIVE",
+                    "reason": roi_reason,
+                    "message": roi_msg,
+                    "quality": "FAIL_ROI_CONTRACT",
+                    "quality_score": 0.0,
+                    "confidence": None,
+                    "confidence_type": "MODEL_SOFTMAX",
+                    "screening_status": "AI_SIGNAL",
+                    "strabismus_probability": None,
+                    "prob_normal": None,
+                    "prob_strabismus": None,
+                    "threshold": self.threshold,
+                    "model_version": self.model_version,
+                    "inference_latency_ms": int(round((time.perf_counter() - start_time) * 1000.0)),
+                    "disclaimer": "Độ tự tin thể hiện mức độ tự tin toán học của mô hình đối với mẫu ảnh, không phải xác suất mắc bệnh.",
+                }
+
+            # 3. Quality Gate Evaluation (blur, brightness)
             passed_qg, q_score, q_metrics, q_reason = evaluate_quality(
                 img_bgr,
-                min_blur_var=60.0,
-                min_brightness=40.0,
-                max_brightness=235.0,
+                min_blur_var=50.0,
+                min_brightness=35.0,
+                max_brightness=240.0,
             )
 
             if not passed_qg:
@@ -212,21 +304,35 @@ class StrabismusInferenceService:
                 )
                 return {
                     "status": "INCONCLUSIVE",
+                    "prediction": "INCONCLUSIVE",
                     "reason": "IMAGE_QUALITY_FAILED",
+                    "quality": "FAIL_QUALITY_GATE",
                     "quality_score": round(q_score, 2),
-                    "strabismus_probability": None,
                     "confidence": None,
+                    "confidence_type": "MODEL_SOFTMAX",
+                    "screening_status": "AI_SIGNAL",
+                    "strabismus_probability": None,
+                    "prob_normal": None,
+                    "prob_strabismus": None,
                     "threshold": self.threshold,
                     "model_version": self.model_version,
                     "inference_latency_ms": int(round((time.perf_counter() - start_time) * 1000.0)),
+                    "disclaimer": "Độ tự tin thể hiện mức độ tự tin toán học của mô hình đối với mẫu ảnh, không phải xác suất mắc bệnh.",
                 }
 
-            # 3. Model Readiness Check
+            # 4. Model Readiness Check
             if not self.is_loaded or self.session is None or not self.input_name:
                 logger.error("[StrabismusInferenceService] Inference requested but ONNX session is not loaded.")
                 raise RuntimeError("Strabismus ONNX screening model is not ready.")
 
-            # 4. Deep Learning Inference
+            # Log contract confirmation
+            logger.info(
+                "[STRABISMUS AI] Input type: BILATERAL_EYE_ROI | Size: %dx%d | RGB: true | Contract: PASS | Quality: PASS",
+                orig_w,
+                orig_h,
+            )
+
+            # 5. Deep Learning Inference
             input_tensor = self.preprocess_image(pil_img)
             outputs = self.session.run(None, {self.input_name: input_tensor})
             logits = outputs[0]  # Shape: (1, 2)
@@ -238,26 +344,47 @@ class StrabismusInferenceService:
             prob_normal = float(probs[0, 0])
             prob_strabismus = float(probs[0, 1])
 
-            # 5. Threshold Rule: locked at 0.20
+            # 6. Threshold Rule: locked at 0.20
             # probability >= 0.20 -> SUSPICIOUS
             # probability < 0.20 -> NORMAL
             if prob_strabismus >= self.threshold:
                 status = "SUSPICIOUS"
+                prediction = "STRABISMUS"
                 confidence = prob_strabismus
             else:
                 status = "NORMAL"
+                prediction = "NORMAL"
                 confidence = prob_normal
 
             latency_ms = int(round((time.perf_counter() - start_time) * 1000.0))
 
+            # Phase 13 Compliance: Structured Model Inference Log (zero PII, zero base64)
+            logger.info(
+                "[MODEL] Model: %s | Input: %dx%d | Normal: %.4f | Strabismus: %.4f | Prediction: %s | Confidence: %.2f%%",
+                self.model_version,
+                orig_w,
+                orig_h,
+                prob_normal,
+                prob_strabismus,
+                prediction,
+                confidence * 100.0,
+            )
+
             return {
                 "status": status,
-                "strabismus_probability": round(prob_strabismus, 2),
+                "prediction": prediction,
                 "confidence": round(confidence, 2),
+                "confidence_type": "MODEL_SOFTMAX",
+                "screening_status": "AI_SIGNAL",
+                "strabismus_probability": round(prob_strabismus, 2),
+                "prob_normal": round(prob_normal, 2),
+                "prob_strabismus": round(prob_strabismus, 2),
+                "quality": "PASS",
                 "quality_score": round(q_score, 2),
                 "threshold": self.threshold,
                 "model_version": self.model_version,
                 "inference_latency_ms": latency_ms,
+                "disclaimer": "Độ tự tin thể hiện mức độ tự tin toán học của mô hình đối với mẫu ảnh, không phải xác suất mắc bệnh.",
             }
 
         finally:
