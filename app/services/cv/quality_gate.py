@@ -278,3 +278,6 @@ class AdvancedQualityGate:
             left_eye_occluded=not landmark_data.left_eye_valid,
             right_eye_occluded=not landmark_data.right_eye_valid,
         )
+
+
+from cv.quality_gate import evaluate_quality  # re-export for root cv

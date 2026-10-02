@@ -16,3 +16,5 @@ greenlet>=3.0.0
 opencv-python>=4.8.0
 mediapipe>=0.10.0
 python-dotenv>=1.0.0
+onnxruntime>=1.17.0
+pillow>=10.0.0

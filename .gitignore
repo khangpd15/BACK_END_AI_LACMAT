@@ -32,3 +32,6 @@ data/models/*.pkl
 # Environment variables & secrets
 .env
 .env.local
+
+# PyTorch checkpoints (only ONNX used in production)
+app/models/*.pt

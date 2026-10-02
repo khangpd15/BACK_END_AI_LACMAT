@@ -1,4 +1,4 @@
-﻿"""RemiCare Strabismus AI Backend - Main Application Entrypoint.
+"""RemiCare Strabismus AI Backend - Main Application Entrypoint.
 
 Provides FastAPI application initialization, CORS configuration,
 health check endpoint, and API router registration.
@@ -17,6 +17,8 @@ from fastapi.responses import JSONResponse
 
 from app import __version__
 from app.api.transfer import router as transfer_router
+from app.api.strabismus import router as strabismus_router
+from app.services.strabismus_inference_service import get_strabismus_inference_service
 from app.api.cover_test_session import router as cover_test_session_router
 from app.api.cover_test import router as cover_test_v1_router
 from app.config import get_allowed_origins
@@ -58,6 +60,20 @@ async def lifespan(app: FastAPI):
         )
     except Exception as e:
         logger.error("Failed to preload transfer model at startup: %s", e, exc_info=True)
+
+    try:
+        strabismus_svc = get_strabismus_inference_service()
+        if strabismus_svc.is_loaded:
+            logger.info(
+                "Strabismus bilateral ONNX model preloaded: version=%s, path=%s, input=%s",
+                strabismus_svc.model_version,
+                strabismus_svc.resolved_model_path,
+                strabismus_svc.input_name,
+            )
+        else:
+            logger.warning("Strabismus bilateral ONNX model is not loaded yet.")
+    except Exception as e:
+        logger.error("Failed to preload strabismus ONNX model at startup: %s", e, exc_info=True)
 
     # Start automated keep-alive self-ping and DB pool warming worker
     start_keep_alive()
@@ -152,6 +168,8 @@ app.include_router(transfer_router)
 app.include_router(cover_test_session_router, prefix="/api/cover-test")
 # New Phase 3 persistent cloud storage router
 app.include_router(cover_test_v1_router, prefix="/api/v1/cover-test")
+# Strabismus Bilateral Screening Router
+app.include_router(strabismus_router)
 
 
 @app.get(
