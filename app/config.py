@@ -43,6 +43,7 @@ SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 SUPABASE_STORAGE_BUCKET_RAW = os.getenv("SUPABASE_STORAGE_BUCKET_RAW", "cover-test-raw")
 ENABLE_AI_INFERENCE_ON_SAVE = os.getenv("ENABLE_AI_INFERENCE_ON_SAVE", "true").lower() in ("true", "1", "yes")
+ENABLE_RESEARCH_MEASUREMENT_API = os.getenv("ENABLE_RESEARCH_MEASUREMENT_API", "true").lower() in ("true", "1", "yes")
 
 # Database Connection Pool Tuning
 DB_POOL_SIZE = int(os.getenv("DB_POOL_SIZE", "5"))

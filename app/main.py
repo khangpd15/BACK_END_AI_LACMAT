@@ -21,6 +21,7 @@ from app.api.strabismus import router as strabismus_router
 from app.services.strabismus_inference_service import get_strabismus_inference_service
 from app.api.cover_test_session import router as cover_test_session_router
 from app.api.cover_test import router as cover_test_v1_router
+from app.api.research_measurement import router as research_measurement_router
 from app.config import get_allowed_origins
 from app.db.database import check_db_connection, init_db
 from app.services.keep_alive import (
@@ -170,6 +171,8 @@ app.include_router(cover_test_session_router, prefix="/api/cover-test")
 app.include_router(cover_test_v1_router, prefix="/api/v1/cover-test")
 # Strabismus Bilateral Screening Router
 app.include_router(strabismus_router)
+# Research-only geometry measurement router
+app.include_router(research_measurement_router)
 
 
 @app.get(
