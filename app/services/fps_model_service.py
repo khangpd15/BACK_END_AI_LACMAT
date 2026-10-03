@@ -70,6 +70,10 @@ class FpsModelResult:
     notice: str
 
 
+class FeatureContractMismatchError(ValueError):
+    """Raised when extracted features do not satisfy the loaded model contract."""
+
+
 class FpsModelService:
     """Singleton service executing 10-15 FPS model inference with temporal consensus."""
 
@@ -112,6 +116,7 @@ class FpsModelService:
                 self.feature_names = list(self.artifact["feature_names"])
             self.model_name = self.artifact.get("name", "remicare-fps-10-15")
             self.model_version = self.artifact.get("version", "10-15fps-v1.1.0")
+            self._validate_loaded_model_contract()
             logger.info(
                 "[FpsModelLoaded] Loaded 10-15 FPS candidate: %s (version: %s, features: %d) from %s",
                 self.model_name,
@@ -123,26 +128,59 @@ class FpsModelService:
             logger.error("[FpsModelLoadError] Failed to load 10-15 FPS model from %s: %s", loaded_file, e)
             self.model = None
 
+    def _validate_loaded_model_contract(self) -> None:
+        """Validate model input dimension against artifact feature_names before inference."""
+        if self.model is None:
+            return
+
+        expected_dim = getattr(self.model, "n_features_in_", None)
+        if expected_dim is None:
+            logger.warning(
+                "[FpsModelContract] Model %s lacks n_features_in_; runtime feature count checks will use artifact order only.",
+                self.model_version,
+            )
+            return
+
+        actual_dim = len(self.feature_names)
+        if int(expected_dim) != actual_dim:
+            raise FeatureContractMismatchError(
+                f"Model expects {expected_dim} features but artifact declares {actual_dim} feature_names."
+            )
+
     def predict_window(self, samples: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Executes inference on a single window/slice of 10-15 FPS samples."""
         features = extract_shared_features_vector(samples)
         feature_names = self.feature_names or DEFAULT_14_FEATURES
 
         if self.model is None:
-            # Fallback safe prediction
             return {
-                "prediction": "NORMAL",
-                "classProbability": {"NORMAL": 0.5, "STRABISMUS": 0.5},
-                "confidence": 0.5,
+                "prediction": "INCONCLUSIVE",
+                "classProbability": {"NORMAL": 0.0, "STRABISMUS": 0.0},
+                "confidence": 0.0,
                 "features": features,
+                "reason": "MODEL_NOT_LOADED",
             }
 
         vec: List[float] = []
+        missing_or_invalid: List[str] = []
         for name in feature_names:
             val = features.get(name)
             if val is None or not np.isfinite(val):
-                val = 0.0
+                missing_or_invalid.append(name)
+                continue
             vec.append(float(val))
+
+        if missing_or_invalid:
+            raise FeatureContractMismatchError(
+                "Cannot run 10-15 FPS model because required features are missing or non-finite: "
+                f"{missing_or_invalid}"
+            )
+
+        expected_dim = getattr(self.model, "n_features_in_", None)
+        if expected_dim is not None and int(expected_dim) != len(vec):
+            raise FeatureContractMismatchError(
+                f"Model expects {expected_dim} features but received {len(vec)}."
+            )
 
         X = np.asarray([vec], dtype=float)
         pred_idx = int(self.model.predict(X)[0])
@@ -237,6 +275,26 @@ class FpsModelService:
             window_size=window_size,
             step_size=step_size,
         )
+
+        if aggregation_result.valid_frames_count == 0:
+            return FpsModelResult(
+                prediction="INCONCLUSIVE",
+                class_probabilities={"NORMAL": 0.0, "STRABISMUS": 0.0},
+                confidence=0.0,
+                model_name=self.model_name,
+                model_version=self.model_version,
+                model_source="fps_10_15_model",
+                features_snapshot=key_features,
+                status="INCONCLUSIVE",
+                agreement_ratio=0.0,
+                is_reliable=False,
+                total_frames_evaluated=aggregation_result.total_frames_evaluated,
+                valid_frames_count=0,
+                notice=(
+                    "10-15 FPS model inference was inconclusive because the model contract was not "
+                    "satisfied or no valid inference windows were available."
+                ),
+            )
 
         final_prediction = aggregation_result.consensus_status
         if final_prediction not in ("NORMAL", "STRABISMUS", "INCONCLUSIVE"):

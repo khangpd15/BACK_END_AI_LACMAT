@@ -106,6 +106,31 @@ KOREAN_FALLBACK_PATH = os.path.join(_PROJECT_ROOT, "app", "models", "korean_shar
 FIFTEEN_FPS_MODEL_PATH = os.path.join(_PROJECT_ROOT, "app", "models", "remicare_15fps_candidate.joblib")
 
 
+class FeatureContractMismatchError(ValueError):
+    """Raised when a model artifact and feature contract disagree."""
+
+
+def _model_expected_input_dim(model: Any) -> Optional[int]:
+    """Return sklearn-style feature dimension metadata when available."""
+    expected = getattr(model, "n_features_in_", None)
+    if expected is None:
+        return None
+    return int(expected)
+
+
+def _validate_model_feature_contract(model: Any, feature_names: List[str], model_label: str) -> None:
+    """Ensure the loaded model dimension matches the artifact feature order."""
+    expected_dim = _model_expected_input_dim(model)
+    if expected_dim is None:
+        return
+
+    actual_dim = len(feature_names)
+    if expected_dim != actual_dim:
+        raise FeatureContractMismatchError(
+            f"{model_label} expects {expected_dim} features but artifact declares {actual_dim} feature_names."
+        )
+
+
 # =============================================================================
 # TRANSFER SERVICE
 # =============================================================================
@@ -135,6 +160,11 @@ class KoreanTransferService:
         artifact = joblib.load(FIFTEEN_FPS_MODEL_PATH)
         if artifact.get("model") is None or not artifact.get("feature_names"):
             raise ValueError("Sampling-robust candidate artifact is missing model or feature_names")
+        _validate_model_feature_contract(
+            artifact["model"],
+            list(artifact["feature_names"]),
+            artifact.get("version", "10-15 FPS candidate model"),
+        )
         self.fifteen_fps_artifact = artifact
 
     def _load_model(self, override_path: Optional[str] = None) -> None:
@@ -173,6 +203,11 @@ class KoreanTransferService:
 
             # Read feature list from artifact, fall back to canonical FEATURE_ORDER
             self.feature_names = self.artifact.get("feature_names", FEATURE_ORDER)
+            _validate_model_feature_contract(
+                self.model,
+                list(self.feature_names),
+                self.artifact.get("version", "Korean transfer model"),
+            )
 
             # Phase 5 coordinate rescaling metadata
             self.coordinate_rescaling = bool(self.artifact.get("coordinate_rescaling", False))
@@ -250,6 +285,12 @@ class KoreanTransferService:
 
         # Build feature vector in the order the model expects
         feature_order = self.feature_names if self.feature_names else FEATURE_ORDER
+        expected_dim = _model_expected_input_dim(self.model)
+        if expected_dim is not None and expected_dim != len(feature_order):
+            raise FeatureContractMismatchError(
+                f"Model expects {expected_dim} features but feature contract provides {len(feature_order)}."
+            )
+
         feature_vector: List[float] = []
         for name in feature_order:
             val = features.get(name)
@@ -295,6 +336,12 @@ class KoreanTransferService:
 
         if self.fifteen_fps_artifact is not None:
             candidate_names = list(self.fifteen_fps_artifact["feature_names"])
+            candidate_expected_dim = _model_expected_input_dim(self.fifteen_fps_artifact["model"])
+            if candidate_expected_dim is not None and candidate_expected_dim != len(candidate_names):
+                raise FeatureContractMismatchError(
+                    "10-15 FPS candidate model expects "
+                    f"{candidate_expected_dim} features but artifact declares {len(candidate_names)}."
+                )
             candidate_vector = []
             for name in candidate_names:
                 value = features.get(name)

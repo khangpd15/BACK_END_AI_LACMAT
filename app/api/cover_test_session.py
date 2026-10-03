@@ -132,6 +132,7 @@ async def save_cover_test_session(payload: CoverTestSessionRequest) -> CoverTest
 
     # Validate each sample
     validated_samples: List[Dict[str, Any]] = []
+    last_timestamp: Optional[float] = None
     for idx, s in enumerate(payload.samples):
         if not isinstance(s, dict):
             raise HTTPException(
@@ -151,16 +152,23 @@ async def save_cover_test_session(payload: CoverTestSessionRequest) -> CoverTest
         timestamp = s.get("timestamp")
         if timestamp is None:
             timestamp = s.get("t")
-        if timestamp is None or not isinstance(timestamp, (int, float)) or math.isnan(float(timestamp)):
+        if timestamp is None or not isinstance(timestamp, (int, float)) or not math.isfinite(float(timestamp)):
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=f"Sample [{idx}]: timestamp must be a valid numeric value",
+                detail=f"Sample [{idx}]: timestamp must be a finite valid numeric value",
             )
-        if float(timestamp) < 0:
+        timestamp_float = float(timestamp)
+        if timestamp_float < 0:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=f"Sample [{idx}]: timestamp cannot be negative",
             )
+        if last_timestamp is not None and timestamp_float <= last_timestamp:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"Sample [{idx}]: timestamp must be strictly increasing ({timestamp_float} <= {last_timestamp})",
+            )
+        last_timestamp = timestamp_float
 
         # Phase validation
         phase = s.get("phase")

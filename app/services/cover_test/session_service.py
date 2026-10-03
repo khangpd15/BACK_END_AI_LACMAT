@@ -154,7 +154,7 @@ def validate_cycle_samples(samples: List[Dict[str, Any]], cycle_num: int) -> Tup
             detail=f"Cycle {cycle_num}: samples must be a non-empty array.",
         )
 
-    last_t = -1.0
+    last_t: Optional[float] = None
     valid_count = 0
     total_quality = 0.0
 
@@ -172,10 +172,10 @@ def validate_cycle_samples(samples: List[Dict[str, Any]], cycle_num: int) -> Tup
         t_val = s.get("t")
         if t_val is None:
             t_val = s.get("timestamp")
-        if t_val is None or not isinstance(t_val, (int, float)) or math.isnan(float(t_val)):
+        if t_val is None or not isinstance(t_val, (int, float)) or not math.isfinite(float(t_val)):
             raise HTTPException(
                 status_code=422,
-                detail=f"Cycle {cycle_num}, sample [{idx}]: timestamp/t must be a valid number.",
+                detail=f"Cycle {cycle_num}, sample [{idx}]: timestamp/t must be a finite valid number.",
             )
         f_t = float(t_val)
         if f_t < 0.0:
@@ -183,10 +183,10 @@ def validate_cycle_samples(samples: List[Dict[str, Any]], cycle_num: int) -> Tup
                 status_code=422,
                 detail=f"Cycle {cycle_num}, sample [{idx}]: timestamp/t cannot be negative ({f_t}).",
             )
-        if f_t < last_t:
+        if last_t is not None and f_t <= last_t:
             raise HTTPException(
                 status_code=422,
-                detail=f"Cycle {cycle_num}, sample [{idx}]: non-monotonic timestamp detected ({f_t} < {last_t}).",
+                detail=f"Cycle {cycle_num}, sample [{idx}]: non-monotonic or duplicate timestamp detected ({f_t} <= {last_t}).",
             )
         last_t = f_t
 

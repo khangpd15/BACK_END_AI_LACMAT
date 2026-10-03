@@ -1,0 +1,62 @@
+[
+  {
+    "index": 0,
+    "t": 0,
+    "phase": "BASELINE",
+    "leftX": 0.44,
+    "leftY": 0.6,
+    "leftValid": true,
+    "rightX": 0.57,
+    "rightY": 0.59,
+    "rightValid": true,
+    "trackingQuality": 0.95
+  },
+  {
+    "index": 1,
+    "t": 66,
+    "phase": "BASELINE",
+    "leftX": 0.441,
+    "leftY": 0.601,
+    "leftValid": true,
+    "rightX": 0.5715,
+    "rightY": 0.5905,
+    "rightValid": true,
+    "trackingQuality": 0.94
+  },
+  {
+    "index": 2,
+    "t": 132,
+    "phase": "UNCOVER",
+    "leftX": 0.443,
+    "leftY": 0.602,
+    "leftValid": true,
+    "rightX": 0.574,
+    "rightY": 0.591,
+    "rightValid": true,
+    "trackingQuality": 0.93
+  },
+  {
+    "index": 3,
+    "t": 198,
+    "phase": "TRACKING",
+    "leftX": 0.445,
+    "leftY": 0.6025,
+    "leftValid": true,
+    "rightX": 0.576,
+    "rightY": 0.592,
+    "rightValid": true,
+    "trackingQuality": 0.92
+  },
+  {
+    "index": 4,
+    "t": 264,
+    "phase": "TRACKING",
+    "leftX": 0.446,
+    "leftY": 0.603,
+    "leftValid": true,
+    "rightX": 0.578,
+    "rightY": 0.593,
+    "rightValid": true,
+    "trackingQuality": 0.91
+  }
+]
