@@ -1,0 +1,503 @@
+filename,status,assigned_folder,source_label,heuristic_label,detection_method,right_eye_reflex,left_eye_reflex,od_displacement_ratio,os_displacement_ratio,rejection_reason,destination_file
+esotropia_003.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_003.jpg
+esotropia_004.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_004.jpg
+esotropia_005.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_005.jpg
+esotropia_006.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_006.jpg
+esotropia_007.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0,-0.2471,,harschberg_data_detect\esotropia_harschberg\esotropia_007.jpg
+esotropia_008.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.7334,-0.1754,,harschberg_data_detect\esotropia_harschberg\esotropia_008.jpg
+esotropia_009.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_009.jpg
+esotropia_010.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_010.jpg
+esotropia_011.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.311,-0.1594,,harschberg_data_detect\esotropia_harschberg\esotropia_011.jpg
+esotropia_012.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_012.jpg
+esotropia_013.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.1276,-0.0361,,harschberg_data_detect\esotropia_harschberg\esotropia_013.jpg
+esotropia_014.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.5421,0.2414,,harschberg_data_detect\esotropia_harschberg\esotropia_014.jpg
+esotropia_015.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_015.jpg
+esotropia_016.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_016.jpg
+esotropia_017.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_017.jpg
+esotropia_018.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0,-0.287,,harschberg_data_detect\esotropia_harschberg\esotropia_018.jpg
+esotropia_019.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_019.jpg
+esotropia_020.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.6165,0.8185,,harschberg_data_detect\esotropia_harschberg\esotropia_020.jpg
+esotropia_021.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_021.jpg
+esotropia_022.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_022.jpg
+esotropia_023.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.2392,-0.1426,,harschberg_data_detect\esotropia_harschberg\esotropia_023.jpg
+esotropia_024.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.4783,0.1594,,harschberg_data_detect\esotropia_harschberg\esotropia_024.jpg
+esotropia_025.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_025.jpg
+esotropia_026.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_026.jpg
+esotropia_027.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_027.jpg
+esotropia_028.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_028.jpg
+esotropia_029.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_029.jpg
+esotropia_030.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_030.jpg
+esotropia_031.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.2232,0.5102,,harschberg_data_detect\esotropia_harschberg\esotropia_031.jpg
+esotropia_032.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.1276,-0.0319,,harschberg_data_detect\esotropia_harschberg\esotropia_032.jpg
+esotropia_033.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_033.jpg
+esotropia_034.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_034.jpg
+esotropia_035.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.2232,-0.7398,,harschberg_data_detect\esotropia_harschberg\esotropia_035.jpg
+esotropia_036.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_036.jpg
+esotropia_037.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_037.jpg
+esotropia_038.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_038.jpg
+esotropia_039.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_039.jpg
+esotropia_040.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_040.jpg
+esotropia_041.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_041.jpg
+esotropia_042.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0446,0.1276,,harschberg_data_detect\esotropia_harschberg\esotropia_042.jpg
+esotropia_043.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_043.jpg
+esotropia_044.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_044.jpg
+esotropia_045.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_045.jpg
+esotropia_046.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0191,0.4464,,harschberg_data_detect\esotropia_harschberg\esotropia_046.jpg
+esotropia_047.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_047.jpg
+esotropia_048.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_048.jpg
+esotropia_049.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_049.jpg
+esotropia_050.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_050.jpg
+esotropia_051.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_051.jpg
+esotropia_052.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_052.jpg
+esotropia_053.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_053.jpg
+esotropia_054.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_054.jpg
+esotropia_055.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2232,0.1594,,harschberg_data_detect\esotropia_harschberg\esotropia_055.jpg
+esotropia_056.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.6386,0.2232,,harschberg_data_detect\esotropia_harschberg\esotropia_056.jpg
+esotropia_057.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_057.jpg
+esotropia_058.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_058.jpg
+esotropia_059.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_059.jpg
+esotropia_060.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2232,0.1594,,harschberg_data_detect\esotropia_harschberg\esotropia_060.jpg
+esotropia_061.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_061.jpg
+esotropia_062.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2208,-0.2503,,harschberg_data_detect\esotropia_harschberg\esotropia_062.jpg
+esotropia_063.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.3899,-0.5421,,harschberg_data_detect\esotropia_harschberg\esotropia_063.jpg
+esotropia_064.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_064.jpg
+esotropia_065.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_065.jpg
+esotropia_066.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,1.0789,0.7241,,harschberg_data_detect\esotropia_harschberg\esotropia_066.jpg
+esotropia_067.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_067.jpg
+esotropia_068.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_068.jpg
+esotropia_069.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.3189,-0.0638,,harschberg_data_detect\esotropia_harschberg\esotropia_069.jpg
+esotropia_070.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3795,-0.4843,,harschberg_data_detect\esotropia_harschberg\esotropia_070.jpg
+esotropia_071.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_071.jpg
+esotropia_072.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.6378,-0.0478,,harschberg_data_detect\esotropia_harschberg\esotropia_072.jpg
+esotropia_073.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_073.jpg
+esotropia_074.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_074.jpg
+esotropia_075.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_075.jpg
+esotropia_076.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_076.jpg
+esotropia_077.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_077.jpg
+esotropia_078.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_078.jpg
+esotropia_079.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_079.jpg
+esotropia_080.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.6358,-0.4494,,harschberg_data_detect\esotropia_harschberg\esotropia_080.jpg
+esotropia_081.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_081.jpg
+esotropia_082.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.7929,-1.2436,,harschberg_data_detect\esotropia_harschberg\esotropia_082.jpg
+esotropia_083.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.3189,0.3189,,harschberg_data_detect\esotropia_harschberg\esotropia_083.jpg
+esotropia_084.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_084.jpg
+esotropia_085.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.3029,-0.0319,,harschberg_data_detect\esotropia_harschberg\esotropia_085.jpg
+esotropia_086.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3189,0.271,,harschberg_data_detect\esotropia_harschberg\esotropia_086.jpg
+esotropia_087.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_087.jpg
+esotropia_088.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_088.jpg
+esotropia_089.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_089.jpg
+esotropia_090.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,1.0204,0.3508,,harschberg_data_detect\esotropia_harschberg\esotropia_090.jpg
+esotropia_091.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2742,-0.0213,,harschberg_data_detect\esotropia_harschberg\esotropia_091.jpg
+esotropia_092.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_092.jpg
+esotropia_093.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.1594,-0.3189,,harschberg_data_detect\esotropia_harschberg\esotropia_093.jpg
+esotropia_094.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1488,-0.4472,,harschberg_data_detect\esotropia_harschberg\esotropia_094.jpg
+esotropia_095.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_095.jpg
+esotropia_096.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_096.jpg
+esotropia_097.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_097.jpg
+esotropia_098.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_098.jpg
+esotropia_099.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_099.jpg
+esotropia_100.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.574,-0.4145,,harschberg_data_detect\esotropia_harschberg\esotropia_100.jpg
+esotropia_101.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_101.jpg
+esotropia_102.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_102.jpg
+esotropia_103.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_103.jpg
+esotropia_104.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2232,0.287,,harschberg_data_detect\esotropia_harschberg\esotropia_104.jpg
+esotropia_105.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_105.jpg
+esotropia_106.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_106.jpg
+esotropia_107.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_107.jpg
+esotropia_108.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_108.jpg
+esotropia_109.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_109.jpg
+esotropia_110.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.7812,-0.8291,,harschberg_data_detect\esotropia_harschberg\esotropia_110.jpg
+esotropia_111.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_111.jpg
+esotropia_112.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-1.1013,0.0478,,harschberg_data_detect\esotropia_harschberg\esotropia_112.jpg
+esotropia_113.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_113.jpg
+esotropia_114.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_114.jpg
+esotropia_115.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_115.jpg
+esotropia_116.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_116.jpg
+esotropia_117.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_117.jpg
+esotropia_118.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_118.jpg
+esotropia_119.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_119.jpg
+esotropia_120.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_120.jpg
+esotropia_121.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_121.jpg
+esotropia_122.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_122.jpg
+esotropia_123.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_123.jpg
+esotropia_124.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.4464,-0.3189,,harschberg_data_detect\esotropia_harschberg\esotropia_124.jpg
+esotropia_125.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_125.jpg
+esotropia_126.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.4145,0.2994,,harschberg_data_detect\esotropia_harschberg\esotropia_126.jpg
+esotropia_127.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1913,0.1276,,harschberg_data_detect\esotropia_harschberg\esotropia_127.jpg
+esotropia_128.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_128.jpg
+esotropia_129.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_129.jpg
+esotropia_130.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_130.jpg
+esotropia_131.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.4943,-0.3189,,harschberg_data_detect\esotropia_harschberg\esotropia_131.jpg
+esotropia_132.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_132.jpg
+esotropia_133.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_133.jpg
+esotropia_134.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_134.jpg
+esotropia_135.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_135.jpg
+esotropia_136.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_136.jpg
+esotropia_137.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_137.jpg
+esotropia_138.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_138.jpg
+esotropia_139.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_139.jpg
+esotropia_140.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_140.jpg
+esotropia_141.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3213,0.3951,,harschberg_data_detect\esotropia_harschberg\esotropia_141.jpg
+esotropia_142.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_142.jpg
+esotropia_143.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.6378,0.6539,,harschberg_data_detect\esotropia_harschberg\esotropia_143.jpg
+esotropia_144.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_144.jpg
+esotropia_145.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_145.jpg
+esotropia_146.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_146.jpg
+esotropia_147.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.4145,0.2551,,harschberg_data_detect\esotropia_harschberg\esotropia_147.jpg
+esotropia_148.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_148.jpg
+esotropia_149.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_149.jpg
+esotropia_150.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_150.jpg
+esotropia_151.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_151.jpg
+esotropia_152.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.8104,-0.7953,,harschberg_data_detect\esotropia_harschberg\esotropia_152.jpg
+esotropia_153.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0319,0.0319,,harschberg_data_detect\esotropia_harschberg\esotropia_153.jpg
+esotropia_154.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\esotropia_154.jpg
+esotropia_155.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_155.jpg
+esotropia_156.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_156.jpg
+esotropia_157.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3047,0.1098,,harschberg_data_detect\esotropia_harschberg\esotropia_157.jpg
+esotropia_158.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1196,0.1913,,harschberg_data_detect\esotropia_harschberg\esotropia_158.jpg
+esotropia_159.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.0159,0.0537,,harschberg_data_detect\esotropia_harschberg\esotropia_159.jpg
+esotropia_160.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_160.jpg
+esotropia_161.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_161.jpg
+esotropia_162.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0,0.3508,,harschberg_data_detect\esotropia_harschberg\esotropia_162.jpg
+esotropia_163.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_163.jpg
+esotropia_164.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_164.jpg
+esotropia_165.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\esotropia_165.jpg
+esotropia_166.jpg,REJECT,rejected,esotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\esotropia_166.jpg
+esotropia_167.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.2232,-0.4464,,harschberg_data_detect\esotropia_harschberg\esotropia_167.jpg
+esotropia_168.jpg,PASS,esotropia_harschberg,esotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.7653,-0.2109,,harschberg_data_detect\esotropia_harschberg\esotropia_168.jpg
+esotropia_169.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.2232,-0.102,,harschberg_data_detect\esotropia_harschberg\esotropia_169.jpg
+esotropia_170.jpg,REJECT,rejected,esotropia,unknown,FACEMESH_LANDMARKS,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\esotropia_170.jpg
+esotropia_171.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.5102,-0.3179,,harschberg_data_detect\esotropia_harschberg\esotropia_171.jpg
+esotropia_172.jpg,PASS,esotropia_harschberg,esotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.7334,0.2431,,harschberg_data_detect\esotropia_harschberg\esotropia_172.jpg
+esotropia_173.jpg,PASS,esotropia_harschberg,esotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.1685,-0.0354,,harschberg_data_detect\esotropia_harschberg\esotropia_173.jpg
+exotropia_001.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_001.jpg
+exotropia_002.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0911,-0.1701,,harschberg_data_detect\exotropia_harschberg\exotropia_002.jpg
+exotropia_003.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_003.jpg
+exotropia_004.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1913,-0.1276,,harschberg_data_detect\exotropia_harschberg\exotropia_004.jpg
+exotropia_005.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_005.jpg
+exotropia_006.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.8929,-0.6378,,harschberg_data_detect\exotropia_harschberg\exotropia_006.jpg
+exotropia_007.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_007.jpg
+exotropia_008.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.4287,-0.5566,,harschberg_data_detect\exotropia_harschberg\exotropia_008.jpg
+exotropia_009.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_009.jpg
+exotropia_010.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_010.jpg
+exotropia_011.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_011.jpg
+exotropia_012.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_012.jpg
+exotropia_013.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_013.jpg
+exotropia_014.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_014.jpg
+exotropia_015.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_015.jpg
+exotropia_016.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.713,0.0926,,harschberg_data_detect\exotropia_harschberg\exotropia_016.jpg
+exotropia_017.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_017.jpg
+exotropia_018.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0319,-0.0957,,harschberg_data_detect\exotropia_harschberg\exotropia_018.jpg
+exotropia_019.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_019.jpg
+exotropia_020.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_020.jpg
+exotropia_021.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_021.jpg
+exotropia_022.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_022.jpg
+exotropia_023.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_023.jpg
+exotropia_024.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_024.jpg
+exotropia_025.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_025.jpg
+exotropia_026.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_026.jpg
+exotropia_027.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_027.jpg
+exotropia_028.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_028.jpg
+exotropia_029.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_029.jpg
+exotropia_030.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.8099,-0.1412,,harschberg_data_detect\exotropia_harschberg\exotropia_030.jpg
+exotropia_031.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_031.jpg
+exotropia_032.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1276,-0.1913,,harschberg_data_detect\exotropia_harschberg\exotropia_032.jpg
+exotropia_033.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_033.jpg
+exotropia_034.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_034.jpg
+exotropia_035.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_035.jpg
+exotropia_036.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_036.jpg
+exotropia_037.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_037.jpg
+exotropia_038.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.6407,-0.1913,,harschberg_data_detect\exotropia_harschberg\exotropia_038.jpg
+exotropia_039.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_039.jpg
+exotropia_040.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_040.jpg
+exotropia_041.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_041.jpg
+exotropia_042.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_042.jpg
+exotropia_043.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_043.jpg
+exotropia_044.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_044.jpg
+exotropia_045.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_045.jpg
+exotropia_046.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_046.jpg
+exotropia_047.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_047.jpg
+exotropia_048.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_048.jpg
+exotropia_049.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_049.jpg
+exotropia_050.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_050.jpg
+exotropia_051.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_051.jpg
+exotropia_052.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_052.jpg
+exotropia_053.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_053.jpg
+exotropia_054.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_054.jpg
+exotropia_055.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_055.jpg
+exotropia_056.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_056.jpg
+exotropia_057.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_057.jpg
+exotropia_058.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_058.jpg
+exotropia_059.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_059.jpg
+exotropia_060.jpg,PASS,exotropia_harschberg,exotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1594,0.3827,,harschberg_data_detect\exotropia_harschberg\exotropia_060.jpg
+exotropia_061.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_061.jpg
+exotropia_062.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_062.jpg
+exotropia_063.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_063.jpg
+exotropia_064.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_064.jpg
+exotropia_065.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_065.jpg
+exotropia_066.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_066.jpg
+exotropia_067.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_067.jpg
+exotropia_068.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_068.jpg
+exotropia_069.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.5102,0.2232,,harschberg_data_detect\exotropia_harschberg\exotropia_069.jpg
+exotropia_070.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_070.jpg
+exotropia_071.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3508,-0.085,,harschberg_data_detect\exotropia_harschberg\exotropia_071.jpg
+exotropia_072.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1754,-0.5421,,harschberg_data_detect\exotropia_harschberg\exotropia_072.jpg
+exotropia_073.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_073.jpg
+exotropia_074.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2126,0.1212,,harschberg_data_detect\exotropia_harschberg\exotropia_074.jpg
+exotropia_075.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_075.jpg
+exotropia_076.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.6036,-0.4889,,harschberg_data_detect\exotropia_harschberg\exotropia_076.jpg
+exotropia_077.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.845,-0.271,,harschberg_data_detect\exotropia_harschberg\exotropia_077.jpg
+exotropia_078.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.0638,-0.3508,,harschberg_data_detect\exotropia_harschberg\exotropia_078.jpg
+exotropia_079.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_079.jpg
+exotropia_080.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_080.jpg
+exotropia_081.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_081.jpg
+exotropia_082.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_082.jpg
+exotropia_083.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_083.jpg
+exotropia_084.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_084.jpg
+exotropia_085.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_085.jpg
+exotropia_086.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_086.jpg
+exotropia_087.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_087.jpg
+exotropia_088.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_088.jpg
+exotropia_089.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_089.jpg
+exotropia_090.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_090.jpg
+exotropia_091.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_091.jpg
+exotropia_092.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_092.jpg
+exotropia_093.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_093.jpg
+exotropia_094.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_094.jpg
+exotropia_095.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_095.jpg
+exotropia_096.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_096.jpg
+exotropia_097.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_097.jpg
+exotropia_098.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_098.jpg
+exotropia_099.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.6696,0.2232,,harschberg_data_detect\exotropia_harschberg\exotropia_099.jpg
+exotropia_100.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1594,-0.8355,,harschberg_data_detect\exotropia_harschberg\exotropia_100.jpg
+exotropia_101.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2976,-0.3029,,harschberg_data_detect\exotropia_harschberg\exotropia_101.jpg
+exotropia_102.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_102.jpg
+exotropia_103.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_103.jpg
+exotropia_104.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_104.jpg
+exotropia_105.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0638,0.0638,,harschberg_data_detect\exotropia_harschberg\exotropia_105.jpg
+exotropia_106.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_106.jpg
+exotropia_107.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_107.jpg
+exotropia_108.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_108.jpg
+exotropia_109.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1913,-0.9247,,harschberg_data_detect\exotropia_harschberg\exotropia_109.jpg
+exotropia_110.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_110.jpg
+exotropia_111.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_111.jpg
+exotropia_112.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_112.jpg
+exotropia_113.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.574,-0.8929,,harschberg_data_detect\exotropia_harschberg\exotropia_113.jpg
+exotropia_114.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_114.jpg
+exotropia_115.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_115.jpg
+exotropia_116.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_116.jpg
+exotropia_117.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_117.jpg
+exotropia_118.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_118.jpg
+exotropia_119.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1276,-0.0957,,harschberg_data_detect\exotropia_harschberg\exotropia_119.jpg
+exotropia_120.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_120.jpg
+exotropia_121.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_121.jpg
+exotropia_122.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_122.jpg
+exotropia_123.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_123.jpg
+exotropia_124.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_124.jpg
+exotropia_125.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_125.jpg
+exotropia_126.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_126.jpg
+exotropia_127.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_127.jpg
+exotropia_128.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3614,0.0574,,harschberg_data_detect\exotropia_harschberg\exotropia_128.jpg
+exotropia_129.jpg,PASS,exotropia_harschberg,exotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1913,0.4783,,harschberg_data_detect\exotropia_harschberg\exotropia_129.jpg
+exotropia_130.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_130.jpg
+exotropia_131.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_131.jpg
+exotropia_132.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1467,0.1276,,harschberg_data_detect\exotropia_harschberg\exotropia_132.jpg
+exotropia_133.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_133.jpg
+exotropia_134.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_134.jpg
+exotropia_135.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_135.jpg
+exotropia_136.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_136.jpg
+exotropia_137.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_137.jpg
+exotropia_138.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_138.jpg
+exotropia_139.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.4601,-0.3508,,harschberg_data_detect\exotropia_harschberg\exotropia_139.jpg
+exotropia_140.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_140.jpg
+exotropia_141.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_141.jpg
+exotropia_142.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_142.jpg
+exotropia_143.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.287,-0.0319,,harschberg_data_detect\exotropia_harschberg\exotropia_143.jpg
+exotropia_144.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_144.jpg
+exotropia_145.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_145.jpg
+exotropia_146.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_146.jpg
+exotropia_147.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_147.jpg
+exotropia_148.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.0638,-0.0957,,harschberg_data_detect\exotropia_harschberg\exotropia_148.jpg
+exotropia_149.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_149.jpg
+exotropia_150.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_150.jpg
+exotropia_151.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_151.jpg
+exotropia_152.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_152.jpg
+exotropia_153.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_153.jpg
+exotropia_154.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_154.jpg
+exotropia_155.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_155.jpg
+exotropia_156.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_156.jpg
+exotropia_157.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_157.jpg
+exotropia_158.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_158.jpg
+exotropia_159.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_159.jpg
+exotropia_160.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_160.jpg
+exotropia_161.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_161.jpg
+exotropia_162.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0478,-0.1276,,harschberg_data_detect\exotropia_harschberg\exotropia_162.jpg
+exotropia_163.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.4783,-0.1276,,harschberg_data_detect\exotropia_harschberg\exotropia_163.jpg
+exotropia_164.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_164.jpg
+exotropia_165.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_165.jpg
+exotropia_166.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.0638,-0.1594,,harschberg_data_detect\exotropia_harschberg\exotropia_166.jpg
+exotropia_167.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2551,-0.6629,,harschberg_data_detect\exotropia_harschberg\exotropia_167.jpg
+exotropia_168.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.9566,-1.0332,,harschberg_data_detect\exotropia_harschberg\exotropia_168.jpg
+exotropia_169.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_169.jpg
+exotropia_170.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_170.jpg
+exotropia_171.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_171.jpg
+exotropia_172.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_172.jpg
+exotropia_173.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_173.jpg
+exotropia_174.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_174.jpg
+exotropia_175.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_175.jpg
+exotropia_176.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_176.jpg
+exotropia_177.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_177.jpg
+exotropia_178.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\exotropia_178.jpg
+exotropia_179.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_179.jpg
+exotropia_180.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_180.jpg
+exotropia_181.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_181.jpg
+exotropia_182.jpg,PASS,exotropia_harschberg,exotropia,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1594,-0.1594,,harschberg_data_detect\exotropia_harschberg\exotropia_182.jpg
+exotropia_183.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3189,0.0957,,harschberg_data_detect\exotropia_harschberg\exotropia_183.jpg
+exotropia_184.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.5606,-0.9247,,harschberg_data_detect\exotropia_harschberg\exotropia_184.jpg
+exotropia_185.jpg,PASS,exotropia_harschberg,exotropia,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,1.0746,0.7892,,harschberg_data_detect\exotropia_harschberg\exotropia_185.jpg
+exotropia_186.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\exotropia_186.jpg
+exotropia_187.jpg,PASS,exotropia_harschberg,exotropia,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.6059,-0.8929,,harschberg_data_detect\exotropia_harschberg\exotropia_187.jpg
+exotropia_188.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\exotropia_188.jpg
+exotropia_189.jpg,REJECT,rejected,exotropia,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\exotropia_189.jpg
+normal_001.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_001.jpg
+normal_002.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_002.jpg
+normal_003.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_003.jpg
+normal_004.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2232,0.2551,,harschberg_data_detect\normal_harschberg\normal_004.jpg
+normal_005.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.1403,-0.9566,,harschberg_data_detect\normal_harschberg\normal_005.jpg
+normal_006.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_006.jpg
+normal_007.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.051,-0.0128,,harschberg_data_detect\normal_harschberg\normal_007.jpg
+normal_008.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_008.jpg
+normal_009.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.7334,-0.2551,,harschberg_data_detect\normal_harschberg\normal_009.jpg
+normal_010.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_010.jpg
+normal_011.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_011.jpg
+normal_012.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3856,-0.1913,,harschberg_data_detect\normal_harschberg\normal_012.jpg
+normal_013.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_013.jpg
+normal_014.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.5102,-0.287,,harschberg_data_detect\normal_harschberg\normal_014.jpg
+normal_015.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1594,-0.1594,,harschberg_data_detect\normal_harschberg\normal_015.jpg
+normal_016.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_016.jpg
+normal_017.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_017.jpg
+normal_018.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_018.jpg
+normal_019.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_019.jpg
+normal_020.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_020.jpg
+normal_021.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_021.jpg
+normal_022.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_022.jpg
+normal_023.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1594,-0.1913,,harschberg_data_detect\normal_harschberg\normal_023.jpg
+normal_024.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_024.jpg
+normal_025.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_025.jpg
+normal_026.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,1.0204,0.6165,,harschberg_data_detect\normal_harschberg\normal_026.jpg
+normal_027.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_027.jpg
+normal_028.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0638,-1.1161,,harschberg_data_detect\normal_harschberg\normal_028.jpg
+normal_029.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_029.jpg
+normal_030.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_030.jpg
+normal_031.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.3316,0.1276,,harschberg_data_detect\normal_harschberg\normal_031.jpg
+normal_032.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_032.jpg
+normal_033.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_033.jpg
+normal_034.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_034.jpg
+normal_035.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.4464,0.3295,,harschberg_data_detect\normal_harschberg\normal_035.jpg
+normal_036.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_036.jpg
+normal_037.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3189,-0.1594,,harschberg_data_detect\normal_harschberg\normal_037.jpg
+normal_038.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_038.jpg
+normal_039.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_039.jpg
+normal_040.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_040.jpg
+normal_041.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_041.jpg
+normal_042.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_042.jpg
+normal_043.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_043.jpg
+normal_044.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_044.jpg
+normal_045.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_045.jpg
+normal_046.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.4145,0.1807,,harschberg_data_detect\normal_harschberg\normal_046.jpg
+normal_047.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1913,-0.3986,,harschberg_data_detect\normal_harschberg\normal_047.jpg
+normal_048.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_048.jpg
+normal_049.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_049.jpg
+normal_050.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_050.jpg
+normal_051.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_051.jpg
+normal_052.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2377,-0.2551,,harschberg_data_detect\normal_harschberg\normal_052.jpg
+normal_053.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_053.jpg
+normal_054.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_054.jpg
+normal_055.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2232,0.2232,,harschberg_data_detect\normal_harschberg\normal_055.jpg
+normal_056.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_056.jpg
+normal_057.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_057.jpg
+normal_058.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_058.jpg
+normal_059.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_059.jpg
+normal_060.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_060.jpg
+normal_061.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.5612,-0.5189,,harschberg_data_detect\normal_harschberg\normal_061.jpg
+normal_062.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2414,-0.1435,,harschberg_data_detect\normal_harschberg\normal_062.jpg
+normal_063.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.5102,-0.3986,,harschberg_data_detect\normal_harschberg\normal_063.jpg
+normal_064.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_064.jpg
+normal_065.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.3061,0.4965,,harschberg_data_detect\normal_harschberg\normal_065.jpg
+normal_066.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.4358,-0.3189,,harschberg_data_detect\normal_harschberg\normal_066.jpg
+normal_067.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_067.jpg
+normal_068.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_068.jpg
+normal_069.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_069.jpg
+normal_070.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.7958,0.5584,,harschberg_data_detect\normal_harschberg\normal_070.jpg
+normal_071.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_071.jpg
+normal_072.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_072.jpg
+normal_073.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_073.jpg
+normal_074.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_074.jpg
+normal_075.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_075.jpg
+normal_076.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_076.jpg
+normal_077.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_077.jpg
+normal_078.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_078.jpg
+normal_079.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_079.jpg
+normal_080.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_080.jpg
+normal_081.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_081.jpg
+normal_082.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.2764,0.2051,,harschberg_data_detect\normal_harschberg\normal_082.jpg
+normal_083.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_083.jpg
+normal_084.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_084.jpg
+normal_085.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_085.jpg
+normal_086.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_086.jpg
+normal_087.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_087.jpg
+normal_088.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_088.jpg
+normal_089.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_089.jpg
+normal_090.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_090.jpg
+normal_091.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0,-0.574,,harschberg_data_detect\normal_harschberg\normal_091.jpg
+normal_092.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_092.jpg
+normal_093.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_093.jpg
+normal_094.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_094.jpg
+normal_095.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.8397,0.5166,,harschberg_data_detect\normal_harschberg\normal_095.jpg
+normal_096.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_096.jpg
+normal_097.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_097.jpg
+normal_098.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_098.jpg
+normal_099.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-1.0253,-0.3864,,harschberg_data_detect\normal_harschberg\normal_099.jpg
+normal_100.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_100.jpg
+normal_101.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_101.jpg
+normal_102.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_102.jpg
+normal_103.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2126,-0.3667,,harschberg_data_detect\normal_harschberg\normal_103.jpg
+normal_104.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_104.jpg
+normal_105.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.6696,-0.0319,,harschberg_data_detect\normal_harschberg\normal_105.jpg
+normal_106.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_106.jpg
+normal_107.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_107.jpg
+normal_108.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2152,0.0319,,harschberg_data_detect\normal_harschberg\normal_108.jpg
+normal_109.jpg,REJECT,rejected,normal,unknown,FACEMESH_LANDMARKS,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_109.jpg
+normal_110.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.4261,-1.1798,,harschberg_data_detect\normal_harschberg\normal_110.jpg
+normal_111.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_111.jpg
+normal_112.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_112.jpg
+normal_113.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.1594,0.1594,,harschberg_data_detect\normal_harschberg\normal_113.jpg
+normal_114.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS),harschberg_data_detect\rejected\normal_114.jpg
+normal_115.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0994,-0.0551,,harschberg_data_detect\normal_harschberg\normal_115.jpg
+normal_116.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_116.jpg
+normal_117.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_117.jpg
+normal_139.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_139.jpg
+normal_140.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_140.jpg
+normal_141.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_141.jpg
+normal_142.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_142.jpg
+normal_143.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.8291,-0.7015,,harschberg_data_detect\normal_harschberg\normal_143.jpg
+normal_144.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1594,0.0,,harschberg_data_detect\normal_harschberg\normal_144.jpg
+normal_145.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.4464,0.1913,,harschberg_data_detect\normal_harschberg\normal_145.jpg
+normal_146.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_146.jpg
+normal_147.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_147.jpg
+normal_148.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_148.jpg
+normal_149.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_149.jpg
+normal_150.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_150.jpg
+normal_151.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_151.jpg
+normal_152.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.1276,-0.0319,,harschberg_data_detect\normal_harschberg\normal_152.jpg
+normal_153.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_153.jpg
+normal_154.jpg,PASS,normal_harschberg,normal,normal,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.0638,-0.1382,,harschberg_data_detect\normal_harschberg\normal_154.jpg
+normal_155.jpg,PASS,normal_harschberg,normal,exotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.2551,0.0,,harschberg_data_detect\normal_harschberg\normal_155.jpg
+normal_156.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,-0.9111,0.8071,,harschberg_data_detect\normal_harschberg\normal_156.jpg
+normal_157.jpg,PASS,normal_harschberg,normal,esotropia,PERIOCULAR_CROP_HEURISTIC,YES,YES,0.5171,0.5952,,harschberg_data_detect\normal_harschberg\normal_157.jpg
+normal_158.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,YES,,,MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_158.jpg
+normal_159.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_159.jpg
+normal_160.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_160.jpg
+normal_161.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,YES,NO,,,MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX),harschberg_data_detect\rejected\normal_161.jpg
+normal_162.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)",harschberg_data_detect\rejected\normal_162.jpg
+normal_163.jpg,REJECT,rejected,normal,unknown,PERIOCULAR_CROP_HEURISTIC,NO,NO,,,"MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)",harschberg_data_detect\rejected\normal_163.jpg
