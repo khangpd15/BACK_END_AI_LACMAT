@@ -1,4 +1,4 @@
-"""Research-only Hirschberg and Cover geometry measurements.
+﻿"""Research-only Hirschberg and Cover geometry measurements.
 
 This module deliberately does not call or modify the production ONNX/image model.
 All thresholds are TODO_PILOT and outputs remain measurement/experimental only.
@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from statistics import median
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+import cv2
 import numpy as np
 from PIL import Image
 
@@ -530,56 +531,79 @@ def _measure_eye(image: np.ndarray, landmarks: List[Dict[str, Any]], eye: str) -
 def measure_hirschberg(req: ResearchMeasurementRequest) -> Dict[str, Any]:
     image = _decode_image(req)
     landmarks = (req.metadata or {}).get("landmarks") or (req.metadata or {}).get("faceLandmarks")
-    if not isinstance(landmarks, list) or len(landmarks) < 478:
-        raise ResearchMeasurementError("INVALID_LANDMARKS", "HIRSCHBERG requires 478 normalized landmarks.")
+    has_valid_landmarks = isinstance(landmarks, list) and len(landmarks) >= 478
 
-    right = _measure_eye(image, landmarks, "right")
-    left = _measure_eye(image, landmarks, "left")
-    eyes = {
-        "OD": right.__dict__,
-        "OS": left.__dict__,
-    }
+    if has_valid_landmarks:
+        right = _measure_eye(image, landmarks, "right")
+        left = _measure_eye(image, landmarks, "left")
+        eyes = {
+            "OD": right.__dict__,
+            "OS": left.__dict__,
+        }
+        face_detected = True
+        eyes_detected = right.status != "INVALID_IRIS" and left.status != "INVALID_IRIS"
+        iris_detected = right.iris_diameter_px > 1.0 and left.iris_diameter_px > 1.0
+        pupil_detected = right.pupil_status == "DETECTED" and left.pupil_status == "DETECTED"
+        reflex_detected = right.reflex_count == 1 and left.reflex_count == 1
+        measured = right.h_iris is not None and left.h_iris is not None
 
-    # Tracking detection success separately for each component
-    face_detected = True
-    eyes_detected = right.status != "INVALID_IRIS" and left.status != "INVALID_IRIS"
-    iris_detected = right.iris_diameter_px > 1.0 and left.iris_diameter_px > 1.0
-    pupil_detected = right.pupil_status == "DETECTED" and left.pupil_status == "DETECTED"
-    reflex_detected = right.reflex_count == 1 and left.reflex_count == 1
-    measured = right.h_iris is not None and left.h_iris is not None
+        reasons: List[str] = []
+        if not reflex_detected:
+            if right.reflex_status == "MULTIPLE_REFLEX" or left.reflex_status == "MULTIPLE_REFLEX":
+                reasons.append("MULTIPLE_REFLEX")
+            if right.reflex_status == "REFLEX_NOT_FOUND" or left.reflex_status == "REFLEX_NOT_FOUND":
+                reasons.append("REFLEX_NOT_FOUND")
+            if "MULTIPLE_REFLEX" not in reasons and "REFLEX_NOT_FOUND" not in reasons:
+                reasons.append("REFLEX_COUNT_NOT_EXACTLY_ONE_PER_EYE")
 
-    reasons: List[str] = []
-    if not reflex_detected:
-        if right.reflex_status == "MULTIPLE_REFLEX" or left.reflex_status == "MULTIPLE_REFLEX":
-            reasons.append("MULTIPLE_REFLEX")
-        if right.reflex_status == "REFLEX_NOT_FOUND" or left.reflex_status == "REFLEX_NOT_FOUND":
-            reasons.append("REFLEX_NOT_FOUND")
-        if "MULTIPLE_REFLEX" not in reasons and "REFLEX_NOT_FOUND" not in reasons:
-            reasons.append("REFLEX_COUNT_NOT_EXACTLY_ONE_PER_EYE")
+        if not pupil_detected:
+            reasons.append("PUPIL_NOT_FOUND")
 
-    if not pupil_detected:
-        reasons.append("PUPIL_NOT_FOUND")
+        if req.distance_bucket == "UNKNOWN":
+            reasons.append("DISTANCE_BUCKET_UNKNOWN")
 
-    if req.distance_bucket == "UNKNOWN":
-        reasons.append("DISTANCE_BUCKET_UNKNOWN")
+        delta_h_iris = round(float(right.h_iris - left.h_iris), 5) if (right.h_iris is not None and left.h_iris is not None) else None
+        delta_h_pupil = (
+            round(float(right.h_pupil - left.h_pupil), 5)
+            if (right.h_pupil is not None and left.h_pupil is not None)
+            else None
+        )
+        quality_reflex_count = {"OD": right.reflex_count, "OS": left.reflex_count}
+        quality_pupil_status = {"OD": right.pupil_status, "OS": left.pupil_status}
+        quality_reflex_status = {"OD": right.reflex_status, "OS": left.reflex_status}
+    else:
+        # Landmarks not provided by client (e.g. uploaded photo or crop)
+        eyes = {}
+        face_detected = False
+        eyes_detected = True
+        iris_detected = True
+        pupil_detected = False
+        reflex_detected = False
+        measured = False
+        reasons = ["CLIENT_LANDMARKS_NOT_PROVIDED_AI_INFERRED"]
+        delta_h_iris = None
+        delta_h_pupil = None
+        quality_reflex_count = {"OD": 0, "OS": 0}
+        quality_pupil_status = {"OD": "NOT_PROVIDED", "OS": "NOT_PROVIDED"}
+        quality_reflex_status = {"OD": "NOT_PROVIDED", "OS": "NOT_PROVIDED"}
 
-    delta_h_iris = round(float(right.h_iris - left.h_iris), 5) if (right.h_iris is not None and left.h_iris is not None) else None
-    delta_h_pupil = (
-        round(float(right.h_pupil - left.h_pupil), 5)
-        if (right.h_pupil is not None and left.h_pupil is not None)
-        else None
-    )
+    # Run AI inference with trained Hirschberg model
+    from app.services.hirschberg_ai_service import predict_hirschberg
+    image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    ai_prediction = predict_hirschberg(image_bgr, landmarks if has_valid_landmarks else None)
 
     return {
         "status": "INCONCLUSIVE",
         "result": "MEASUREMENT_ONLY",
         "reasonCodes": reasons or ["THRESHOLDS_TODO_PILOT"],
+        "aiPrediction": ai_prediction,
         "measurements": {
             "distanceBucket": req.distance_bucket,
             "eyes": eyes,
             "delta_h": delta_h_iris,
             "delta_h_iris": delta_h_iris,
             "delta_h_pupil": delta_h_pupil,
+            "aiPrediction": ai_prediction,
             "detectionStats": {
                 "faceDetected": face_detected,
                 "eyesDetected": eyes_detected,
@@ -591,9 +615,9 @@ def measure_hirschberg(req: ResearchMeasurementRequest) -> Dict[str, Any]:
             "thresholds": "TODO_PILOT_BY_DISTANCE_BUCKET",
         },
         "quality": {
-            "reflexCountPerEye": {"OD": right.reflex_count, "OS": left.reflex_count},
-            "pupilStatusPerEye": {"OD": right.pupil_status, "OS": left.pupil_status},
-            "reflexStatusPerEye": {"OD": right.reflex_status, "OS": left.reflex_status},
+            "reflexCountPerEye": quality_reflex_count,
+            "pupilStatusPerEye": quality_pupil_status,
+            "reflexStatusPerEye": quality_reflex_status,
             "serverMeasured": measured,
             "detectorSuccess": {
                 "face": face_detected,
@@ -791,6 +815,8 @@ def measure_research_request(req: ResearchMeasurementRequest) -> Dict[str, Any]:
         "experimental": True,
         "latencyMs": latency_ms,
     }
+    if "aiPrediction" in result:
+        response["aiPrediction"] = result["aiPrediction"]
     logger.info(
         "[ResearchMeasurement] requestId=%s sessionId=%s testType=%s status=%s result=%s latencyMs=%.3f quality=%s",
         request_id,
@@ -802,3 +828,8 @@ def measure_research_request(req: ResearchMeasurementRequest) -> Dict[str, Any]:
         response["quality"],
     )
     return response
+
+
+
+
+

@@ -361,3 +361,56 @@ def test_hirschberg_multiple_reflex_reason_codes():
     assert result["result"] == "MEASUREMENT_ONLY"
     assert "MULTIPLE_REFLEX" in result["reasonCodes"]
     assert result["quality"]["detectorSuccess"]["reflex"] is False
+
+
+def test_hirschberg_includes_ai_prediction():
+    """Unit test: Hirschberg request runs trained candidate AI model and returns predicted class and probabilities."""
+    image_data_url, landmarks = _synthetic_hirschberg_payload(with_pupil=True, num_reflexes=1)
+    req = ResearchMeasurementRequest(
+        schemaVersion="remicare-research-quality-v0.1",
+        featureVersion=FEATURE_VERSION,
+        testType="HIRSCHBERG",
+        sessionId="55555555-5555-5555-5555-555555555555",
+        requestId="hirschberg-with-ai",
+        distance_bucket="TARGET_20_25_CM",
+        eligibility=_eligibility(),
+        imageDataUrl=image_data_url,
+        metadata={"landmarks": landmarks},
+    )
+
+    result = measure_research_request(req)
+
+    assert "aiPrediction" in result
+    assert "aiPrediction" in result["measurements"]
+    ai = result["aiPrediction"]
+    assert ai["status"] == "PREDICTED"
+    assert ai["predictedClass"] in {"NORMAL", "ESOTROPIA", "EXOTROPIA"}
+    assert 0.0 <= ai["confidence"] <= 1.0
+    assert "probabilities" in ai
+    assert "modelId" in ai
+    assert ai["modelId"] == "hirschberg-candidate-v0.1"
+
+
+def test_hirschberg_without_landmarks_runs_ai_fallback():
+    """Unit test: Request without 478 landmarks does not raise error, but runs AI inference gracefully."""
+    image_data_url, _ = _synthetic_hirschberg_payload(with_pupil=True, num_reflexes=1)
+    req = ResearchMeasurementRequest(
+        schemaVersion="remicare-research-quality-v0.1",
+        featureVersion=FEATURE_VERSION,
+        testType="HIRSCHBERG",
+        sessionId="66666666-6666-6666-6666-666666666666",
+        requestId="hirschberg-no-landmarks",
+        distance_bucket="TARGET_20_25_CM",
+        eligibility=_eligibility(),
+        imageDataUrl=image_data_url,
+        metadata={"landmarks": []},  # empty landmarks
+    )
+
+    result = measure_research_request(req)
+
+    assert result["status"] == "INCONCLUSIVE"
+    assert result["result"] == "MEASUREMENT_ONLY"
+    assert "CLIENT_LANDMARKS_NOT_PROVIDED_AI_INFERRED" in result["reasonCodes"]
+    assert "aiPrediction" in result
+    assert result["aiPrediction"]["status"] == "PREDICTED"
+    assert result["aiPrediction"]["predictedClass"] in {"NORMAL", "ESOTROPIA", "EXOTROPIA"}
