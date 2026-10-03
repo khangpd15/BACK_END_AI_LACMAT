@@ -78,3 +78,18 @@ If the artifact declares `feature_names`, the artifact list takes precedence and
 ## Separate Frontend Static Contract
 
 `D:\AI_Check_Lac\FEATURE_CONTRACT_V1.md` documents a separate 10-feature client-side ONNX/static morphology contract. It is not the backend Cover Test model contract. Do not combine these feature orders without an explicit v2 migration and retraining plan.
+
+## Research Hirschberg Detector Contract
+
+Endpoint: `POST /api/v1/research/measurements` with `testType="HIRSCHBERG"`.
+
+- This endpoint remains research-only and must not be treated as a normal screening clearance.
+- `status` remains `INCONCLUSIVE` and `result` remains `MEASUREMENT_ONLY` for Hirschberg geometry output.
+- `reasonCodes` preserves `REFLEX_NOT_FOUND` for older frontend fallback copy.
+- Detailed detector reason codes now include:
+  - `LOW_PEAK_BRIGHTNESS`
+  - `LARGE_OR_ELONGATED_GLARE`
+  - `CLUSTERED_REFLEX_CANDIDATES`
+  - `REFLEX_CANDIDATE_TOO_FAR`
+- Per-eye details are exposed in `quality.reflexStatusPerEye` and `measurements.eyes.{OD,OS}.reflex_status`.
+- The detector rejects large/elongated glare, ambiguous clustered glints, and bright candidates outside the strict pupil/iris region before computing Hirschberg geometry.

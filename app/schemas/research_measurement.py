@@ -66,8 +66,21 @@ class ResearchMeasurementResponse(BaseModel):
     testType: str
     status: str
     result: str
-    reasonCodes: List[str] = Field(default_factory=list)
+    reasonCodes: List[str] = Field(
+        default_factory=list,
+        description=(
+            "Frontend-facing research reason codes. Hirschberg reflex detail codes include "
+            "LOW_PEAK_BRIGHTNESS, LARGE_OR_ELONGATED_GLARE, "
+            "CLUSTERED_REFLEX_CANDIDATES, and REFLEX_CANDIDATE_TOO_FAR. "
+            "REFLEX_NOT_FOUND is preserved for backwards compatibility."
+        ),
+    )
     measurements: Dict[str, Any] = Field(default_factory=dict)
     quality: Dict[str, Any] = Field(default_factory=dict)
     versions: Dict[str, Any] = Field(default_factory=dict)
+    aiPrediction: Optional[Dict[str, Any]] = Field(
+        None,
+        description="Research candidate AI output when available; never a clinical diagnosis.",
+    )
+    latencyMs: Optional[float] = Field(None, description="Server-side research measurement latency in milliseconds.")
     experimental: bool = True

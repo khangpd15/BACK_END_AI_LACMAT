@@ -1,0 +1,279 @@
+{
+  "dataset_root": "D:\\REMICARE-STRABISMUS-AI\\harschberg_data_detect",
+  "records_total_in_audited_dirs": 522,
+  "unreadable_images": [],
+  "per_folder": {
+    "esotropia": {
+      "count": 55,
+      "total_mb": 0.769,
+      "width": {
+        "min": 224,
+        "median": 224,
+        "max": 224
+      },
+      "height": {
+        "min": 224,
+        "median": 224,
+        "max": 224
+      },
+      "aspect": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "brightness_mean": {
+        "min": 61.794,
+        "median": 148.693,
+        "max": 228.343
+      },
+      "brightness_std": {
+        "min": 27.269,
+        "median": 43.893,
+        "max": 65.13
+      },
+      "blur_laplacian_var": {
+        "min": 32.506,
+        "median": 199.391,
+        "max": 1402.053
+      },
+      "formats": {
+        "JPEG": 55
+      }
+    },
+    "exotropia": {
+      "count": 40,
+      "total_mb": 0.557,
+      "width": {
+        "min": 224,
+        "median": 224.0,
+        "max": 224
+      },
+      "height": {
+        "min": 224,
+        "median": 224.0,
+        "max": 224
+      },
+      "aspect": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "brightness_mean": {
+        "min": 87.875,
+        "median": 132.209,
+        "max": 196.864
+      },
+      "brightness_std": {
+        "min": 30.538,
+        "median": 42.072,
+        "max": 70.092
+      },
+      "blur_laplacian_var": {
+        "min": 14.865,
+        "median": 162.075,
+        "max": 719.184
+      },
+      "formats": {
+        "JPEG": 40
+      }
+    },
+    "normal": {
+      "count": 41,
+      "total_mb": 0.612,
+      "width": {
+        "min": 224,
+        "median": 224,
+        "max": 224
+      },
+      "height": {
+        "min": 224,
+        "median": 224,
+        "max": 224
+      },
+      "aspect": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "brightness_mean": {
+        "min": 44.525,
+        "median": 140.06,
+        "max": 189.016
+      },
+      "brightness_std": {
+        "min": 30.642,
+        "median": 46.397,
+        "max": 61.953
+      },
+      "blur_laplacian_var": {
+        "min": 15.053,
+        "median": 167.414,
+        "max": 1332.695
+      },
+      "formats": {
+        "JPEG": 41
+      }
+    },
+    "rejected": {
+      "count": 366,
+      "total_mb": 4.788,
+      "width": {
+        "min": 224,
+        "median": 224.0,
+        "max": 224
+      },
+      "height": {
+        "min": 224,
+        "median": 224.0,
+        "max": 224
+      },
+      "aspect": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "brightness_mean": {
+        "min": 20.948,
+        "median": 115.405,
+        "max": 200.549
+      },
+      "brightness_std": {
+        "min": 17.06,
+        "median": 41.97,
+        "max": 85.158
+      },
+      "blur_laplacian_var": {
+        "min": 5.294,
+        "median": 108.684,
+        "max": 1341.009
+      },
+      "formats": {
+        "JPEG": 366
+      }
+    },
+    "debug": {
+      "count": 20,
+      "total_mb": 0.379,
+      "width": {
+        "min": 224,
+        "median": 224.0,
+        "max": 224
+      },
+      "height": {
+        "min": 224,
+        "median": 224.0,
+        "max": 224
+      },
+      "aspect": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "brightness_mean": {
+        "min": 96.083,
+        "median": 157.212,
+        "max": 213.191
+      },
+      "brightness_std": {
+        "min": 27.359,
+        "median": 45.048,
+        "max": 58.071
+      },
+      "blur_laplacian_var": {
+        "min": 723.643,
+        "median": 1346.672,
+        "max": 2527.023
+      },
+      "formats": {
+        "JPEG": 20
+      }
+    }
+  },
+  "trainable_class_counts": {
+    "esotropia": 55,
+    "exotropia": 40,
+    "normal": 41
+  },
+  "class_imbalance_max_min_ratio": 1.375,
+  "exact_duplicate_groups": [],
+  "exact_duplicate_group_count": 0,
+  "near_duplicate_candidates_top80": [
+    {
+      "path1": "harschberg_data_detect/esotropia_harschberg/esotropia_055.jpg",
+      "label1": "esotropia",
+      "path2": "harschberg_data_detect/esotropia_harschberg/esotropia_060.jpg",
+      "label2": "esotropia",
+      "ahash_hamming": 0
+    },
+    {
+      "path1": "harschberg_data_detect/normal_harschberg/normal_066.jpg",
+      "label1": "normal",
+      "path2": "harschberg_data_detect/normal_harschberg/normal_070.jpg",
+      "label2": "normal",
+      "ahash_hamming": 8
+    }
+  ],
+  "near_duplicate_candidate_count_top80_returned": 2,
+  "filter_report_summary": {
+    "rows": 502,
+    "status_counts": {
+      "REJECT": 366,
+      "PASS": 136
+    },
+    "assigned_folder_counts": {
+      "rejected": 366,
+      "esotropia_harschberg": 55,
+      "exotropia_harschberg": 40,
+      "normal_harschberg": 41
+    },
+    "source_label_counts": {
+      "esotropia": 171,
+      "exotropia": 189,
+      "normal": 142
+    },
+    "heuristic_label_counts": {
+      "unknown": 366,
+      "normal": 36,
+      "exotropia": 60,
+      "esotropia": 40
+    },
+    "detection_method_counts": {
+      "PERIOCULAR_CROP_HEURISTIC": 500,
+      "FACEMESH_LANDMARKS": 2
+    },
+    "pass_source_vs_heuristic": {
+      "esotropia->normal": 13,
+      "esotropia->exotropia": 18,
+      "esotropia->esotropia": 24,
+      "exotropia->normal": 12,
+      "exotropia->exotropia": 25,
+      "exotropia->esotropia": 3,
+      "normal->esotropia": 13,
+      "normal->exotropia": 17,
+      "normal->normal": 11
+    },
+    "pass_source_vs_assigned": {
+      "esotropia->esotropia_harschberg": 55,
+      "exotropia->exotropia_harschberg": 40,
+      "normal->normal_harschberg": 41
+    },
+    "rejection_reason_top20": {
+      "MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)": 132,
+      "MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX)": 45,
+      "MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX)": 41,
+      "MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS)": 37,
+      "MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)": 35,
+      "MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)": 29,
+      "MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)": 26,
+      "MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS)": 21
+    }
+  },
+  "sample_grids": [
+    "reports/audit_samples/esotropia_random20_grid.jpg",
+    "reports/audit_samples/exotropia_random20_grid.jpg",
+    "reports/audit_samples/normal_random20_grid.jpg"
+  ],
+  "notes": [
+    "MediaPipe audit not run in this script because bundled runtime lacks mediapipe and project venv Python is broken."
+  ]
+}

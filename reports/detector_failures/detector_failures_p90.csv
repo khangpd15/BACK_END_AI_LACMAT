@@ -1,0 +1,11 @@
+﻿cause,class_label,detector_x,detector_y,error_px,eye,failure_image,manual_x,manual_y,relative_path
+double_or_multiple_reflex_candidates,esotropia,32.0,110.0,38.01315561749642,od,reports/detector_failures/01_esotropia_od_esotropia_018_38.0px.jpg,33.0,148.0,harschberg_data_detect/esotropia_harschberg/esotropia_018.jpg
+large_or_elongated_glare_environment_or_eyelid,esotropia,173.65,78.65,31.85506239202805,os,reports/detector_failures/02_esotropia_os_esotropia_055_31.9px.jpg,168.0,110.0,harschberg_data_detect/esotropia_harschberg/esotropia_055.jpg
+eyelid_or_skin_bright_spot,esotropia,174.0,132.0,78.44743462982075,os,reports/detector_failures/03_esotropia_os_esotropia_066_78.4px.jpg,159.0,55.0,harschberg_data_detect/esotropia_harschberg/esotropia_066.jpg
+double_or_multiple_reflex_candidates,esotropia,197.0,132.5,36.45888094826828,os,reports/detector_failures/04_esotropia_os_esotropia_082_36.5px.jpg,170.0,108.0,harschberg_data_detect/esotropia_harschberg/esotropia_082.jpg
+double_or_multiple_reflex_candidates,esotropia,158.0,137.0,36.235341863986875,os,reports/detector_failures/05_esotropia_os_esotropia_090_36.2px.jpg,181.0,109.0,harschberg_data_detect/esotropia_harschberg/esotropia_090.jpg
+double_or_multiple_reflex_candidates,esotropia,86.0,118.5,40.512343797909296,od,reports/detector_failures/06_esotropia_od_esotropia_094_40.5px.jpg,53.0,142.0,harschberg_data_detect/esotropia_harschberg/esotropia_094.jpg
+double_or_multiple_reflex_candidates,esotropia,190.22857142857143,70.77142857142857,66.69711005580315,os,reports/detector_failures/07_esotropia_os_esotropia_152_66.7px.jpg,169.0,134.0,harschberg_data_detect/esotropia_harschberg/esotropia_152.jpg
+double_or_multiple_reflex_candidates,esotropia,49.0,56.0,52.23983154643591,od,reports/detector_failures/08_esotropia_od_esotropia_167_52.2px.jpg,54.0,108.0,harschberg_data_detect/esotropia_harschberg/esotropia_167.jpg
+large_or_elongated_glare_environment_or_eyelid,exotropia,153.0,134.0,37.48332962798263,os,reports/detector_failures/09_exotropia_os_exotropia_032_37.5px.jpg,180.0,108.0,harschberg_data_detect/exotropia_harschberg/exotropia_032.jpg
+double_or_multiple_reflex_candidates,exotropia,162.0,76.5,35.79455265819088,os,reports/detector_failures/10_exotropia_os_exotropia_076_35.8px.jpg,179.0,108.0,harschberg_data_detect/exotropia_harschberg/exotropia_076.jpg

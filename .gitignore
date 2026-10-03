@@ -7,6 +7,7 @@ __pycache__/
 env/
 venv/
 .venv/
+.venv312/
 ENV/
 
 # Testing & Coverage
@@ -15,6 +16,10 @@ ENV/
 htmlcov/
 .tox/
 .nox/
+processed/matplotlib_cache/
+processed/*.csv
+reports/**/*.jpg
+reports/**/*.png
 
 # IDE
 .idea/

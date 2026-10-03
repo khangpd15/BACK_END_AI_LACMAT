@@ -1,0 +1,80 @@
+{
+  "manual_count": 62,
+  "oracle_feature_csv": "processed/hirschberg_oracle_features.csv",
+  "plots": [
+    "reports/oracle_plots/od_offset_nasal_ipd.png",
+    "reports/oracle_plots/os_offset_nasal_ipd.png",
+    "reports/oracle_plots/signed_asymmetry_nasal_ipd.png",
+    "reports/oracle_plots/abs_asymmetry_nasal_ipd.png",
+    "reports/oracle_plots/mean_offset_nasal_ipd.png",
+    "reports/oracle_plots/mean_abs_offset_nasal_ipd.png"
+  ],
+  "detector_failure_summary": {
+    "error_count": 94,
+    "mean_error_px": 10.527627470591591,
+    "median_error_px": 2.23606797749979,
+    "p90_error_px": 31.609424406122734,
+    "p90_failure_count": 10,
+    "cause_counts": {
+      "double_or_multiple_reflex_candidates": 7,
+      "large_or_elongated_glare_environment_or_eyelid": 2,
+      "eyelid_or_skin_bright_spot": 1
+    },
+    "failure_csv": "reports/detector_failures/detector_failures_p90.csv"
+  },
+  "oracle_cv": {
+    "feature": "abs_asymmetry_nasal_ipd",
+    "n_predictions": 310,
+    "balanced_accuracy": 0.665,
+    "macro_f1": 0.6110527544351074,
+    "confusion_matrix": [
+      [
+        29,
+        21
+      ],
+      [
+        65,
+        195
+      ]
+    ],
+    "threshold_median": 0.012719508089995541,
+    "direction_counts": {
+      "1": 25
+    },
+    "bootstrap_ci": {
+      "balanced_accuracy": {
+        "low": 0.5017810713627143,
+        "high": 0.8280500000000001
+      },
+      "macro_f1": {
+        "low": 0.47662824831421857,
+        "high": 0.7312340312349447
+      }
+    }
+  },
+  "oracle_permutation": {
+    "n_permutations": 1000,
+    "p_value": 0.030969030969030968,
+    "balanced_accuracy_mean": 0.49683400127236627,
+    "balanced_accuracy_p95": 0.6507642262317834
+  },
+  "hypothesis_grids": {
+    "normal_high_asymmetry_count": 10,
+    "strabismus_low_asymmetry_count": 10,
+    "normal_high_asymmetry_grid": "reports/normal_high_oracle_asymmetry_grid.jpg",
+    "strabismus_low_asymmetry_grid": "reports/strabismus_low_oracle_asymmetry_grid.jpg",
+    "environment_reflection_suspect_count": 2,
+    "environment_reflection_note": "Count is based on P90 detector-failure overlays classified as large/elongated glare; human review is still required to separate ambient reflection from eyelid/skin glare."
+  },
+  "detector_previous": {
+    "balanced_accuracy": 0.5616279069767443,
+    "permutation_p_value": 0.2857142857142857
+  },
+  "governance": [
+    "research_only",
+    "manual_oracle_geometry",
+    "no_cnn",
+    "no_production_api_integration",
+    "no_source_data_modification"
+  ]
+}

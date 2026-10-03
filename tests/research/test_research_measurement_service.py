@@ -182,13 +182,13 @@ def test_detect_reflex_single_spot():
 
     assert status == "DETECTED"
     assert len(candidates) == 1
-    assert tier == "strict_specular"
+    assert tier == "compact_specular"
     assert abs(candidates[0]["x"] - 49.5) < 1.0
     assert abs(candidates[0]["y"] - 49.5) < 1.0
 
 
 def test_detect_reflex_not_found():
-    """Unit test: REFLEX_NOT_FOUND when no bright spot exists in eye ROI."""
+    """Unit test: LOW_PEAK_BRIGHTNESS when no bright spot exists in eye ROI."""
     im = Image.new("RGB", (100, 100), "black")
     draw = ImageDraw.Draw(im)
     cx, cy, iris_diameter = 50.0, 50.0, 30.0
@@ -198,27 +198,59 @@ def test_detect_reflex_not_found():
 
     candidates, status, tier = detect_reflexes_in_roi(arr, cx, cy, iris_diameter)
 
-    assert status == "REFLEX_NOT_FOUND"
+    assert status == "LOW_PEAK_BRIGHTNESS"
     assert len(candidates) == 0
     assert tier is None
 
 
-def test_detect_reflex_multiple_spots():
-    """Unit test: MULTIPLE_REFLEX when multiple bright spots exist in eye ROI."""
+def test_detect_reflex_clustered_spots():
+    """Unit test: clustered bright glints are rejected as ambiguous."""
     im = Image.new("RGB", (100, 100), "black")
     draw = ImageDraw.Draw(im)
     cx, cy, iris_diameter = 50.0, 50.0, 30.0
     draw.ellipse((35, 35, 65, 65), fill=(80, 60, 40))
-    # Spot 1
-    draw.rectangle((44, 48, 46, 50), fill=(255, 255, 255))
-    # Spot 2
-    draw.rectangle((54, 48, 56, 50), fill=(255, 255, 255))
+    # Two close, similarly strong spots.
+    draw.rectangle((45, 48, 47, 50), fill=(255, 255, 255))
+    draw.rectangle((51, 48, 53, 50), fill=(255, 255, 255))
     arr = np.array(im)
 
     candidates, status, tier = detect_reflexes_in_roi(arr, cx, cy, iris_diameter)
 
-    assert status == "MULTIPLE_REFLEX"
-    assert len(candidates) >= 2
+    assert status == "CLUSTERED_REFLEX_CANDIDATES"
+    assert candidates == []
+    assert tier is None
+
+
+def test_detect_reflex_rejects_large_or_elongated_glare():
+    """Unit test: long bright glare streak is rejected."""
+    im = Image.new("RGB", (100, 100), "black")
+    draw = ImageDraw.Draw(im)
+    cx, cy, iris_diameter = 50.0, 50.0, 30.0
+    draw.ellipse((35, 35, 65, 65), fill=(80, 60, 40))
+    draw.rectangle((35, 48, 70, 50), fill=(255, 255, 255))
+    arr = np.array(im)
+
+    candidates, status, tier = detect_reflexes_in_roi(arr, cx, cy, iris_diameter)
+
+    assert status == "LARGE_OR_ELONGATED_GLARE"
+    assert candidates == []
+    assert tier is None
+
+
+def test_detect_reflex_rejects_candidate_too_far_from_iris():
+    """Unit test: bright candidate inside broad search but outside strict iris region is rejected."""
+    im = Image.new("RGB", (100, 100), "black")
+    draw = ImageDraw.Draw(im)
+    cx, cy, iris_diameter = 50.0, 50.0, 30.0
+    draw.ellipse((35, 35, 65, 65), fill=(80, 60, 40))
+    draw.rectangle((71, 48, 73, 50), fill=(255, 255, 255))
+    arr = np.array(im)
+
+    candidates, status, tier = detect_reflexes_in_roi(arr, cx, cy, iris_diameter)
+
+    assert status == "REFLEX_CANDIDATE_TOO_FAR"
+    assert candidates == []
+    assert tier is None
 
 
 def test_detect_pupil_not_found_when_insufficient_data():
@@ -337,11 +369,12 @@ def test_hirschberg_missing_reflex_reason_codes():
     assert result["status"] == "INCONCLUSIVE"
     assert result["result"] == "MEASUREMENT_ONLY"
     assert "REFLEX_NOT_FOUND" in result["reasonCodes"]
+    assert "LOW_PEAK_BRIGHTNESS" in result["reasonCodes"]
     assert result["quality"]["detectorSuccess"]["reflex"] is False
 
 
-def test_hirschberg_multiple_reflex_reason_codes():
-    """Unit test: Multiple corneal reflexes produce MULTIPLE_REFLEX reason and MEASUREMENT_ONLY."""
+def test_hirschberg_clustered_reflex_reason_codes():
+    """Unit test: clustered corneal reflexes produce detailed reason and MEASUREMENT_ONLY."""
     image_data_url, landmarks = _synthetic_hirschberg_payload(with_pupil=True, num_reflexes=2)
     req = ResearchMeasurementRequest(
         schemaVersion="remicare-research-quality-v0.1",
@@ -359,7 +392,8 @@ def test_hirschberg_multiple_reflex_reason_codes():
 
     assert result["status"] == "INCONCLUSIVE"
     assert result["result"] == "MEASUREMENT_ONLY"
-    assert "MULTIPLE_REFLEX" in result["reasonCodes"]
+    assert "REFLEX_NOT_FOUND" in result["reasonCodes"]
+    assert "CLUSTERED_REFLEX_CANDIDATES" in result["reasonCodes"]
     assert result["quality"]["detectorSuccess"]["reflex"] is False
 
 

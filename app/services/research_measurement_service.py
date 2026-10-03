@@ -48,32 +48,27 @@ RIGHT_CORNERS = {"nasal": 133, "temporal": 33}
 # Phase 6A Research Thresholds (All thresholds are TODO_PILOT pending clinical pilot)
 # ==============================================================================
 
-# Multi-threshold tiers for corneal light reflex detection (evaluated from strict to adaptive)
-REFLEX_MULTI_THRESHOLDS_TODO_PILOT: List[Dict[str, Any]] = [
-    {
-        "tier": "strict_specular",
-        "min_rgb": 235,
-        "min_luma": 225.0,
-        "threshold_source": "TODO_PILOT",
-    },
-    {
-        "tier": "medium_specular",
-        "min_rgb": 215,
-        "min_luma": 205.0,
-        "threshold_source": "TODO_PILOT",
-    },
-    {
-        "tier": "adaptive_specular",
-        "min_rgb": 195,
-        "min_luma": 185.0,
-        "threshold_source": "TODO_PILOT",
-    },
-]
+# Compact-glint reflex detector, synced with the manual/oracle research audit.
+REFLEX_MIN_PIXELS_TODO_PILOT = 1
+REFLEX_MAX_PIXELS_TODO_PILOT = 60
+REFLEX_BROAD_SEARCH_RADIUS_FACTOR_TODO_PILOT = 1.60   # Relative to iris radius
+REFLEX_STRICT_SEARCH_RADIUS_FACTOR_TODO_PILOT = 1.30  # Reject accepted candidate beyond this radius
+REFLEX_MIN_PEAK_LUMA_TODO_PILOT = 180.0
+REFLEX_THRESHOLD_DELTA_TODO_PILOT = 32.0
+REFLEX_MAX_ASPECT_RATIO_TODO_PILOT = 2.8              # Exclude elongated glare streaks
+REFLEX_CLUSTER_DISTANCE_PX_TODO_PILOT = 8.0
+REFLEX_CLUSTER_SCORE_GAP_TODO_PILOT = 3.0
 
-REFLEX_MIN_PIXELS_TODO_PILOT = 2
-REFLEX_MAX_PIXELS_TODO_PILOT = 120
-REFLEX_SEARCH_RADIUS_FACTOR_TODO_PILOT = 1.35  # Relative to iris radius
-REFLEX_MAX_ASPECT_RATIO_TODO_PILOT = 3.5       # Exclude elongated glare streaks
+REFLEX_SUCCESS_STATUS = "DETECTED"
+REFLEX_FAILURE_DETAIL_STATUSES = {
+    "REFLEX_NOT_FOUND",
+    "LOW_PEAK_BRIGHTNESS",
+    "LARGE_OR_ELONGATED_GLARE",
+    "CLUSTERED_REFLEX_CANDIDATES",
+    "REFLEX_CANDIDATE_TOO_FAR",
+    "LOW_QUALITY_INPUT",
+    "MULTIPLE_REFLEX",
+}
 
 # Pupil Center Detection constants (all exploratory & TODO_PILOT)
 PUPIL_SEARCH_RADIUS_FACTOR_TODO_PILOT = 0.85   # Search inside 85% of iris radius
@@ -229,87 +224,111 @@ def detect_reflexes_in_roi(
     cy: float,
     iris_diameter: float,
 ) -> Tuple[List[Dict[str, Any]], str, Optional[str]]:
-    """Detect corneal light reflexes (Purkinje images) within eye ROI across multi-threshold tiers.
+    """Detect compact corneal light reflexes within an iris-centered ROI.
 
     Returns:
         (candidates, reflex_status, reflex_tier)
-        reflex_status: "DETECTED", "REFLEX_NOT_FOUND", "MULTIPLE_REFLEX", "LOW_QUALITY_INPUT"
+        reflex_status values are frontend-facing research reason codes, including:
+        DETECTED, LOW_PEAK_BRIGHTNESS, LARGE_OR_ELONGATED_GLARE,
+        CLUSTERED_REFLEX_CANDIDATES, REFLEX_CANDIDATE_TOO_FAR,
+        REFLEX_NOT_FOUND, LOW_QUALITY_INPUT.
     """
-    height, width, _ = image.shape
-    radius = max(8.0, (iris_diameter / 2.0) * REFLEX_SEARCH_RADIUS_FACTOR_TODO_PILOT)
-    x0 = max(0, int(round(cx - radius)))
-    x1 = min(width, int(round(cx + radius)))
-    y0 = max(0, int(round(cy - radius)))
-    y1 = min(height, int(round(cy + radius)))
-    if x1 <= x0 or y1 <= y0:
+    if image.ndim != 3 or image.shape[2] < 3 or iris_diameter <= 1.0:
         return [], "LOW_QUALITY_INPUT", None
 
-    crop = image[y0:y1, x0:x1, :]
-    yy, xx = np.mgrid[y0:y1, x0:x1]
-    circular = ((xx - cx) ** 2 + (yy - cy) ** 2) <= radius**2
-    luma = (0.299 * crop[:, :, 0]) + (0.587 * crop[:, :, 1]) + (0.114 * crop[:, :, 2])
+    height, width = image.shape[:2]
+    iris_radius = iris_diameter / 2.0
+    broad_radius = max(16.0, iris_radius * REFLEX_BROAD_SEARCH_RADIUS_FACTOR_TODO_PILOT)
+    strict_radius = max(12.0, iris_radius * REFLEX_STRICT_SEARCH_RADIUS_FACTOR_TODO_PILOT)
 
-    for tier_cfg in REFLEX_MULTI_THRESHOLDS_TODO_PILOT:
-        min_rgb = tier_cfg["min_rgb"]
-        min_luma = tier_cfg["min_luma"]
-        tier_name = tier_cfg["tier"]
+    gray = cv2.cvtColor(image[:, :, :3], cv2.COLOR_RGB2GRAY)
+    mask = np.zeros((height, width), dtype=np.uint8)
+    cv2.circle(mask, (int(round(cx)), int(round(cy))), int(round(broad_radius)), 255, -1)
+    masked_values = gray[mask > 0]
+    if masked_values.size == 0:
+        return [], "LOW_QUALITY_INPUT", None
 
-        bright = (
-            circular
-            & (crop[:, :, 0] >= min_rgb)
-            & (crop[:, :, 1] >= min_rgb)
-            & (crop[:, :, 2] >= min_rgb)
-            & (luma >= min_luma)
-        )
-        if not np.any(bright):
+    max_val = float(np.max(masked_values))
+    if max_val < REFLEX_MIN_PEAK_LUMA_TODO_PILOT:
+        return [], "LOW_PEAK_BRIGHTNESS", None
+
+    threshold = max(
+        int(REFLEX_MIN_PEAK_LUMA_TODO_PILOT),
+        int(max_val - REFLEX_THRESHOLD_DELTA_TODO_PILOT),
+    )
+    _, binary = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
+    binary = cv2.bitwise_and(binary, mask)
+    num_labels, component_labels, stats, centroids = cv2.connectedComponentsWithStats(binary)
+
+    candidates: List[Dict[str, Any]] = []
+    rejected_large_or_long = 0
+    rejected_too_far = 0
+    for label_idx in range(1, num_labels):
+        area = int(stats[label_idx, cv2.CC_STAT_AREA])
+        box_w = int(stats[label_idx, cv2.CC_STAT_WIDTH])
+        box_h = int(stats[label_idx, cv2.CC_STAT_HEIGHT])
+        aspect = max(box_w, box_h) / max(1, min(box_w, box_h))
+        x = float(centroids[label_idx][0])
+        y = float(centroids[label_idx][1])
+        dist = float(math.hypot(x - cx, y - cy))
+
+        if area > REFLEX_MAX_PIXELS_TODO_PILOT or (
+            aspect > REFLEX_MAX_ASPECT_RATIO_TODO_PILOT and area >= 4
+        ):
+            rejected_large_or_long += 1
+            continue
+        if area < REFLEX_MIN_PIXELS_TODO_PILOT:
+            continue
+        if dist > strict_radius:
+            rejected_too_far += 1
             continue
 
-        visited = np.zeros(bright.shape, dtype=bool)
-        candidates: List[Dict[str, Any]] = []
-        h, w = bright.shape
-        for y in range(h):
-            for x in range(w):
-                if visited[y, x] or not bright[y, x]:
-                    continue
-                stack = [(x, y)]
-                visited[y, x] = True
-                pixels: List[Tuple[int, int]] = []
-                while stack:
-                    px, py = stack.pop()
-                    pixels.append((px, py))
-                    for nx, ny in ((px + 1, py), (px - 1, py), (px, py + 1), (px, py - 1)):
-                        if 0 <= nx < w and 0 <= ny < h and not visited[ny, nx] and bright[ny, nx]:
-                            visited[ny, nx] = True
-                            stack.append((nx, ny))
+        component_mask = component_labels == label_idx
+        peak = float(np.max(gray[component_mask])) if np.any(component_mask) else max_val
+        score = (
+            dist
+            + area * 0.12
+            + max(0.0, aspect - 1.0) * 1.5
+            - (peak - threshold) * 0.03
+        )
+        candidates.append({
+            "x": x,
+            "y": y,
+            "pixel_count": area,
+            "area": area,
+            "aspect_ratio": round(float(aspect), 4),
+            "distance_from_iris_center_px": round(dist, 4),
+            "score": round(float(score), 4),
+            "tier": "compact_specular",
+            "threshold_source": "TODO_PILOT",
+        })
 
-                if REFLEX_MIN_PIXELS_TODO_PILOT <= len(pixels) <= REFLEX_MAX_PIXELS_TODO_PILOT:
-                    xs = [p[0] for p in pixels]
-                    ys = [p[1] for p in pixels]
-                    w_box = max(xs) - min(xs) + 1
-                    h_box = max(ys) - min(ys) + 1
-                    aspect_ratio = max(w_box, h_box) / max(1, min(w_box, h_box))
-                    if aspect_ratio <= REFLEX_MAX_ASPECT_RATIO_TODO_PILOT:
-                        mean_x = x0 + sum(xs) / len(pixels)
-                        mean_y = y0 + sum(ys) / len(pixels)
-                        candidates.append({
-                            "x": float(mean_x),
-                            "y": float(mean_y),
-                            "pixel_count": len(pixels),
-                            "tier": tier_name,
-                            "threshold_source": "TODO_PILOT",
-                        })
+    if not candidates:
+        if rejected_large_or_long:
+            return [], "LARGE_OR_ELONGATED_GLARE", None
+        if rejected_too_far:
+            return [], "REFLEX_CANDIDATE_TOO_FAR", None
+        return [], "REFLEX_NOT_FOUND", None
 
-        if len(candidates) == 1:
-            return candidates, "DETECTED", tier_name
-        elif len(candidates) > 1:
-            return candidates, "MULTIPLE_REFLEX", tier_name
+    candidates = sorted(candidates, key=lambda item: float(item["score"]))
+    best = candidates[0]
+    clustered = [
+        candidate for candidate in candidates[1:]
+        if math.hypot(float(candidate["x"]) - float(best["x"]), float(candidate["y"]) - float(best["y"]))
+        <= REFLEX_CLUSTER_DISTANCE_PX_TODO_PILOT
+        and float(candidate["score"]) - float(best["score"]) <= REFLEX_CLUSTER_SCORE_GAP_TODO_PILOT
+    ]
+    if clustered:
+        return [], "CLUSTERED_REFLEX_CANDIDATES", None
 
-    return [], "REFLEX_NOT_FOUND", None
+    best["secondary_candidate_count"] = len(candidates) - 1
+    tier = "detected_with_secondary_candidates" if len(candidates) > 1 else "compact_specular"
+    return [best], REFLEX_SUCCESS_STATUS, tier
 
 
 # Backwards compatibility alias
 def _detect_reflexes(image: np.ndarray, cx: float, cy: float, radius: float) -> List[Tuple[float, float, int]]:
-    candidates, _status, _tier = detect_reflexes_in_roi(image, cx, cy, radius * 2.0 / REFLEX_SEARCH_RADIUS_FACTOR_TODO_PILOT)
+    candidates, _status, _tier = detect_reflexes_in_roi(image, cx, cy, radius * 2.0)
     return [(c["x"], c["y"], c["pixel_count"]) for c in candidates]
 
 
@@ -472,7 +491,7 @@ def _measure_eye(image: np.ndarray, landmarks: List[Dict[str, Any]], eye: str) -
     disp_iris_raw: Optional[float] = None
     disp_pupil_raw: Optional[float] = None
 
-    if reflex_status == "DETECTED" and reflex_count == 1:
+    if reflex_status == REFLEX_SUCCESS_STATUS and reflex_count == 1:
         reflex_x = reflex_candidates[0]["x"]
         reflex_y = reflex_candidates[0]["y"]
         reflex_center = {"x": round(reflex_x, 3), "y": round(reflex_y, 3)}
@@ -488,15 +507,13 @@ def _measure_eye(image: np.ndarray, landmarks: List[Dict[str, Any]], eye: str) -
             disp_pupil_raw = round((reflex_x - pupil_c["x"]) / diameter, 5)
 
     # Eye overall status
-    if reflex_status == "DETECTED" and pupil_status == "DETECTED":
+    if reflex_status == REFLEX_SUCCESS_STATUS and pupil_status == "DETECTED":
         status = "MEASURED"
-    elif reflex_status == "MULTIPLE_REFLEX":
-        status = "MULTIPLE_REFLEX"
-    elif reflex_status == "REFLEX_NOT_FOUND":
-        status = "REFLEX_NOT_FOUND"
+    elif reflex_status in REFLEX_FAILURE_DETAIL_STATUSES:
+        status = reflex_status
     elif pupil_status == "PUPIL_NOT_FOUND":
         status = "PUPIL_NOT_FOUND"
-    elif reflex_status == "LOW_QUALITY_INPUT" or pupil_status == "LOW_QUALITY_INPUT":
+    elif pupil_status == "LOW_QUALITY_INPUT":
         status = "LOW_QUALITY_INPUT"
     else:
         status = "INCONCLUSIVE_REFLEX"
@@ -544,16 +561,26 @@ def measure_hirschberg(req: ResearchMeasurementRequest) -> Dict[str, Any]:
         eyes_detected = right.status != "INVALID_IRIS" and left.status != "INVALID_IRIS"
         iris_detected = right.iris_diameter_px > 1.0 and left.iris_diameter_px > 1.0
         pupil_detected = right.pupil_status == "DETECTED" and left.pupil_status == "DETECTED"
-        reflex_detected = right.reflex_count == 1 and left.reflex_count == 1
+        reflex_detected = (
+            right.reflex_status == REFLEX_SUCCESS_STATUS
+            and left.reflex_status == REFLEX_SUCCESS_STATUS
+            and right.reflex_count == 1
+            and left.reflex_count == 1
+        )
         measured = right.h_iris is not None and left.h_iris is not None
 
         reasons: List[str] = []
         if not reflex_detected:
-            if right.reflex_status == "MULTIPLE_REFLEX" or left.reflex_status == "MULTIPLE_REFLEX":
-                reasons.append("MULTIPLE_REFLEX")
-            if right.reflex_status == "REFLEX_NOT_FOUND" or left.reflex_status == "REFLEX_NOT_FOUND":
-                reasons.append("REFLEX_NOT_FOUND")
-            if "MULTIPLE_REFLEX" not in reasons and "REFLEX_NOT_FOUND" not in reasons:
+            for reflex_status in (right.reflex_status, left.reflex_status):
+                if reflex_status == REFLEX_SUCCESS_STATUS:
+                    continue
+                # Preserve the broad legacy reason so older clients can keep
+                # their existing fallback copy, then add the detailed reason.
+                if "REFLEX_NOT_FOUND" not in reasons:
+                    reasons.append("REFLEX_NOT_FOUND")
+                if reflex_status and reflex_status not in reasons:
+                    reasons.append(reflex_status)
+            if len(reasons) == 1 and "REFLEX_COUNT_NOT_EXACTLY_ONE_PER_EYE" not in reasons:
                 reasons.append("REFLEX_COUNT_NOT_EXACTLY_ONE_PER_EYE")
 
         if not pupil_detected:
