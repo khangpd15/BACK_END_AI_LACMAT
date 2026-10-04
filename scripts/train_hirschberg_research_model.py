@@ -50,9 +50,12 @@ logger = logging.getLogger("remicare.train_hirschberg")
 
 DEFAULT_SEED = 20261003
 DEFAULT_MANIFEST = Path("D:/AI_Check_Lac/manifests/hirschberg_folder_labels.jsonl")
-DEFAULT_MODEL_OUTPUT = PROJECT_ROOT / "app" / "models" / "research" / "hirschberg_candidate_v0.1.joblib"
-DEFAULT_EVAL_OUTPUT = Path("D:/AI_Check_Lac/manifests/hirschberg_candidate_eval.json")
+DEFAULT_MODEL_ID = "hirschberg-candidate-v0.2"
+DEFAULT_MODEL_OUTPUT = PROJECT_ROOT / "app" / "models" / "research" / "hirschberg_candidate_v0.2.joblib"
+DEFAULT_EVAL_OUTPUT = PROJECT_ROOT / "reports" / "hirschberg_candidate_v0.2_eval.json"
+DEFAULT_MODEL_CARD_OUTPUT = PROJECT_ROOT / "reports" / "hirschberg_candidate_v0.2_model_card.md"
 DEFAULT_FEATURE_CACHE = Path("D:/AI_Check_Lac/manifests/hirschberg_extracted_features.npz")
+DATASET_VERSION = "hirschberg-folder-labels-v0.1"
 
 FEATURE_NAMES = [
     # 1. Iris geometry (3)
@@ -214,6 +217,18 @@ def extract_features_from_image(
     return feats
 
 
+def _record_reference(rec: Dict[str, Any], label_idx: int, split: str) -> Dict[str, Any]:
+    return {
+        "path": rec.get("absolute_path") or rec.get("relative_path"),
+        "class_label": rec.get("class_label"),
+        "label_idx": int(label_idx),
+        "group_id": rec.get("group_id"),
+        "participant_id": rec.get("participant_id") or rec.get("participantId"),
+        "domain": rec.get("domain"),
+        "split": split,
+    }
+
+
 def load_dataset(
     manifest_path: Path,
     cache_path: Path | None = None,
@@ -233,6 +248,7 @@ def load_dataset(
             "groups_val": cached["groups_val"],
             "groups_test": cached["groups_test"],
             "feature_names": cached["feature_names"].tolist(),
+            "records_test": cached["records_test"].tolist() if "records_test" in cached.files else [],
         }
 
     logger.info(f"Extracting features from manifest {manifest_path}...")
@@ -247,9 +263,9 @@ def load_dataset(
                 records.append(json.loads(line))
 
     splits: Dict[str, Dict[str, List[Any]]] = {
-        "train": {"X": [], "y": [], "groups": []},
-        "val": {"X": [], "y": [], "groups": []},
-        "test": {"X": [], "y": [], "groups": []},
+        "train": {"X": [], "y": [], "groups": [], "records": []},
+        "val": {"X": [], "y": [], "groups": [], "records": []},
+        "test": {"X": [], "y": [], "groups": [], "records": []},
     }
 
     t0 = time.time()
@@ -275,6 +291,7 @@ def load_dataset(
         splits[split]["X"].append(feats)
         splits[split]["y"].append(label_idx)
         splits[split]["groups"].append(group_id)
+        splits[split]["records"].append(_record_reference(rec, label_idx, split))
 
         if idx % 100 == 0 or idx == len(records):
             elapsed = time.time() - t0
@@ -291,7 +308,20 @@ def load_dataset(
         "groups_val": np.array(splits["val"]["groups"]),
         "groups_test": np.array(splits["test"]["groups"]),
         "feature_names": FEATURE_NAMES,
+        "records_test": np.array(splits["test"]["records"], dtype=object),
     }
+
+    missing = {
+        split: len(records_for_split["X"])
+        for split, records_for_split in splits.items()
+    }
+    if any(count == 0 for count in missing.values()):
+        raise RuntimeError(
+            "Resolved dataset is not trainable because one or more splits are empty "
+            f"after image path resolution: {missing}. "
+            "Check that the manifest paths exist on this machine or rebuild the manifest "
+            "from the local dataset root."
+        )
 
     if cache_path:
         cache_path.parent.mkdir(parents=True, exist_ok=True)
@@ -402,6 +432,25 @@ def train_and_evaluate(
     except Exception:
         binary_roc_auc = None
 
+    records_test = list(dataset.get("records_test") or [])
+    false_negative_review = []
+    false_positive_review = []
+    for idx, (true_idx, pred_idx) in enumerate(zip(y_test.tolist(), test_preds.tolist())):
+        rec = records_test[idx] if idx < len(records_test) and isinstance(records_test[idx], dict) else {}
+        item = {
+            **rec,
+            "true_class": CLASS_NAMES[int(true_idx)],
+            "predicted_class": CLASS_NAMES[int(pred_idx)],
+            "probabilities": {
+                CLASS_NAMES[i]: round(float(test_probs[idx, i]), 4)
+                for i in range(len(CLASS_NAMES))
+            },
+        }
+        if int(true_idx) != 2 and int(pred_idx) == 2:
+            false_negative_review.append(item)
+        elif int(true_idx) == 2 and int(pred_idx) != 2:
+            false_positive_review.append(item)
+
     test_metrics = {
         "model_name": best_name,
         "seed": seed,
@@ -422,6 +471,10 @@ def train_and_evaluate(
             "tn": int(tn),
             "fn": int(fn),
         },
+        "review_lists": {
+            "false_negative_strabismus_as_normal": false_negative_review,
+            "false_positive_normal_as_strabismus": false_positive_review,
+        },
     }
 
     return best_pipeline, validation_results, test_metrics
@@ -430,8 +483,10 @@ def train_and_evaluate(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Phase 6B Hirschberg Exploratory Classifier Trainer")
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--model-id", default=DEFAULT_MODEL_ID)
     parser.add_argument("--model-output", type=Path, default=DEFAULT_MODEL_OUTPUT)
     parser.add_argument("--eval-output", type=Path, default=DEFAULT_EVAL_OUTPUT)
+    parser.add_argument("--model-card-output", type=Path, default=DEFAULT_MODEL_CARD_OUTPUT)
     parser.add_argument("--cache-features", type=Path, default=DEFAULT_FEATURE_CACHE)
     parser.add_argument("--force-recompute", action="store_true")
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
@@ -448,14 +503,14 @@ def main() -> int:
     # Save artifact
     args.model_output.parent.mkdir(parents=True, exist_ok=True)
     bundle = {
-        "model_id": "hirschberg-candidate-v0.1",
+        "model_id": args.model_id,
         "status": "research_candidate",
         "model_type": test_metrics["model_name"],
         "pipeline": best_pipeline,
         "feature_names": FEATURE_NAMES,
         "classes": CLASS_NAMES,
         "class_to_idx": CLASS_TO_IDX,
-        "dataset_version": "hirschberg-folder-labels-v0.1",
+        "dataset_version": DATASET_VERSION,
         "trained_at": datetime.now(timezone.utc).isoformat(),
         "seed": args.seed,
         "metrics": test_metrics,
@@ -473,13 +528,20 @@ def main() -> int:
         "phase": "Phase 6B Exploratory Hirschberg Classifier Evaluation",
         "createdAt": datetime.now(timezone.utc).isoformat(),
         "status": "COMPLETED_RESEARCH_CANDIDATE",
-        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "modelId": args.model_id,
+        "datasetVersion": DATASET_VERSION,
         "manifestPath": str(args.manifest),
         "artifactPath": str(args.model_output),
         "seed": args.seed,
         "modelFamily": test_metrics["model_name"],
         "validationComparison": val_results,
         "testMetrics": test_metrics,
+        "knownLimitations": [
+            "Dataset is legacy_or_unknown_hirschberg_crop, not full-face phone flash uploads.",
+            "Participant IDs are UNKNOWN in the source manifest; group split reduces filename leakage but cannot prove patient-level independence.",
+            "Folder labels are user-attested doctor-confirmed, but no separate clinician manifest is present in this repository.",
+            "Model is research_candidate only and must not be interpreted as diagnosis or clinical probability.",
+        ],
         "governanceDeclarations": [
             "Status is strictly research_candidate, NOT deployed to production.",
             "Production endpoint /api/v1/strabismus/predict remains unchanged.",
@@ -490,6 +552,57 @@ def main() -> int:
     args.eval_output.parent.mkdir(parents=True, exist_ok=True)
     args.eval_output.write_text(json.dumps(eval_report, ensure_ascii=False, indent=2), encoding="utf-8")
     logger.info(f"Saved evaluation report to {args.eval_output}")
+
+    model_card = f"""# {args.model_id} Model Card
+
+Status: `research_candidate`
+
+## Intended Use
+
+Exploratory Hirschberg image research only. This artifact is not a diagnostic model, not a clinical probability estimator, and is not deployed to the production `/api/v1/strabismus/predict` endpoint.
+
+## Dataset
+
+- Dataset version: `{DATASET_VERSION}`
+- Manifest: `{args.manifest}`
+- Domain: legacy or unknown 224x224 Hirschberg/ocular crops.
+- Participant identity: unavailable/UNKNOWN in the manifest.
+- Label source: folder labels reported as doctor-confirmed by the user, but no independent clinician manifest is present in this repository.
+
+## Feature Contract
+
+- Feature count: {len(FEATURE_NAMES)}
+- Feature families: iris geometry, corneal reflex metrics, pupil metrics, normalized Hirschberg vectors, dark centroid, left/right intensity asymmetry, horizontal profile, 4x4 spatial grid, frozen ONNX logits.
+
+## Selected Model
+
+- Model family: {test_metrics['model_name']}
+- Seed: {args.seed}
+- Production: `False`
+
+## Test Metrics
+
+- Accuracy: {test_metrics['test_accuracy']}
+- Balanced accuracy: {test_metrics['test_balanced_accuracy']}
+- Macro-F1: {test_metrics['test_macro_f1']}
+- Binary strabismus sensitivity: {test_metrics['binary_strabismus_vs_normal']['sensitivity']}
+- Binary strabismus specificity: {test_metrics['binary_strabismus_vs_normal']['specificity']}
+- Binary ROC-AUC: {test_metrics['binary_strabismus_vs_normal']['roc_auc']}
+
+## Critical Limitations
+
+- Crop-only training data does not match the current full-face phone-upload product flow.
+- Patient-level leakage cannot be ruled out because true participant IDs are absent.
+- No production threshold or clinical angle mapping is validated.
+- Raw probabilities must not be shown as medical risk.
+
+## Deployment Recommendation
+
+Do not deploy as production. Use only for offline research comparison and guarded research output with clear non-clinical labeling.
+"""
+    args.model_card_output.parent.mkdir(parents=True, exist_ok=True)
+    args.model_card_output.write_text(model_card, encoding="utf-8")
+    logger.info(f"Saved model card to {args.model_card_output}")
 
     logger.info("=== PHASE 6B TRAINING AND EVALUATION COMPLETED SUCCESSFULLY ===")
     logger.info(f"Test Accuracy: {test_metrics['test_accuracy']}")
