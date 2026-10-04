@@ -1,0 +1,8 @@
+{
+  "source_domain": "KOREAN_EYE_TRACKER",
+  "training_permitted": false,
+  "consent_verified": false,
+  "verified_by": null,
+  "evidence_file": null,
+  "note": "Unverified. Reference an actual source-specific permission/consent document before enabling training."
+}

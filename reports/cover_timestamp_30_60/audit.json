@@ -1,0 +1,176 @@
+{
+  "status": "AUDIT_ONLY_NO_TRAINING",
+  "recordings": 41,
+  "class_counts": {
+    "NORMAL": 20,
+    "STRABISMUS": 21
+  },
+  "samples": 62404,
+  "valid_timestamp_recordings": 3,
+  "invalid_recordings": [
+    {
+      "recording_sha256": "8a7f07f7ec8e23892a745950cbe7405a4fa2b8a860687cd214dfea0905216f4f",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "e12135ea4c0feb92ca448f77809727ec7e53728b65f311ccffdeb1d8ee98ae94",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "02deb3234cee518015a2b1884d857077968c7258c84485cb4279eb478f64aaa4",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "1acbc801955599ee0407aaff82e0d0413bcde9c417203d6ac762e9c49c92384d",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "584598211da2bbcf7bfe141125c6d6c866274fc17aa1757ae9bdcbfd584b6ae7",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "d5d54da56b102404f44593ea1752db1672e2ae333141901da9e7e208dc78bcea",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "d73406052266d37e59c6367847d04e19822267fe6660593460a516dc41ec01c2",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "417a50c0fd5598e1cbb4bb3a7a4de77b0805a86f851468a92f230bdb21d56f2c",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "6976998d9a5751652c12544086caa8da107d1c847c47f2e2a2b9e51d5bdc9f23",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "c23accf8cc916572b183563fdfb7c9a38807797c4be64ed0f361448d363e8d4f",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "878ec0317e7cbac1a01a043f14df5323ed318fd0b51cdc147c04e392f67d9429",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "d395a03ddc0d6dc83ddfeeeb7e5b18cac03651fabf1e039ab2bc3701ecb8419a",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "d02a2ea2042031951df0fbeb564d7daa7fede045d752d4459329d9c559f31293",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "12c7b04eed8764cc7ba6fe17a461492e25ada2ced3644279503d45cc29926cb7",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "1ed73fbd252d4aa2b6032a3181a1fa6c330e0bf1ad0afdca2a016d7321f400b9",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "303edc48b98f96587f75bbc78f03b4ef4cb963e4831a8e1e51604fdae89499ba",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "13441e1eaeb8e0214917f450f5a338e1395f3f87cedb797ee99221ebf5864fec",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "300c30b9b38b3b50d07fa5fd3a0c20f1ae1da5f05551a0b892b76ae7b008c4c4",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "3822106ae6a0a45ad3f2cbbd625bafc61ab76bbea9e69818a233f473897d734a",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "6f6ca4ab670fd0922e223c58cce7f8ddd4f391bbb3264746263ed167558d3d79",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "6e41f29feb0413045f665b0ce42882875ac572cd87a1d624e1486937ea0d48c9",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "6cf1c61408fff56bf6bd52303bfc603ee8c254a44b1240ab06259699be698d85",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "3a27288ae718f2dc316870615803d6e5981eeb14b24333e1cd9b6bc6c2426e7b",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "f92324e7fc82de9e271cca7d84d248f0c63e9429c13479cfc0df1294eb1715ec",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "10a82b6a49af909582d71f979d728c89f9e61032d4ae2ea83caf2a0ec5145af2",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "3a4a0a20d0f293098bf6050973a5ac3c13bfc637449a580c2fcc5dda587a91fc",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "7c6b507042342e4dbfe4d81dbd5556fdfd02ac6cf2bc83b650903beee7897e01",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "3e6b24a0209c1d6c1ec4040c5ffb991c92c0dc11a7982967f7c9827df539d1ef",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "e7ca3cf000321daf7efa997f97fcda4c5ae43a9bda044083233c6bba50fd3f53",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "d31c17812f1673e48f493444b8db944cd43c6d8e332a0a226cdabb5ce94baa39",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "838920a95db9b3cc95f853817f8e48ebd6c43fb0fe6b2ea710a7065663604076",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "51bb1f5de1872a2e56b64ec55e6fd450e09f8f26591972f698ea6f0cecb925e3",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "7e83f887026f5804bf1ceb02a7f8801cff6cdfcb3e63fbdb308c3bbd63cd1312",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "4bd3bfdf7386af55e62fc61c52a8e21f8d7bffb8d6aa53daf0196b3275916d67",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "f5a556921c4ec48f64743707f0335d7e84b5cf413aaa312a5d488d3d58ec2d19",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "13f2cd6d8c2c3fc2123a57b6bc12d082ac75ca3546b2d533b72585b8e70433b3",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "8f9a53d04750a24f4a21a2302bc6c0a22d30d33f88a1b5dbfd6fddfde96b25cf",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    },
+    {
+      "recording_sha256": "940f0cbbcbdb8dd12462faac4bbf1d426155ba89012195dc2051650fdcbb9ac3",
+      "reason": "Timestamps must be finite and strictly increasing; no sorting or silent deduplication"
+    }
+  ],
+  "observed_median_hz_min_median_max": [
+    61.12469437652817,
+    61.12469437652817,
+    61.124694376529206
+  ],
+  "total_gaps_over_100ms": 0,
+  "recordings_with_cover_phase_labels": 0,
+  "verified_patient_count": null,
+  "legacy_report_note": "Local 41 recordings match the previous test conversion count; raw training directory is empty.",
+  "permission": "UNVERIFIED",
+  "can_learn_cover_uncover_response": false,
+  "source_url": "https://github.com/hyunwoongko/strabismus-recognition"
+}
