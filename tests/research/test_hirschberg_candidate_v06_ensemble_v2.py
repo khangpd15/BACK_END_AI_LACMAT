@@ -44,7 +44,14 @@ def test_predict_hirschberg_production_service():
     res = predict_hirschberg(img)
 
     assert res.get("status") in {"PREDICTED", "INCONCLUSIVE"}
-    assert res.get("modelId") == "hirschberg-candidate-v0.6-ensemble-v2"
+    assert res.get("modelId") in {
+        "hirschberg-candidate-v0.6-ensemble-v2",
+        "hirschberg-candidate-v0.5-safe",
+    }
+    if res.get("fallbackReason"):
+        assert res["modelId"] == "hirschberg-candidate-v0.5-safe"
+        assert res["fallbackFromModelId"] == "hirschberg-candidate-v0.6-ensemble-v2"
+    assert "evaluationSummary" not in res
     probs = res.get("probabilities")
     assert probs is not None
     assert set(probs.keys()) == {"esotropia", "exotropia", "normal"}
@@ -77,8 +84,45 @@ def test_eye_crop_geometry_service_synthetic():
     assert isinstance(feats, dict)
     for name in GEOMETRIC_FEATURE_NAMES:
         assert name in feats
-        assert not np.isnan(feats[name])
-        assert not np.isinf(feats[name])
+        if feats[name] is not None:
+            assert np.isfinite(feats[name])
+    assert feats["dx_left_mm"] is None
+    assert feats["intercanthal_distance_mm"] is None
+    assert feats["is_likely_pseudostrabismus_flag"] is None
+
+
+def test_geometry_uses_explicit_measured_scale_only():
+    img = np.full((224, 224, 3), 128, dtype=np.uint8)
+    import cv2
+    cv2.circle(img, (56, 112), 20, (30, 30, 30), -1)
+    cv2.circle(img, (168, 112), 20, (30, 30, 30), -1)
+    cv2.circle(img, (58, 112), 3, (255, 255, 255), -1)
+    cv2.circle(img, (166, 112), 3, (255, 255, 255), -1)
+    feats = extract_eye_crop_geometric_features(img, iris_diameter_mm=11.0)
+    assert feats["intercanthal_distance_mm"] is not None
+
+
+def test_effnet_refuses_random_initialized_fallback(monkeypatch):
+    import sys
+    import types
+    from app.services.hirschberg_ai_service import EfficientNetFeatureExtractor
+
+    calls = []
+    fake_timm = types.SimpleNamespace(
+        create_model=lambda *args, **kwargs: calls.append(kwargs) or (_ for _ in ()).throw(OSError("weights missing"))
+    )
+    fake_torch = types.SimpleNamespace(cuda=types.SimpleNamespace(is_available=lambda: False))
+    fake_transforms = types.SimpleNamespace()
+    monkeypatch.setitem(sys.modules, "timm", fake_timm)
+    monkeypatch.setitem(sys.modules, "torch", fake_torch)
+    fake_torchvision = types.ModuleType("torchvision")
+    fake_torchvision.__path__ = []
+    monkeypatch.setitem(sys.modules, "torchvision", fake_torchvision)
+    monkeypatch.setitem(sys.modules, "torchvision.transforms", fake_transforms)
+    monkeypatch.setitem(sys.modules, "PIL", types.SimpleNamespace(Image=object()))
+    with pytest.raises(RuntimeError, match="refusing random initialization"):
+        EfficientNetFeatureExtractor()
+    assert calls == [{"pretrained": True, "num_classes": 0}]
 
 
 def test_candidate_v06_v2_reports_exist():

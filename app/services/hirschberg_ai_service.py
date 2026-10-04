@@ -59,18 +59,25 @@ def _get_model_and_onnx() -> Tuple[Optional[Dict[str, Any]], Optional[ort.Infere
 
 class EfficientNetFeatureExtractor:
     def __init__(self):
-        import timm
-        import torch
-        import torchvision.transforms as T
-        from PIL import Image
+        try:
+            import timm
+            import torch
+            import torchvision.transforms as T
+            from PIL import Image
+        except ImportError as exc:
+            raise RuntimeError(
+                "EfficientNet dependencies (timm, torch, torchvision, Pillow) are unavailable"
+            ) from exc
 
         self._torch = torch
         self._Image = Image
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         try:
             self.model = timm.create_model("efficientnet_b0", pretrained=True, num_classes=0)
-        except Exception:
-            self.model = timm.create_model("efficientnet_b0", pretrained=False, num_classes=0)
+        except Exception as exc:
+            raise RuntimeError(
+                "EfficientNet pretrained weights are unavailable; refusing random initialization"
+            ) from exc
         self.model.eval()
         for p in self.model.parameters():
             p.requires_grad = False
@@ -328,7 +335,6 @@ def predict_hirschberg(
 
         pipeline = bundle.get("pipeline")
         classes = bundle.get("classes", ["esotropia", "exotropia", "normal"])
-        metrics = bundle.get("metrics") or {}
 
         # Prepare eye crops
         crops = []
@@ -394,6 +400,11 @@ def predict_hirschberg(
                     raise RuntimeError("secondary eye-crop pipeline is not available")
 
                 gdict = extract_eye_crop_geometric_features(image_bgr)
+                missing_features = [name for name in GEOMETRIC_FEATURE_NAMES if gdict[name] is None]
+                if missing_features:
+                    raise RuntimeError(
+                        "secondary branch measurements unavailable: " + ", ".join(missing_features)
+                    )
                 gvec = [gdict[k] for k in GEOMETRIC_FEATURE_NAMES]
                 effnet = _get_effnet()
                 vvec = effnet.extract_features(cv2.resize(image_bgr, (224, 224)))
@@ -460,16 +471,12 @@ def predict_hirschberg(
             threshold = float(decision_policy.get("threshold", 0.0) or 0.0)
             margin_threshold = float(decision_policy.get("margin_threshold", 0.0) or 0.0)
 
-        model_id = bundle.get("model_id", "hirschberg-candidate-v0.6-ensemble-v2")
+        model_id = (
+            "hirschberg-candidate-v0.5-safe"
+            if fallback_reason
+            else bundle.get("model_id", "hirschberg-candidate-v0.6-ensemble-v2")
+        )
         dataset_version = bundle.get("dataset_version", "hirschberg-folder-labels-v0.1")
-        evaluation_summary = {
-            "balancedAccuracy": metrics.get("balanced_accuracy"),
-            "macroF1": metrics.get("macro_f1"),
-            "binaryStrabismusVsNormal": metrics.get("binary_strabismus_vs_normal"),
-            "abstentionPolicy": metrics.get("abstention_policy_oof"),
-            "source": "production_screening_eval",
-        }
-
         base_payload = {
             "confidence": round(confidence, 4),
             "margin": round(margin, 4),
@@ -477,7 +484,6 @@ def predict_hirschberg(
             "modelId": model_id,
             "datasetVersion": dataset_version,
             "featureContract": feature_contract,
-            "evaluationSummary": evaluation_summary,
             "deploymentWarning": (
                 "Research-only Hirschberg candidate with limited validation. "
                 "Low-confidence cases intentionally return INCONCLUSIVE. "
@@ -487,7 +493,9 @@ def predict_hirschberg(
         }
         if fallback_reason:
             base_payload["fallbackReason"] = fallback_reason
-            base_payload["fallbackModelId"] = "hirschberg-candidate-v0.5-safe"
+            base_payload["fallbackFromModelId"] = bundle.get(
+                "model_id", "hirschberg-candidate-v0.6-ensemble-v2"
+            )
 
         if confidence < threshold or margin < margin_threshold:
             return {

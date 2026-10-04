@@ -182,7 +182,7 @@ class ResearchMeasurementOutput:
     intercanthal_distance_px: Optional[float]
     intercanthal_distance_mm: Optional[float]
     symmetry_deviation_mm: Optional[float]
-    is_likely_pseudostrabismus: bool
+    is_likely_pseudostrabismus: Optional[bool]
     pseudostrabismus_notes: str
     rois: ROICrops
     leveled_image: Optional[np.ndarray] = None
@@ -937,9 +937,6 @@ FACIAL_MODEL_3D = np.array([
     (150.0, -150.0, -125.0),  # Right mouth corner (landmark 57)
 ], dtype=np.float64)
 
-CORNEA_DIAMETER_MM_STANDARD = 11.7
-
-
 class ResearchMeasurementService:
     """Clinical & Biomedical Ocular Measurement Service for RemiCare Strabismus AI.
     
@@ -952,7 +949,7 @@ class ResearchMeasurementService:
     2. Hirschberg Geometric Features:
        - Pupil center extraction from refined iris landmarks & aperture analysis.
        - Corneal Light Reflex (CLR) Hunter algorithm via adaptive specular highlight detection.
-       - Hirschberg decentration vectors (dx_px, dy_px, dx_mm, dy_mm normalized by ~11.7mm corneal diameter).
+       - Hirschberg decentration in pixels; mm requires an explicitly measured corneal diameter.
        - Nasal-to-Temporal Scleral Area Ratio for epicanthal fold / flat nasal bridge detection.
     3. AI ROI Extraction:
        - (a) Bino-periocular crop (both eyes + bridge of nose).
@@ -968,12 +965,14 @@ class ResearchMeasurementService:
         max_pitch_deg: float = 10.0,
         max_yaw_deg: float = 10.0,
         max_roll_deg: float = 5.0,
-        cornea_diameter_mm: float = CORNEA_DIAMETER_MM_STANDARD,
+        cornea_diameter_mm: Optional[float] = None,
     ):
         self.min_blur_var = min_blur_var
         self.max_pitch_deg = max_pitch_deg
         self.max_yaw_deg = max_yaw_deg
         self.max_roll_deg = max_roll_deg
+        if cornea_diameter_mm is not None and cornea_diameter_mm <= 0:
+            raise ValueError("cornea_diameter_mm must be a positive measured value")
         self.cornea_diameter_mm = cornea_diameter_mm
 
         self._face_mesh = None
@@ -1219,10 +1218,10 @@ class ResearchMeasurementService:
         self,
         left_meas: Optional[EyeHirschbergMeasurement],
         right_meas: Optional[EyeHirschbergMeasurement],
-    ) -> Tuple[bool, str]:
+    ) -> Tuple[Optional[bool], str]:
         """Evaluates clinical rule check to distinguish Pseudostrabismus from Esotropia."""
         if not left_meas or not right_meas or left_meas.dx_mm is None or right_meas.dx_mm is None:
-            return False, "MEASUREMENT_INCOMPLETE_CANNOT_EVALUATE_RULE"
+            return None, "MEASUREMENT_INCOMPLETE_CANNOT_EVALUATE_RULE"
 
         dx_l = left_meas.dx_mm
         dx_r = right_meas.dx_mm
@@ -1381,13 +1380,25 @@ class ResearchMeasurementService:
 
         dx_l_px = (clr_l_x - lev_left_cx) if clr_l_x is not None else None
         dy_l_px = (clr_l_y - lev_left_cy) if clr_l_y is not None else None
-        dx_l_mm = round((dx_l_px / left_d) * self.cornea_diameter_mm, 4) if dx_l_px is not None else None
-        dy_l_mm = round((dy_l_px / left_d) * self.cornea_diameter_mm, 4) if dy_l_px is not None else None
+        dx_l_mm = (
+            round((dx_l_px / left_d) * self.cornea_diameter_mm, 4)
+            if dx_l_px is not None and self.cornea_diameter_mm is not None else None
+        )
+        dy_l_mm = (
+            round((dy_l_px / left_d) * self.cornea_diameter_mm, 4)
+            if dy_l_px is not None and self.cornea_diameter_mm is not None else None
+        )
 
         dx_r_px = (clr_r_x - lev_right_cx) if clr_r_x is not None else None
         dy_r_px = (clr_r_y - lev_right_cy) if clr_r_y is not None else None
-        dx_r_mm = round((dx_r_px / right_d) * self.cornea_diameter_mm, 4) if dx_r_px is not None else None
-        dy_r_mm = round((dy_r_px / right_d) * self.cornea_diameter_mm, 4) if dy_r_px is not None else None
+        dx_r_mm = (
+            round((dx_r_px / right_d) * self.cornea_diameter_mm, 4)
+            if dx_r_px is not None and self.cornea_diameter_mm is not None else None
+        )
+        dy_r_mm = (
+            round((dy_r_px / right_d) * self.cornea_diameter_mm, 4)
+            if dy_r_px is not None and self.cornea_diameter_mm is not None else None
+        )
 
         left_meas = EyeHirschbergMeasurement(
             eye="left",
@@ -1430,7 +1441,10 @@ class ResearchMeasurementService:
         inner_r_x = leveled_landmarks[RIGHT_CORNERS["nasal"]]["x"] * w
         inner_r_y = leveled_landmarks[RIGHT_CORNERS["nasal"]]["y"] * h
         intercanthal_px = float(math.hypot(inner_l_x - inner_r_x, inner_l_y - inner_r_y))
-        intercanthal_mm = round((intercanthal_px / avg_d) * self.cornea_diameter_mm, 2)
+        intercanthal_mm = (
+            round((intercanthal_px / avg_d) * self.cornea_diameter_mm, 2)
+            if self.cornea_diameter_mm is not None else None
+        )
 
         sym_dev_mm = round(abs(dx_l_mm - dx_r_mm), 4) if (dx_l_mm is not None and dx_r_mm is not None) else None
 

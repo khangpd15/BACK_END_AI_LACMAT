@@ -89,7 +89,7 @@ def _create_synthetic_landmarks(w=400, h=300, tilt_angle_deg=0.0):
 def test_service_initialization():
     service = ResearchMeasurementService()
     assert service.min_blur_var == 100.0
-    assert service.cornea_diameter_mm == 11.7
+    assert service.cornea_diameter_mm is None
 
 
 def test_blur_variance_detection():
@@ -170,6 +170,18 @@ def test_pseudostrabismus_rule_check_classification():
     assert is_pseudo is True
     assert "Pseudostrabismus" in notes
 
+    is_pseudo_missing, missing_notes = service.check_pseudostrabismus_rule(
+        EyeHirschbergMeasurement(
+            eye="left", pupil_center_x_px=1, pupil_center_y_px=1, iris_diameter_px=20,
+            clr_found=False, clr_x_px=None, clr_y_px=None, dx_px=None, dy_px=None,
+            dx_mm=None, dy_mm=None, nasal_scleral_area=1, temporal_scleral_area=1,
+            nasal_to_temporal_scleral_ratio=1, status="NOT_DETECTED",
+        ),
+        meas_right,
+    )
+    assert is_pseudo_missing is None
+    assert "INCOMPLETE" in missing_notes
+
     # Scenario 2: Genuine Esotropia (Left eye reflex deviated temporal by dx_mm = +0.85mm)
     meas_esotropia_left = EyeHirschbergMeasurement(
         eye="left",
@@ -208,5 +220,5 @@ def test_process_image_full_pipeline():
     assert result.rois.left_eye_224.shape == (224, 224, 3)
     assert result.rois.right_eye_224 is not None
     assert result.rois.right_eye_224.shape == (224, 224, 3)
-    assert result.intercanthal_distance_mm is not None
-    assert result.intercanthal_distance_mm > 0.0
+    assert result.intercanthal_distance_mm is None
+    assert result.is_likely_pseudostrabismus is None

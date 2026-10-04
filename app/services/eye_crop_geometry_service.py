@@ -21,9 +21,6 @@ import cv2
 import numpy as np
 
 
-AVERAGE_IRIS_DIAMETER_MM = 11.8
-
-
 def segment_iris_pupil(eye_bgr: np.ndarray) -> Tuple[float, float, float, str]:
     """Segment iris / pupil in a single eye crop (e.g. 112x224).
     
@@ -241,7 +238,9 @@ def detect_eye_corners(
     return temporal_x, iris_cy, nasal_x, iris_cy, eye_width, scleral_ratio
 
 
-def extract_eye_crop_geometric_features(bgr_image: np.ndarray) -> Dict[str, float]:
+def extract_eye_crop_geometric_features(
+    bgr_image: np.ndarray, iris_diameter_mm: Optional[float] = None
+) -> Dict[str, Optional[float]]:
     """Extract complete 19-dimensional geometric feature vector from an eye crop image.
     
     The input image is assumed to contain both eyes (left half = OD, right half = OS).
@@ -262,37 +261,30 @@ def extract_eye_crop_geometric_features(bgr_image: np.ndarray) -> Dict[str, floa
     od_rx, od_ry, od_area, od_refl_st = detect_corneal_reflex(od_bgr, od_cx, od_cy, od_rad)
     os_rx, os_ry, os_area, os_refl_st = detect_corneal_reflex(os_bgr, os_cx, os_cy, os_rad)
     
-    # 3. Corneal displacement in mm (scale based on 11.8 mm iris diameter)
+    # Millimeter outputs require a subject-specific measured iris diameter.
     od_rad_safe = max(2.0, od_rad)
     os_rad_safe = max(2.0, os_rad)
-    
-    if od_rx is not None:
-        dx_right_mm = float(((od_rx - od_cx) / (2.0 * od_rad_safe)) * AVERAGE_IRIS_DIAMETER_MM)
-        dy_right_mm = float(((od_ry - od_cy) / (2.0 * od_rad_safe)) * AVERAGE_IRIS_DIAMETER_MM)
-    else:
-        # Default kappa offset ~ +0.5 mm nasal
-        dx_right_mm = 0.5
-        dy_right_mm = 0.0
-        
-    if os_rx is not None:
-        dx_left_mm = float(((os_rx - os_cx) / (2.0 * os_rad_safe)) * AVERAGE_IRIS_DIAMETER_MM)
-        dy_left_mm = float(((os_ry - os_cy) / (2.0 * os_rad_safe)) * AVERAGE_IRIS_DIAMETER_MM)
-    else:
-        dx_left_mm = -0.5
-        dy_left_mm = 0.0
-        
-    abs_dx_left_mm = abs(dx_left_mm)
-    abs_dx_right_mm = abs(dx_right_mm)
-    
-    # Hirschberg asymmetry:
-    # In orthophoria (normal), both eyes have reflex slightly nasal.
-    # Symmetry deviation measures the deviation between OS and OD
-    symmetry_deviation_mm = abs(dx_left_mm - (-dx_right_mm)) # accounting for bilateral nasal symmetry
-    vertical_asymmetry_mm = abs(dy_left_mm - dy_right_mm)
+    if iris_diameter_mm is not None and iris_diameter_mm <= 0:
+        raise ValueError("iris_diameter_mm must be a positive measured value")
+    px_to_mm = iris_diameter_mm / (od_rad_safe + os_rad_safe) if iris_diameter_mm else None
+    dx_right_mm = ((od_rx - od_cx) * px_to_mm) if od_rx is not None and px_to_mm else None
+    dy_right_mm = ((od_ry - od_cy) * px_to_mm) if od_ry is not None and px_to_mm else None
+    dx_left_mm = ((os_rx - os_cx) * px_to_mm) if os_rx is not None and px_to_mm else None
+    dy_left_mm = ((os_ry - os_cy) * px_to_mm) if os_ry is not None and px_to_mm else None
+    abs_dx_left_mm = abs(dx_left_mm) if dx_left_mm is not None else None
+    abs_dx_right_mm = abs(dx_right_mm) if dx_right_mm is not None else None
+    symmetry_deviation_mm = (
+        abs(dx_left_mm + dx_right_mm)
+        if dx_left_mm is not None and dx_right_mm is not None else None
+    )
+    vertical_asymmetry_mm = (
+        abs(dy_left_mm - dy_right_mm)
+        if dy_left_mm is not None and dy_right_mm is not None else None
+    )
     
     # 4. Eye corners and scleral ratio
-    _, _, _, _, od_width, scleral_ratio_right = detect_eye_corners(od_bgr, od_cx, od_cy, od_rad, is_od=True)
-    _, _, _, _, os_width, scleral_ratio_left = detect_eye_corners(os_bgr, os_cx, os_cy, os_rad, is_od=False)
+    _, _, od_nasal_x, _, od_width, scleral_ratio_right = detect_eye_corners(od_bgr, od_cx, od_cy, od_rad, is_od=True)
+    _, _, os_nasal_x, _, os_width, scleral_ratio_left = detect_eye_corners(os_bgr, os_cx, os_cy, os_rad, is_od=False)
     
     scleral_ratio_min = min(scleral_ratio_left, scleral_ratio_right)
     scleral_ratio_diff = abs(scleral_ratio_left - scleral_ratio_right)
@@ -300,17 +292,12 @@ def extract_eye_crop_geometric_features(bgr_image: np.ndarray) -> Dict[str, floa
     # Intercanthal distance: distance between OD nasal corner and OS nasal corner
     # In OD crop, nasal corner x is near right edge (half_w)
     # In OS crop, nasal corner x is near left edge (0 + half_w)
-    # Average pixel to mm scale:
-    avg_rad = (od_rad_safe + os_rad_safe) / 2.0
-    px_to_mm = AVERAGE_IRIS_DIAMETER_MM / (2.0 * avg_rad)
-    intercanthal_px = max(10.0, (os_cx_full - od_cx) * 0.45)
-    intercanthal_distance_mm = float(intercanthal_px * px_to_mm)
+    intercanthal_px = float(np.hypot((os_nasal_x + half_w) - od_nasal_x, os_cy - od_cy))
+    intercanthal_distance_mm = intercanthal_px * px_to_mm if px_to_mm else None
     
     # 5. Pseudostrabismus indicator
     # Large intercanthal distance or epicanthal fold with low reflex displacement
-    is_likely_pseudostrabismus_flag = 1.0 if (
-        intercanthal_distance_mm > 35.0 and max(abs_dx_left_mm, abs_dx_right_mm) < 1.0
-    ) else 0.0
+    is_likely_pseudostrabismus_flag = None
     
     # 6. Quality & pose metrics
     gray_full = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2GRAY)
