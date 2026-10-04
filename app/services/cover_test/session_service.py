@@ -384,10 +384,28 @@ class CoverTestSessionService:
             from app.services.fps_model_service import get_fps_model_service
 
             fps_svc = get_fps_model_service()
+            if fps_svc.model is None:
+                ai_result_payload = {
+                    "status": "INCONCLUSIVE",
+                    "prediction": "INCONCLUSIVE",
+                    "reason": "MODEL_NOT_LOADED",
+                    "reasonCodes": ["MODEL_NOT_LOADED"],
+                    "model": {"name": None, "version": None, "loaded": False},
+                    "classProbabilities": None,
+                    "confidence": None,
+                    "isReliable": False,
+                    "notice": "Cover Test data saved; no approved AI model is loaded for this session.",
+                }
+                should_infer = False
+        if should_infer:
+            from app.services.fps_model_service import get_fps_model_service
+
+            fps_svc = get_fps_model_service()
 
             # Step 1: Finalize result from 10-15 FPS Model with temporal consensus aggregation
             try:
-                fps_res = fps_svc.aggregate_and_predict(raw_trajectories)
+                from starlette.concurrency import run_in_threadpool
+                fps_res = await run_in_threadpool(fps_svc.aggregate_and_predict, raw_trajectories)
                 logger.info(
                     "[MODEL]\nsource = fps_10_15\nprediction = %s\nprobabilities = %s",
                     fps_res.prediction,
@@ -478,5 +496,5 @@ class CoverTestSessionService:
             cyclesSaved=len(cycles_to_save),
             imagesSaved=0,
             aiResult=ai_result_payload,
-            message="Cover test session numeric trajectory data persisted and 10-15 FPS model consensus completed.",
+            message="Cover test numeric trajectory data saved. Check aiResult for AI availability and result.",
         )

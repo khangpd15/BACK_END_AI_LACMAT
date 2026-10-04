@@ -9,6 +9,7 @@ import logging
 from typing import Any, Dict, Optional
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from fastapi.responses import JSONResponse
+from starlette.concurrency import run_in_threadpool
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.database import get_db_session
@@ -101,7 +102,7 @@ async def predict_strabismus(
         # 3. Perform Quality Gate & Deep Learning Inference via Singleton Service
         inference_service = get_strabismus_inference_service()
         try:
-            result = inference_service.predict(image_bytes)
+            result = await run_in_threadpool(inference_service.predict, image_bytes)
         except Exception as inf_err:
             logger.error("[PredictStrabismusError] Inference failed: %s", inf_err, exc_info=True)
             raise HTTPException(

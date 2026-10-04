@@ -1,9 +1,11 @@
 """Versioned research-only geometry measurement API."""
 
+import asyncio
 import logging
 from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException, status
+from starlette.concurrency import run_in_threadpool
 
 from app.config import ENABLE_RESEARCH_MEASUREMENT_API
 from app.schemas.research_measurement import (
@@ -18,6 +20,7 @@ from app.services.research_measurement_service import (
 logger = logging.getLogger("remicare.api.research_measurement")
 
 router = APIRouter(prefix="/api/v1/research", tags=["Research Measurement"])
+_measurement_lock = asyncio.Lock()
 
 
 @router.post(
@@ -40,7 +43,13 @@ async def create_research_measurement(request: ResearchMeasurementRequest) -> Di
         )
 
     try:
-        return measure_research_request(request)
+        await asyncio.wait_for(_measurement_lock.acquire(), timeout=2.0)
+    except asyncio.TimeoutError as exc:
+        raise HTTPException(status_code=503, headers={"Retry-After": "2"}, detail={
+            "code": "SERVER_BUSY", "message": "Measurement engine is busy. Please try again."
+        }) from exc
+    try:
+        return await run_in_threadpool(measure_research_request, request)
     except ResearchMeasurementError as exc:
         logger.info(
             "[ResearchMeasurementRejected] requestId=%s sessionId=%s code=%s",
@@ -58,3 +67,5 @@ async def create_research_measurement(request: ResearchMeasurementRequest) -> Di
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={"code": "INFERENCE_ERROR", "message": "Research measurement failed."},
         ) from exc
+    finally:
+        _measurement_lock.release()

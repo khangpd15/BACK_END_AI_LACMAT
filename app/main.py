@@ -4,9 +4,11 @@ Provides FastAPI application initialization, CORS configuration,
 health check endpoint, and API router registration.
 """
 
+import asyncio
 from contextlib import asynccontextmanager
 import logging
 import math
+import os
 from typing import Any, Dict
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -29,6 +31,7 @@ from app.services.keep_alive import (
     stop_keep_alive,
 )
 from app.services.fps_model_service import get_fps_model_service
+from app.services.hirschberg_ai_service import _get_model_and_onnx, hirschberg_runtime_status
 
 # Configure structured audit logging
 logging.basicConfig(
@@ -45,7 +48,7 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing RemiCare Strabismus AI Backend - Phase 5...")
     try:
         # Initialize database tables
-        await init_db()
+        await asyncio.wait_for(init_db(), timeout=10)
     except Exception as e:
         logger.warning("Database init check note: %s", e)
 
@@ -62,7 +65,7 @@ async def lifespan(app: FastAPI):
         logger.error("Failed to initialize Cover Test FPS service at startup: %s", e, exc_info=True)
 
     try:
-        strabismus_svc = get_strabismus_inference_service()
+        strabismus_svc = await asyncio.to_thread(get_strabismus_inference_service)
         if strabismus_svc.is_loaded:
             logger.info(
                 "Strabismus bilateral ONNX model preloaded: version=%s, path=%s, input=%s",
@@ -74,6 +77,8 @@ async def lifespan(app: FastAPI):
             logger.warning("Strabismus bilateral ONNX model is not loaded yet.")
     except Exception as e:
         logger.error("Failed to preload strabismus ONNX model at startup: %s", e, exc_info=True)
+
+    await asyncio.to_thread(_get_model_and_onnx)
 
     # Start automated keep-alive self-ping and DB pool warming worker
     start_keep_alive()
@@ -229,6 +234,8 @@ async def health_check(check_db: bool = False) -> Dict[str, Any]:
         "service": "remicare-strabismus-ai",
         "version": __version__,
         "model": model_info,
+        "models": {"coverTest": model_info, "hirschberg": hirschberg_runtime_status()},
+        "deploymentCommit": os.getenv("RENDER_GIT_COMMIT"),
         "keepAlive": keep_alive_info,
     }
 

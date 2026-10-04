@@ -159,17 +159,8 @@ class StrabismusInferenceService:
             return
 
         try:
-            # Configure ONNX session options for optimized CPU inference
-            opts = ort.SessionOptions()
-            opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
-            opts.intra_op_num_threads = max(1, os.cpu_count() or 2)
-            opts.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
-
-            self.session = ort.InferenceSession(
-                self.resolved_model_path,
-                sess_options=opts,
-                providers=["CPUExecutionProvider"],
-            )
+            from app.services.onnx_runtime import get_cpu_session
+            self.session = get_cpu_session(self.resolved_model_path)
             self.input_name = self.session.get_inputs()[0].name
             self.is_loaded = True
             logger.info(

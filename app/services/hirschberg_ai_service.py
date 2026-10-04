@@ -8,6 +8,7 @@ research-only abstention policy.
 
 from __future__ import annotations
 
+from functools import lru_cache
 import logging
 import os
 from pathlib import Path
@@ -17,6 +18,8 @@ import cv2
 import joblib
 import numpy as np
 import onnxruntime as ort
+
+from app.services.onnx_runtime import get_cpu_session
 
 logger = logging.getLogger("remicare.services.hirschberg_ai")
 
@@ -49,7 +52,7 @@ def _get_model_and_onnx() -> Tuple[Optional[Dict[str, Any]], Optional[ort.Infere
 
     if _ONNX_SESS is None and ONNX_PATH.is_file():
         try:
-            _ONNX_SESS = ort.InferenceSession(str(ONNX_PATH), providers=["CPUExecutionProvider"])
+            _ONNX_SESS = get_cpu_session(ONNX_PATH)
             logger.info("Loaded ONNX bilateral ROI representation model from %s", ONNX_PATH)
         except Exception as exc:
             logger.error("Failed to load ONNX model: %s", exc)
@@ -102,6 +105,23 @@ def _get_effnet() -> EfficientNetFeatureExtractor:
     if _EFFNET is None:
         _EFFNET = EfficientNetFeatureExtractor()
     return _EFFNET
+
+
+@lru_cache(maxsize=1)
+def _secondary_branch_error() -> Optional[str]:
+    try:
+        _get_effnet()
+        return None
+    except Exception as exc:
+        return str(exc)
+
+
+def hirschberg_runtime_status() -> Dict[str, Any]:
+    return {
+        "loaded": _BUNDLE is not None and _ONNX_SESS is not None,
+        "configuredModelId": (_BUNDLE or {}).get("model_id"),
+        "researchOnly": True,
+    }
 
 
 def estimate_iris_center_in_crop(image: np.ndarray) -> Tuple[float, float, float]:
@@ -384,6 +404,9 @@ def predict_hirschberg(
             p5 = prim_pipeline.predict_proba(X5)
 
             try:
+                secondary_error = _secondary_branch_error()
+                if secondary_error:
+                    raise RuntimeError(secondary_error)
                 from app.services.eye_crop_geometry_service import (
                     GEOMETRIC_FEATURE_NAMES,
                     extract_eye_crop_geometric_features,
