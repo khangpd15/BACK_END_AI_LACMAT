@@ -443,7 +443,7 @@ def test_hirschberg_includes_ai_prediction():
     assert 0.0 <= ai["confidence"] <= 1.0
     assert "probabilities" in ai
     assert "modelId" in ai
-    assert ai["modelId"] == "hirschberg-candidate-v0.1"
+    assert ai["modelId"] == "hirschberg-candidate-v0.3-pedseye"
 
 
 def test_hirschberg_without_landmarks_runs_ai_fallback():

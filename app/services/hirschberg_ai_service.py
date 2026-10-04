@@ -1,6 +1,6 @@
 ﻿"""Hirschberg AI Inference Service.
 
-Loads the trained Hirschberg exploratory classifier (`hirschberg-candidate-v0.1`)
+Loads the trained Hirschberg exploratory classifier (`hirschberg-candidate-v0.3-pedseye`)
 and the ONNX representation model (`best_model.onnx`).
 Performs feature extraction (73 geometry and appearance features) and runs model prediction.
 """
@@ -8,6 +8,7 @@ Performs feature extraction (73 geometry and appearance features) and runs model
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -19,7 +20,8 @@ import onnxruntime as ort
 logger = logging.getLogger("remicare.services.hirschberg_ai")
 
 APP_DIR = Path(__file__).resolve().parent.parent
-MODEL_PATH = APP_DIR / "models" / "research" / "hirschberg_candidate_v0.1.joblib"
+DEFAULT_MODEL_PATH = APP_DIR / "models" / "research" / "hirschberg_candidate_v0.3_pedseye.joblib"
+MODEL_PATH = Path(os.getenv("HIRSCHBERG_RESEARCH_MODEL_PATH", str(DEFAULT_MODEL_PATH)))
 ONNX_PATH = APP_DIR / "models" / "best_model.onnx"
 
 _BUNDLE: Optional[Dict[str, Any]] = None
@@ -255,6 +257,7 @@ def predict_hirschberg(
 
     pipeline = bundle.get("pipeline")
     classes = bundle.get("classes", ["esotropia", "exotropia", "normal"])
+    metrics = bundle.get("metrics") or {}
 
     # Prepare eye crops
     crops = []
@@ -297,8 +300,17 @@ def predict_hirschberg(
         "predictedClass": pred_class.upper(),
         "confidence": round(confidence, 4),
         "probabilities": prob_dict,
-        "modelId": bundle.get("model_id", "hirschberg-candidate-v0.1"),
+        "modelId": bundle.get("model_id", "hirschberg-candidate-v0.3-pedseye"),
         "datasetVersion": bundle.get("dataset_version", "hirschberg-folder-labels-v0.1"),
-        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "evaluationSummary": {
+            "balancedAccuracy": metrics.get("balanced_accuracy"),
+            "macroF1": metrics.get("macro_f1"),
+            "binaryStrabismusVsNormal": metrics.get("binary_strabismus_vs_normal"),
+            "source": "research_candidate_internal_eval",
+        },
+        "deploymentWarning": (
+            "Research-only Pedseye candidate with limited validation. "
+            "Not suitable for clinical diagnosis or clearance."
+        ),
         "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa.",
     }
