@@ -30,6 +30,14 @@ _ONNX_SESS: Optional[ort.InferenceSession] = None
 _EFFNET: Any = None
 
 
+def _unavailable_prediction(message: str, reason: str = "RUNTIME_ERROR") -> Dict[str, Any]:
+    return {
+        "status": "UNAVAILABLE",
+        "reason": reason,
+        "message": message,
+    }
+
+
 def _get_model_and_onnx() -> Tuple[Optional[Dict[str, Any]], Optional[ort.InferenceSession]]:
     global _BUNDLE, _ONNX_SESS
     if _BUNDLE is None and MODEL_PATH.is_file():
@@ -310,146 +318,193 @@ def predict_hirschberg(
     Returns:
         Dict with status, predictedClass, confidence, probabilities, and model details.
     """
-    bundle, onnx_sess = _get_model_and_onnx()
-    if not bundle or not onnx_sess:
-        return {
-            "status": "UNAVAILABLE",
-            "message": "Hirschberg AI model artifact not available on backend.",
-        }
+    try:
+        bundle, onnx_sess = _get_model_and_onnx()
+        if not bundle or not onnx_sess:
+            return _unavailable_prediction(
+                "Hirschberg AI model artifact not available on backend.",
+                "MODEL_ARTIFACT_UNAVAILABLE",
+            )
 
-    pipeline = bundle.get("pipeline")
-    classes = bundle.get("classes", ["esotropia", "exotropia", "normal"])
-    metrics = bundle.get("metrics") or {}
+        pipeline = bundle.get("pipeline")
+        classes = bundle.get("classes", ["esotropia", "exotropia", "normal"])
+        metrics = bundle.get("metrics") or {}
 
-    # Prepare eye crops
-    crops = []
-    if landmarks and len(landmarks) >= 468:
-        od_crop = crop_eye_from_landmarks(image_bgr, landmarks, "right")
-        os_crop = crop_eye_from_landmarks(image_bgr, landmarks, "left")
-        crops = [od_crop, os_crop]
-    else:
-        # Check if the image itself is approximately square / eye crop (e.g. 224x224)
-        h, w = image_bgr.shape[:2]
-        aspect = max(w, h) / max(1, min(w, h))
-        if aspect < 1.35 and min(w, h) <= 400:
-            crops = [cv2.resize(image_bgr, (224, 224))]
+        # Prepare eye crops
+        crops = []
+        if landmarks and len(landmarks) >= 468:
+            od_crop = crop_eye_from_landmarks(image_bgr, landmarks, "right")
+            os_crop = crop_eye_from_landmarks(image_bgr, landmarks, "left")
+            crops = [od_crop, os_crop]
         else:
-            # Full face without landmarks: extract left and right eye regions by heuristics
-            left_half = image_bgr[:, : w // 2]
-            right_half = image_bgr[:, w // 2 :]
-            crops = [
-                cv2.resize(left_half, (224, 224)),
-                cv2.resize(right_half, (224, 224)),
-            ]
-
-    model_type = bundle.get("model_type")
-    version = bundle.get("version")
-    is_ensemble_v2 = (version == "v0.6_ensemble_v2" or model_type == "ensemble_eye_crop_prior_normalized")
-
-    if is_ensemble_v2:
-        from app.services.eye_crop_geometry_service import (
-            GEOMETRIC_FEATURE_NAMES,
-            extract_eye_crop_geometric_features,
-        )
-
-        # 1. Primary pipeline (v0.5 ONNX pair features)
-        prim_pipeline = bundle.get("primary_pipeline")
-        if prim_pipeline is None:
-            v5_p = APP_DIR / "models" / "research" / "hirschberg_candidate_v0.5_safe.joblib"
-            if v5_p.is_file():
-                prim_pipeline = joblib.load(v5_p).get("pipeline")
+            # Check if the image itself is approximately square / eye crop (e.g. 224x224)
+            h, w = image_bgr.shape[:2]
+            aspect = max(w, h) / max(1, min(w, h))
+            if aspect < 1.35 and min(w, h) <= 400:
+                crops = [cv2.resize(image_bgr, (224, 224))]
             else:
-                prim_pipeline = pipeline
+                # Full face without landmarks: extract left and right eye regions by heuristics
+                left_half = image_bgr[:, : w // 2]
+                right_half = image_bgr[:, w // 2 :]
+                crops = [
+                    cv2.resize(left_half, (224, 224)),
+                    cv2.resize(right_half, (224, 224)),
+                ]
 
-        X5 = _features_for_bundle(
-            crops, onnx_sess, {"feature_contract": "hirschberg_pair_features_v0.5", "feature_names": [None] * 365}
-        )
-        p5 = prim_pipeline.predict_proba(X5)
+        model_type = bundle.get("model_type")
+        version = bundle.get("version")
+        is_ensemble_v2 = (version == "v0.6_ensemble_v2" or model_type == "ensemble_eye_crop_prior_normalized")
+        fallback_reason: Optional[str] = None
 
-        # 2. Secondary pipeline (v0.2 Eye-Crop Geometry + EfficientNet)
-        sec_pipeline = bundle.get("branch_v02_pipeline")
-        if sec_pipeline is None:
-            v2_p = APP_DIR / "models" / "research" / "hirschberg_branch_v02_eyecrop.joblib"
-            if v2_p.is_file():
-                sec_pipeline = joblib.load(v2_p).get("pipeline")
+        if is_ensemble_v2:
+            # 1. Primary pipeline (v0.5 ONNX pair features)
+            prim_pipeline = bundle.get("primary_pipeline")
+            if prim_pipeline is None:
+                v5_p = APP_DIR / "models" / "research" / "hirschberg_candidate_v0.5_safe.joblib"
+                if v5_p.is_file():
+                    prim_pipeline = joblib.load(v5_p).get("pipeline")
+                else:
+                    prim_pipeline = pipeline
 
-        gdict = extract_eye_crop_geometric_features(image_bgr)
-        gvec = [gdict[k] for k in GEOMETRIC_FEATURE_NAMES]
-        effnet = _get_effnet()
-        vvec = effnet.extract_features(cv2.resize(image_bgr, (224, 224)))
-        X2 = np.array(gvec + list(vvec), dtype=np.float32).reshape(1, -1)
-        p2 = sec_pipeline.predict_proba(X2) if sec_pipeline is not None else np.copy(p5)
+            if prim_pipeline is None:
+                return _unavailable_prediction(
+                    "Hirschberg AI primary pipeline is not available on backend.",
+                    "MODEL_PIPELINE_UNAVAILABLE",
+                )
 
-        # 3. Prior-normalized weighted fusion
-        fusion_policy = bundle.get("fusion_policy") or {}
-        prior5 = np.array(fusion_policy.get("prior5", [0.65, 0.15, 0.20]), dtype=np.float32)
-        p5_norm = p5 / prior5
-        p5_norm = p5_norm / np.maximum(p5_norm.sum(axis=1, keepdims=True), 1e-8)
-        alpha = float(fusion_policy.get("alpha", 0.25))
+            X5 = _features_for_bundle(
+                crops, onnx_sess, {"feature_contract": "hirschberg_pair_features_v0.5", "feature_names": [None] * 365}
+            )
+            p5 = prim_pipeline.predict_proba(X5)
 
-        fused = alpha * p5_norm + (1.0 - alpha) * p2
-        fused = fused / np.maximum(fused.sum(axis=1, keepdims=True), 1e-8)
-        avg_probs = fused[0]
+            try:
+                from app.services.eye_crop_geometry_service import (
+                    GEOMETRIC_FEATURE_NAMES,
+                    extract_eye_crop_geometric_features,
+                )
 
-        threshold = float(fusion_policy.get("conf_threshold", 0.40))
-        margin_threshold = float(fusion_policy.get("margin_threshold", 0.03))
-        decision_policy = {
-            "type": fusion_policy.get("type", "prior_normalized_weighted"),
-            "threshold": threshold,
-            "marginThreshold": margin_threshold,
+                # 2. Secondary pipeline (v0.2 Eye-Crop Geometry + EfficientNet)
+                sec_pipeline = bundle.get("branch_v02_pipeline")
+                if sec_pipeline is None:
+                    v2_p = APP_DIR / "models" / "research" / "hirschberg_branch_v02_eyecrop.joblib"
+                    if v2_p.is_file():
+                        sec_pipeline = joblib.load(v2_p).get("pipeline")
+
+                if sec_pipeline is None:
+                    raise RuntimeError("secondary eye-crop pipeline is not available")
+
+                gdict = extract_eye_crop_geometric_features(image_bgr)
+                gvec = [gdict[k] for k in GEOMETRIC_FEATURE_NAMES]
+                effnet = _get_effnet()
+                vvec = effnet.extract_features(cv2.resize(image_bgr, (224, 224)))
+                X2 = np.array(gvec + list(vvec), dtype=np.float32).reshape(1, -1)
+                p2 = sec_pipeline.predict_proba(X2)
+
+                # 3. Prior-normalized weighted fusion
+                fusion_policy = bundle.get("fusion_policy") or {}
+                prior5 = np.array(fusion_policy.get("prior5", [0.65, 0.15, 0.20]), dtype=np.float32)
+                p5_norm = p5 / prior5
+                p5_norm = p5_norm / np.maximum(p5_norm.sum(axis=1, keepdims=True), 1e-8)
+                alpha = float(fusion_policy.get("alpha", 0.25))
+
+                fused = alpha * p5_norm + (1.0 - alpha) * p2
+                fused = fused / np.maximum(fused.sum(axis=1, keepdims=True), 1e-8)
+                avg_probs = fused[0]
+
+                threshold = float(fusion_policy.get("conf_threshold", 0.40))
+                margin_threshold = float(fusion_policy.get("margin_threshold", 0.03))
+                decision_policy = {
+                    "type": fusion_policy.get("type", "prior_normalized_weighted"),
+                    "threshold": threshold,
+                    "marginThreshold": margin_threshold,
+                }
+                feature_contract = "ensemble_v0.6_v2_eyecrop_geometry_effnet_onnx_pair"
+            except Exception as exc:
+                fallback_reason = type(exc).__name__
+                logger.warning(
+                    "Hirschberg ensemble secondary branch unavailable; falling back to v0.5 primary branch: %s",
+                    exc,
+                )
+                avg_probs = p5[0]
+                decision_policy = bundle.get("decision_policy") or {}
+                fusion_policy = bundle.get("fusion_policy") or {}
+                threshold = float(
+                    decision_policy.get("threshold", fusion_policy.get("conf_threshold", 0.40)) or 0.0
+                )
+                margin_threshold = float(
+                    decision_policy.get("margin_threshold", fusion_policy.get("margin_threshold", 0.03)) or 0.0
+                )
+                feature_contract = "hirschberg_pair_features_v0.5"
+        else:
+            if pipeline is None:
+                return _unavailable_prediction(
+                    "Hirschberg AI pipeline is not available on backend.",
+                    "MODEL_PIPELINE_UNAVAILABLE",
+                )
+            X = _features_for_bundle(crops, onnx_sess, bundle)
+            avg_probs = pipeline.predict_proba(X)[0]
+            decision_policy = bundle.get("decision_policy") or {}
+            threshold = float(decision_policy.get("threshold", 0.0) or 0.0)
+            margin_threshold = float(decision_policy.get("margin_threshold", 0.0) or 0.0)
+            feature_contract = bundle.get("feature_contract", "hirschberg_crop_mean_features_v0.1")
+
+        pred_idx = int(np.argmax(avg_probs))
+        pred_class = classes[pred_idx]
+        confidence = float(avg_probs[pred_idx])
+        sorted_probs = np.sort(avg_probs)
+        margin = float(sorted_probs[-1] - sorted_probs[-2]) if len(sorted_probs) > 1 else confidence
+        prob_dict = {cls_name: round(float(avg_probs[i]), 4) for i, cls_name in enumerate(classes)}
+
+        if not is_ensemble_v2:
+            decision_policy = bundle.get("decision_policy") or {}
+            threshold = float(decision_policy.get("threshold", 0.0) or 0.0)
+            margin_threshold = float(decision_policy.get("margin_threshold", 0.0) or 0.0)
+
+        model_id = bundle.get("model_id", "hirschberg-candidate-v0.6-ensemble-v2")
+        dataset_version = bundle.get("dataset_version", "hirschberg-folder-labels-v0.1")
+        evaluation_summary = {
+            "balancedAccuracy": metrics.get("balanced_accuracy"),
+            "macroF1": metrics.get("macro_f1"),
+            "binaryStrabismusVsNormal": metrics.get("binary_strabismus_vs_normal"),
+            "abstentionPolicy": metrics.get("abstention_policy_oof"),
+            "source": "production_screening_eval",
         }
-        feature_contract = "ensemble_v0.6_v2_eyecrop_geometry_effnet_onnx_pair"
-    else:
-        X = _features_for_bundle(crops, onnx_sess, bundle)
-        avg_probs = pipeline.predict_proba(X)[0]
-        decision_policy = bundle.get("decision_policy") or {}
-        threshold = float(decision_policy.get("threshold", 0.0) or 0.0)
-        margin_threshold = float(decision_policy.get("margin_threshold", 0.0) or 0.0)
-        feature_contract = bundle.get("feature_contract", "hirschberg_crop_mean_features_v0.1")
 
-    pred_idx = int(np.argmax(avg_probs))
-    pred_class = classes[pred_idx]
-    confidence = float(avg_probs[pred_idx])
-    sorted_probs = np.sort(avg_probs)
-    margin = float(sorted_probs[-1] - sorted_probs[-2]) if len(sorted_probs) > 1 else confidence
-    prob_dict = {cls_name: round(float(avg_probs[i]), 4) for i, cls_name in enumerate(classes)}
+        base_payload = {
+            "confidence": round(confidence, 4),
+            "margin": round(margin, 4),
+            "probabilities": prob_dict,
+            "modelId": model_id,
+            "datasetVersion": dataset_version,
+            "featureContract": feature_contract,
+            "evaluationSummary": evaluation_summary,
+            "deploymentWarning": (
+                "Research-only Hirschberg candidate with limited validation. "
+                "Low-confidence cases intentionally return INCONCLUSIVE. "
+                "Not suitable for clinical diagnosis or clearance."
+            ),
+            "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa.",
+        }
+        if fallback_reason:
+            base_payload["fallbackReason"] = fallback_reason
+            base_payload["fallbackModelId"] = "hirschberg-candidate-v0.5-safe"
 
-    if not is_ensemble_v2:
-        decision_policy = bundle.get("decision_policy") or {}
-        threshold = float(decision_policy.get("threshold", 0.0) or 0.0)
-        margin_threshold = float(decision_policy.get("margin_threshold", 0.0) or 0.0)
+        if confidence < threshold or margin < margin_threshold:
+            return {
+                "status": "INCONCLUSIVE",
+                "predictedClass": "INCONCLUSIVE",
+                "reason": "LOW_CONFIDENCE_RESEARCH_MODEL",
+                "decisionPolicy": {
+                    "type": decision_policy.get("type", "confidence_margin_abstention"),
+                    "threshold": threshold,
+                    "marginThreshold": margin_threshold,
+                },
+                **base_payload,
+            }
 
-    model_id = bundle.get("model_id", "hirschberg-candidate-v0.6-ensemble-v2")
-    dataset_version = bundle.get("dataset_version", "hirschberg-folder-labels-v0.1")
-    evaluation_summary = {
-        "balancedAccuracy": metrics.get("balanced_accuracy"),
-        "macroF1": metrics.get("macro_f1"),
-        "binaryStrabismusVsNormal": metrics.get("binary_strabismus_vs_normal"),
-        "abstentionPolicy": metrics.get("abstention_policy_oof"),
-        "source": "production_screening_eval",
-    }
-
-    base_payload = {
-        "confidence": round(confidence, 4),
-        "margin": round(margin, 4),
-        "probabilities": prob_dict,
-        "modelId": model_id,
-        "datasetVersion": dataset_version,
-        "featureContract": feature_contract,
-        "evaluationSummary": evaluation_summary,
-        "deploymentWarning": (
-            "Research-only Hirschberg candidate with limited validation. "
-            "Low-confidence cases intentionally return INCONCLUSIVE. "
-            "Not suitable for clinical diagnosis or clearance."
-        ),
-        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa.",
-    }
-
-    if confidence < threshold or margin < margin_threshold:
         return {
-            "status": "INCONCLUSIVE",
-            "predictedClass": "INCONCLUSIVE",
-            "reason": "LOW_CONFIDENCE_RESEARCH_MODEL",
+            "status": "PREDICTED",
+            "predictedClass": pred_class.upper(),
             "decisionPolicy": {
                 "type": decision_policy.get("type", "confidence_margin_abstention"),
                 "threshold": threshold,
@@ -457,14 +512,9 @@ def predict_hirschberg(
             },
             **base_payload,
         }
-
-    return {
-        "status": "PREDICTED",
-        "predictedClass": pred_class.upper(),
-        "decisionPolicy": {
-            "type": decision_policy.get("type", "confidence_margin_abstention"),
-            "threshold": threshold,
-            "marginThreshold": margin_threshold,
-        },
-        **base_payload,
-    }
+    except Exception as exc:
+        logger.exception("Hirschberg AI prediction failed.")
+        return _unavailable_prediction(
+            f"Hirschberg AI prediction failed: {type(exc).__name__}.",
+            "AI_RUNTIME_ERROR",
+        )
