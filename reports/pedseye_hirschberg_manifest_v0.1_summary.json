@@ -1,0 +1,624 @@
+{
+  "createdAt": "2026-10-04T07:03:11.424655+00:00",
+  "status": "PASS_WITH_WARNINGS",
+  "total_records": 67,
+  "class_counts": {
+    "esotropia": 20,
+    "exotropia": 14,
+    "normal": 33
+  },
+  "split_counts": {
+    "train": 49,
+    "val": 9,
+    "test": 9
+  },
+  "class_split_counts": {
+    "normal": {
+      "train": 24,
+      "test": 5,
+      "val": 4
+    },
+    "esotropia": {
+      "train": 15,
+      "val": 3,
+      "test": 2
+    },
+    "exotropia": {
+      "train": 10,
+      "val": 2,
+      "test": 2
+    },
+    "pseudostrabismus": {},
+    "poor_quality": {}
+  },
+  "participant_count": 52,
+  "participant_id_source": "inferred_near_duplicate_cluster_not_real_patient_id",
+  "participant_leakage": {
+    "is_disjoint": true,
+    "violating_participants": {}
+  },
+  "exact_duplicate_sha256_count": 0,
+  "near_duplicate_threshold": 4,
+  "near_duplicate_count": 16,
+  "near_duplicates": [
+    {
+      "distance": 2,
+      "path1": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-05-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-15-before.jpg",
+      "label1": "esotropia",
+      "label2": "esotropia",
+      "same_label": true
+    },
+    {
+      "distance": 4,
+      "path1": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-05-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (17).jpg",
+      "label1": "esotropia",
+      "label2": "normal",
+      "same_label": false
+    },
+    {
+      "distance": 4,
+      "path1": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-07-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (24).jpg",
+      "label1": "esotropia",
+      "label2": "normal",
+      "same_label": false
+    },
+    {
+      "distance": 4,
+      "path1": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-12-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (14).jpg",
+      "label1": "esotropia",
+      "label2": "normal",
+      "same_label": false
+    },
+    {
+      "distance": 4,
+      "path1": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-12-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (24).jpg",
+      "label1": "esotropia",
+      "label2": "normal",
+      "same_label": false
+    },
+    {
+      "distance": 3,
+      "path1": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-16-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (16).jpg",
+      "label1": "esotropia",
+      "label2": "normal",
+      "same_label": false
+    },
+    {
+      "distance": 0,
+      "path1": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-07-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-14-before.jpg",
+      "label1": "exotropia",
+      "label2": "exotropia",
+      "same_label": true
+    },
+    {
+      "distance": 4,
+      "path1": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-07-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (22).jpg",
+      "label1": "exotropia",
+      "label2": "normal",
+      "same_label": false
+    },
+    {
+      "distance": 1,
+      "path1": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-10-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (25).jpg",
+      "label1": "exotropia",
+      "label2": "normal",
+      "same_label": false
+    },
+    {
+      "distance": 4,
+      "path1": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-14-before.jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (22).jpg",
+      "label1": "exotropia",
+      "label2": "normal",
+      "same_label": false
+    },
+    {
+      "distance": 4,
+      "path1": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (1).jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (13).jpg",
+      "label1": "normal",
+      "label2": "normal",
+      "same_label": true
+    },
+    {
+      "distance": 2,
+      "path1": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (1).jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (19).jpg",
+      "label1": "normal",
+      "label2": "normal",
+      "same_label": true
+    },
+    {
+      "distance": 4,
+      "path1": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (11).jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (24).jpg",
+      "label1": "normal",
+      "label2": "normal",
+      "same_label": true
+    },
+    {
+      "distance": 3,
+      "path1": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (11).jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (5).jpg",
+      "label1": "normal",
+      "label2": "normal",
+      "same_label": true
+    },
+    {
+      "distance": 0,
+      "path1": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (21).jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (28).jpg",
+      "label1": "normal",
+      "label2": "normal",
+      "same_label": true
+    },
+    {
+      "distance": 4,
+      "path1": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (22).jpg",
+      "path2": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (29).jpg",
+      "label1": "normal",
+      "label2": "normal",
+      "same_label": true
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    "Class normal below research minimum: 33 < 300",
+    "Class esotropia below research minimum: 20 < 300",
+    "Class exotropia below research minimum: 14 < 300",
+    "Missing class: pseudostrabismus",
+    "Missing class: poor_quality",
+    "participant_id values are inferred clusters, not true patient IDs; patient-level leakage risk remains.",
+    "Near-duplicate image pairs at threshold <= 4: 16"
+  ],
+  "overlay_count": 67,
+  "overlay_samples": [
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-01-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/estropia-01-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "detected_with_secondary_candidates",
+          "reflex_count": 1,
+          "pupil_status": "DETECTED",
+          "iris_center_original_px": [
+            193,
+            95
+          ],
+          "pupil_center_original_px": [
+            228,
+            94
+          ],
+          "reflex_points_original_px": [
+            [
+              234,
+              98
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "detected_with_secondary_candidates",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            664,
+            98
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              641,
+              99
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-02-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/estropia-02-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            216,
+            125
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              235,
+              94
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            646,
+            105
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              643,
+              88
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-03-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/estropia-03-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            241,
+            114
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              213,
+              154
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            678,
+            90
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              630,
+              156
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-01-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-01-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "detected_with_secondary_candidates",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            186,
+            139
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              217,
+              116
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "detected_with_secondary_candidates",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            703,
+            139
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              670,
+              124
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-02-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-02-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "detected_with_secondary_candidates",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            186,
+            115
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              225,
+              115
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            669,
+            130
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              647,
+              134
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-03-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-03-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            207,
+            111
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              215,
+              117
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            683,
+            128
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              664,
+              116
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-04-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-04-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "DETECTED",
+          "iris_center_original_px": [
+            184,
+            118
+          ],
+          "pupil_center_original_px": [
+            214,
+            121
+          ],
+          "reflex_points_original_px": [
+            [
+              202,
+              107
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            664,
+            100
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              641,
+              120
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-05-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-05-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "DETECTED",
+          "iris_center_original_px": [
+            191,
+            100
+          ],
+          "pupil_center_original_px": [
+            211,
+            123
+          ],
+          "reflex_points_original_px": [
+            [
+              210,
+              122
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "detected_with_secondary_candidates",
+          "reflex_count": 1,
+          "pupil_status": "DETECTED",
+          "iris_center_original_px": [
+            690,
+            118
+          ],
+          "pupil_center_original_px": [
+            643,
+            116
+          ],
+          "reflex_points_original_px": [
+            [
+              656,
+              116
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-06-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-06-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            202,
+            119
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              221,
+              136
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "PUPIL_NOT_FOUND",
+          "iris_center_original_px": [
+            678,
+            134
+          ],
+          "pupil_center_original_px": null,
+          "reflex_points_original_px": [
+            [
+              650,
+              144
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "source": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-07-before.jpg",
+      "overlay": "reports/pedseye_detector_overlays/dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-07-before.jpg",
+      "detections": [
+        {
+          "crop": "left_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "detected_with_secondary_candidates",
+          "reflex_count": 1,
+          "pupil_status": "DETECTED",
+          "iris_center_original_px": [
+            180,
+            128
+          ],
+          "pupil_center_original_px": [
+            213,
+            116
+          ],
+          "reflex_points_original_px": [
+            [
+              213,
+              116
+            ]
+          ]
+        },
+        {
+          "crop": "right_half",
+          "reflex_status": "DETECTED",
+          "reflex_tier": "compact_specular",
+          "reflex_count": 1,
+          "pupil_status": "DETECTED",
+          "iris_center_original_px": [
+            690,
+            132
+          ],
+          "pupil_center_original_px": [
+            636,
+            122
+          ],
+          "reflex_points_original_px": [
+            [
+              652,
+              117
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

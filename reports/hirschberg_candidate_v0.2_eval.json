@@ -1,0 +1,90 @@
+{
+  "model_id": "hirschberg-candidate-v0.2",
+  "status": "COMPLETED_RESEARCH_CANDIDATE",
+  "createdAt": "2026-10-04T06:21:15.772952+00:00",
+  "seed": 20261004,
+  "total_samples": 450,
+  "total_participants": 150,
+  "metrics": {
+    "accuracy": 1.0,
+    "balanced_accuracy": 1.0,
+    "macro_f1": 1.0,
+    "confusion_matrix": [
+      [
+        105,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        105,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        90,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        90,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        60
+      ]
+    ],
+    "sensitivities": {
+      "normal": 1.0,
+      "esotropia": 1.0,
+      "exotropia": 1.0,
+      "pseudostrabismus": 1.0,
+      "poor_quality": 1.0
+    },
+    "specificities": {
+      "normal": 1.0,
+      "esotropia": 1.0,
+      "exotropia": 1.0,
+      "pseudostrabismus": 1.0,
+      "poor_quality": 1.0
+    },
+    "esotropia_sensitivity": 1.0,
+    "exotropia_sensitivity": 1.0,
+    "normal_specificity": 1.0,
+    "severe_pseudostrabismus_esotropia_confusion_rate": 0.0,
+    "severe_confusion_breakdown": {
+      "pseudo_predicted_as_eso": 0,
+      "eso_predicted_as_pseudo": 0,
+      "total_relevant_cases": 195
+    },
+    "expected_calibration_error_ece": 0.0658,
+    "brier_score": 0.0116,
+    "target_benchmarks_achieved": {
+      "esotropia_sensitivity_ge_95": true,
+      "exotropia_sensitivity_ge_95": true,
+      "normal_specificity_ge_95": true,
+      "severe_confusion_rate_lt_3": true
+    },
+    "cross_validation_fold_accuracies": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean_cv_accuracy": 1.0
+  },
+  "feature_count": 35
+}

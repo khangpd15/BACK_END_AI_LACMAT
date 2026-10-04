@@ -1,0 +1,1057 @@
+{
+  "createdAt": "2026-10-04T07:10:08.707879+00:00",
+  "status": "COMPLETED_RESEARCH_CANDIDATE_WITH_WARNINGS",
+  "manifest_path": "D:\\REMICARE-STRABISMUS-AI\\datasets\\pedseye_hirschberg_manifest_v0.1.jsonl",
+  "model_output": "D:\\REMICARE-STRABISMUS-AI\\app\\models\\research\\hirschberg_candidate_v0.4.joblib",
+  "model_card_output": "D:\\REMICARE-STRABISMUS-AI\\reports\\hirschberg_candidate_v0.4_model_card.md",
+  "seed": 20261004,
+  "manifest_validation": {
+    "errors": [],
+    "warnings": [
+      "Missing class in manifest: pseudostrabismus",
+      "Missing class in manifest: poor_quality",
+      "Class esotropia is very small for ML training: 20 images",
+      "Class exotropia is very small for ML training: 14 images",
+      "participant_id is inferred from near-duplicate clustering; true patient independence is unproven."
+    ],
+    "label_counts": {
+      "esotropia": 20,
+      "exotropia": 14,
+      "normal": 33
+    },
+    "participant_count": 52,
+    "participant_id_source_counts": {
+      "inferred_near_duplicate_cluster_not_real_patient_id": 67
+    },
+    "participant_leakage": {
+      "is_disjoint": true,
+      "violating_participants": {}
+    },
+    "total_trainable_rows": 67,
+    "missing_expected_labels": [
+      "pseudostrabismus",
+      "poor_quality"
+    ]
+  },
+  "training": {
+    "trained": true,
+    "model_id": "hirschberg-candidate-v0.4",
+    "selected_model": "random_forest_balanced",
+    "cv": {
+      "name": "StratifiedGroupKFold",
+      "splits": 5,
+      "group_source": "manifest participant_id"
+    },
+    "classes": [
+      "normal",
+      "esotropia",
+      "exotropia"
+    ],
+    "class_to_idx": {
+      "normal": 0,
+      "esotropia": 1,
+      "exotropia": 2
+    },
+    "feature_count": 73,
+    "comparisons": {
+      "logistic_regression_balanced": {
+        "balanced_accuracy": 0.4426,
+        "macro_f1": 0.4308,
+        "confusion_matrix_labels": [
+          "normal",
+          "esotropia",
+          "exotropia"
+        ],
+        "confusion_matrix": [
+          [
+            16,
+            10,
+            7
+          ],
+          [
+            16,
+            4,
+            0
+          ],
+          [
+            4,
+            1,
+            9
+          ]
+        ],
+        "per_class_recall": {
+          "normal": 0.4848,
+          "esotropia": 0.2,
+          "exotropia": 0.6429
+        },
+        "per_class_precision": {
+          "normal": 0.4444,
+          "esotropia": 0.2667,
+          "exotropia": 0.5625
+        },
+        "binary_strabismus_vs_normal": {
+          "tp": 14,
+          "tn": 16,
+          "fp": 17,
+          "fn": 20,
+          "sensitivity": 0.4118,
+          "specificity": 0.4848,
+          "ppv": 0.4516,
+          "npv": 0.4444,
+          "roc_auc": 0.4242
+        }
+      },
+      "random_forest_balanced": {
+        "balanced_accuracy": 0.4718,
+        "macro_f1": 0.4666,
+        "confusion_matrix_labels": [
+          "normal",
+          "esotropia",
+          "exotropia"
+        ],
+        "confusion_matrix": [
+          [
+            13,
+            14,
+            6
+          ],
+          [
+            11,
+            9,
+            0
+          ],
+          [
+            5,
+            1,
+            8
+          ]
+        ],
+        "per_class_recall": {
+          "normal": 0.3939,
+          "esotropia": 0.45,
+          "exotropia": 0.5714
+        },
+        "per_class_precision": {
+          "normal": 0.4483,
+          "esotropia": 0.375,
+          "exotropia": 0.5714
+        },
+        "binary_strabismus_vs_normal": {
+          "tp": 18,
+          "tn": 13,
+          "fp": 20,
+          "fn": 16,
+          "sensitivity": 0.5294,
+          "specificity": 0.3939,
+          "ppv": 0.4737,
+          "npv": 0.4483,
+          "roc_auc": 0.451
+        },
+        "bootstrap_ci": {
+          "recall_normal": {
+            "point": 0.3939,
+            "ci95": [
+              0.2308,
+              0.5556
+            ]
+          },
+          "specificity_normal": {
+            "point": 0.5294,
+            "ci95": [
+              0.3704,
+              0.6875
+            ]
+          },
+          "recall_esotropia": {
+            "point": 0.45,
+            "ci95": [
+              0.25,
+              0.6667
+            ]
+          },
+          "specificity_esotropia": {
+            "point": 0.6809,
+            "ci95": [
+              0.5455,
+              0.8085
+            ]
+          },
+          "recall_exotropia": {
+            "point": 0.5714,
+            "ci95": [
+              0.3,
+              0.8333
+            ]
+          },
+          "specificity_exotropia": {
+            "point": 0.8868,
+            "ci95": [
+              0.7869,
+              0.9636
+            ]
+          },
+          "binary_sensitivity": {
+            "point": 0.5294,
+            "ci95": [
+              0.3704,
+              0.6875
+            ]
+          },
+          "binary_specificity": {
+            "point": 0.3939,
+            "ci95": [
+              0.2308,
+              0.5556
+            ]
+          }
+        }
+      },
+      "hist_gradient_boosting": {
+        "balanced_accuracy": 0.4354,
+        "macro_f1": 0.4383,
+        "confusion_matrix_labels": [
+          "normal",
+          "esotropia",
+          "exotropia"
+        ],
+        "confusion_matrix": [
+          [
+            20,
+            8,
+            5
+          ],
+          [
+            16,
+            4,
+            0
+          ],
+          [
+            7,
+            0,
+            7
+          ]
+        ],
+        "per_class_recall": {
+          "normal": 0.6061,
+          "esotropia": 0.2,
+          "exotropia": 0.5
+        },
+        "per_class_precision": {
+          "normal": 0.4651,
+          "esotropia": 0.3333,
+          "exotropia": 0.5833
+        },
+        "binary_strabismus_vs_normal": {
+          "tp": 11,
+          "tn": 20,
+          "fp": 13,
+          "fn": 23,
+          "sensitivity": 0.3235,
+          "specificity": 0.6061,
+          "ppv": 0.4583,
+          "npv": 0.4651,
+          "roc_auc": 0.4626
+        }
+      }
+    },
+    "selected_metrics": {
+      "balanced_accuracy": 0.4718,
+      "macro_f1": 0.4666,
+      "confusion_matrix_labels": [
+        "normal",
+        "esotropia",
+        "exotropia"
+      ],
+      "confusion_matrix": [
+        [
+          13,
+          14,
+          6
+        ],
+        [
+          11,
+          9,
+          0
+        ],
+        [
+          5,
+          1,
+          8
+        ]
+      ],
+      "per_class_recall": {
+        "normal": 0.3939,
+        "esotropia": 0.45,
+        "exotropia": 0.5714
+      },
+      "per_class_precision": {
+        "normal": 0.4483,
+        "esotropia": 0.375,
+        "exotropia": 0.5714
+      },
+      "binary_strabismus_vs_normal": {
+        "tp": 18,
+        "tn": 13,
+        "fp": 20,
+        "fn": 16,
+        "sensitivity": 0.5294,
+        "specificity": 0.3939,
+        "ppv": 0.4737,
+        "npv": 0.4483,
+        "roc_auc": 0.451
+      },
+      "bootstrap_ci": {
+        "recall_normal": {
+          "point": 0.3939,
+          "ci95": [
+            0.2308,
+            0.5556
+          ]
+        },
+        "specificity_normal": {
+          "point": 0.5294,
+          "ci95": [
+            0.3704,
+            0.6875
+          ]
+        },
+        "recall_esotropia": {
+          "point": 0.45,
+          "ci95": [
+            0.25,
+            0.6667
+          ]
+        },
+        "specificity_esotropia": {
+          "point": 0.6809,
+          "ci95": [
+            0.5455,
+            0.8085
+          ]
+        },
+        "recall_exotropia": {
+          "point": 0.5714,
+          "ci95": [
+            0.3,
+            0.8333
+          ]
+        },
+        "specificity_exotropia": {
+          "point": 0.8868,
+          "ci95": [
+            0.7869,
+            0.9636
+          ]
+        },
+        "binary_sensitivity": {
+          "point": 0.5294,
+          "ci95": [
+            0.3704,
+            0.6875
+          ]
+        },
+        "binary_specificity": {
+          "point": 0.3939,
+          "ci95": [
+            0.2308,
+            0.5556
+          ]
+        }
+      }
+    },
+    "false_negative_review": [
+      {
+        "image_id": "pedseye_0001",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-01-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0001",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0002",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-02-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0002",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0005",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-02-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0005",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0006",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-03-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0006",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0007",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-04-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0007",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0008",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-05-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0008",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0009",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-06-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0009",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0011",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-08-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0011",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0017",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-14-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0016",
+        "split": "val",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0019",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-16-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0017",
+        "split": "test",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0020",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-17-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0018",
+        "split": "test",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0023",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-03-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0021",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0025",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-05-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0023",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0028",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-08-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0026",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0029",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-09-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0027",
+        "split": "train",
+        "feature_count": 73,
+        "predicted": "normal"
+      },
+      {
+        "image_id": "pedseye_0030",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-10-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0028",
+        "split": "val",
+        "feature_count": 73,
+        "predicted": "normal"
+      }
+    ],
+    "feature_extraction_rows": [
+      {
+        "image_id": "pedseye_0001",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-01-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0001",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0002",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-02-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0002",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0003",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-03-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0003",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0004",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-01-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0004",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0005",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-02-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0005",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0006",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-03-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0006",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0007",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-04-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0007",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0008",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-05-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0008",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0009",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-06-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0009",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0010",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-07-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0011",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-08-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0011",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0012",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-09-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0012",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0013",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-10-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0013",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0014",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-11-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0014",
+        "split": "val",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0015",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-12-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0016",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-13-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0015",
+        "split": "val",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0017",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-14-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0016",
+        "split": "val",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0018",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-15-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0008",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0019",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-16-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0017",
+        "split": "test",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0020",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-17-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0018",
+        "split": "test",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0021",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-01-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0019",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0022",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-02-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0020",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0023",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-03-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0021",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0024",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-04-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0022",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0025",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-05-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0023",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0026",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-06-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0024",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0027",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-07-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0025",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0028",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-08-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0026",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0029",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-09-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0027",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0030",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-10-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0028",
+        "split": "val",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0031",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-11-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0029",
+        "split": "val",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0032",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-12-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0030",
+        "split": "test",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0033",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-13-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0031",
+        "split": "test",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0034",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-14-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0025",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0035",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (1).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0032",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0036",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (10).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0033",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0037",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (11).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0038",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (12).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0034",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0039",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (13).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0032",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0040",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (14).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0041",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (15).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0035",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0042",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (16).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0017",
+        "split": "test",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0043",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (17).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0008",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0044",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (18).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0036",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0045",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (19).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0032",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0046",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (2).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0037",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0047",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (20).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0038",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0048",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (21).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0039",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0049",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (22).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0025",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0050",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (23).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0040",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0051",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (24).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0052",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (25).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0028",
+        "split": "val",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0053",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (26).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0041",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0054",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (27).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0042",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0055",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (28).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0039",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0056",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (29).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0025",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0057",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (3).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0043",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0058",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (30).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0044",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0059",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (31).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0045",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0060",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (32).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0046",
+        "split": "val",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0061",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (33).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0047",
+        "split": "val",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0062",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (4).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0048",
+        "split": "val",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0063",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (5).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0064",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (6).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0049",
+        "split": "test",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0065",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (7).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0050",
+        "split": "test",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0066",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (8).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0051",
+        "split": "test",
+        "feature_count": 73
+      },
+      {
+        "image_id": "pedseye_0067",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (9).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0052",
+        "split": "test",
+        "feature_count": 73
+      }
+    ]
+  },
+  "deployment_recommendation": {
+    "deploy": false,
+    "reason": "Dataset is too small, missing pseudostrabismus/poor_quality, and participant IDs are inferred.",
+    "allowed_use": "offline research baseline only"
+  },
+  "governance": [
+    "Production endpoint /api/v1/strabismus/predict was not modified.",
+    "Existing artifacts v0.1/v0.2/v0.3 were not overwritten.",
+    "Output is sàng lọc nghiên cứu only, not a diagnosis."
+  ]
+}

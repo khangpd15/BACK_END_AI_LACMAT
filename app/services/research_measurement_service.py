@@ -1,4 +1,4 @@
-﻿"""Research-only Hirschberg and Cover geometry measurements.
+"""Research-only Hirschberg and Cover geometry measurements.
 
 This module deliberately does not call or modify the production ONNX/image model.
 All thresholds are TODO_PILOT and outputs remain measurement/experimental only.
@@ -12,13 +12,18 @@ import logging
 import math
 import time
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from statistics import median
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import cv2
 import numpy as np
 from PIL import Image
+
+try:
+    import mediapipe as mp
+except ImportError:
+    mp = None
 
 from app.schemas.research_measurement import ResearchMeasurementRequest
 
@@ -117,6 +122,70 @@ class EyeMeasurement:
     reflex_center: Optional[Dict[str, float]] = None
     iris_diameter: Optional[float] = None
     reflex_tier: Optional[str] = None
+
+
+@dataclass
+class EyeHirschbergMeasurement:
+    """Standardized geometric Hirschberg measurement for an individual eye."""
+    eye: str  # "left" (OS) or "right" (OD)
+    pupil_center_x_px: float
+    pupil_center_y_px: float
+    iris_diameter_px: float
+    clr_found: bool
+    clr_x_px: Optional[float]
+    clr_y_px: Optional[float]
+    dx_px: Optional[float]  # clr_x - pupil_center_x
+    dy_px: Optional[float]  # clr_y - pupil_center_y
+    dx_mm: Optional[float]  # normalized by corneal diameter (~11.7mm)
+    dy_mm: Optional[float]  # normalized by corneal diameter (~11.7mm)
+    nasal_scleral_area: float
+    temporal_scleral_area: float
+    nasal_to_temporal_scleral_ratio: float
+    status: str
+    displacement_anatomical: Optional[str] = None
+
+
+@dataclass
+class QualityGateMetrics:
+    """Multi-factor clinical quality gatekeeper metrics."""
+    is_acceptable: bool
+    blur_variance: float
+    is_blurry: bool
+    head_pose_pitch: float
+    head_pose_yaw: float
+    head_pose_roll: float
+    head_pose_status: str  # "OPTIMAL", "MILD_TILT", "EXCEEDED_TOLERANCE"
+    inter_pupillary_angle_deg: float
+    face_detected: bool
+    landmarks_count: int
+    confidence_score: float
+    rejection_reasons: List[str] = field(default_factory=list)
+
+
+@dataclass
+class ROICrops:
+    """Three levels of standardized ocular crops for AI vision backbones."""
+    bino_periocular: Optional[np.ndarray] = None  # (H, W, 3) both eyes + bridge of nose
+    left_eye_224: Optional[np.ndarray] = None     # (224, 224, 3) Left eye (OS)
+    right_eye_224: Optional[np.ndarray] = None    # (224, 224, 3) Right eye (OD)
+
+
+@dataclass
+class ResearchMeasurementOutput:
+    """Comprehensive output container for ResearchMeasurementService."""
+    is_acceptable: bool
+    confidence_score: float
+    rejection_reasons: List[str]
+    quality: QualityGateMetrics
+    hirschberg_left: Optional[EyeHirschbergMeasurement]
+    hirschberg_right: Optional[EyeHirschbergMeasurement]
+    intercanthal_distance_px: Optional[float]
+    intercanthal_distance_mm: Optional[float]
+    symmetry_deviation_mm: Optional[float]
+    is_likely_pseudostrabismus: bool
+    pseudostrabismus_notes: str
+    rois: ROICrops
+    leveled_image: Optional[np.ndarray] = None
 
 
 def _is_finite_number(value: Any) -> bool:
@@ -852,6 +921,566 @@ def measure_research_request(req: ResearchMeasurementRequest) -> Dict[str, Any]:
         response["quality"],
     )
     return response
+
+
+# ==============================================================================
+# ResearchMeasurementService: Advanced Gatekeeper, Hirschberg & Pseudostrabismus
+# ==============================================================================
+
+# Standard 3D facial model for cv2.solvePnP (in mm, reference origin at nose tip)
+FACIAL_MODEL_3D = np.array([
+    (0.0, 0.0, 0.0),          # Nose tip (landmark 1)
+    (0.0, -330.0, -65.0),     # Chin (landmark 152)
+    (-225.0, 170.0, -135.0),  # Left eye outer corner (landmark 263)
+    (225.0, 170.0, -135.0),   # Right eye outer corner (landmark 33)
+    (-150.0, -150.0, -125.0), # Left mouth corner (landmark 287)
+    (150.0, -150.0, -125.0),  # Right mouth corner (landmark 57)
+], dtype=np.float64)
+
+CORNEA_DIAMETER_MM_STANDARD = 11.7
+
+
+class ResearchMeasurementService:
+    """Clinical & Biomedical Ocular Measurement Service for RemiCare Strabismus AI.
+    
+    Modules:
+    1. Quality Gatekeeper:
+       - 468+10 MediaPipe Face Mesh & Iris landmark detection.
+       - Laplacian blur variance verification (threshold >= 100.0).
+       - 3D Head Pose estimation (Pitch, Yaw, Roll via solvePnP). Rejects if Pitch/Yaw > 10°, Roll > 5°.
+       - Inter-pupillary line leveling via 2D Affine transformation.
+    2. Hirschberg Geometric Features:
+       - Pupil center extraction from refined iris landmarks & aperture analysis.
+       - Corneal Light Reflex (CLR) Hunter algorithm via adaptive specular highlight detection.
+       - Hirschberg decentration vectors (dx_px, dy_px, dx_mm, dy_mm normalized by ~11.7mm corneal diameter).
+       - Nasal-to-Temporal Scleral Area Ratio for epicanthal fold / flat nasal bridge detection.
+    3. AI ROI Extraction:
+       - (a) Bino-periocular crop (both eyes + bridge of nose).
+       - (b) Left eye crop (224x224).
+       - (c) Right eye crop (224x224).
+    4. Pseudostrabismus Safety Check:
+       - Identifies pseudostrabismus when Hirschberg is orthophoric (|dx| < 0.40mm) despite narrow nasal sclera.
+    """
+
+    def __init__(
+        self,
+        min_blur_var: float = 100.0,
+        max_pitch_deg: float = 10.0,
+        max_yaw_deg: float = 10.0,
+        max_roll_deg: float = 5.0,
+        cornea_diameter_mm: float = CORNEA_DIAMETER_MM_STANDARD,
+    ):
+        self.min_blur_var = min_blur_var
+        self.max_pitch_deg = max_pitch_deg
+        self.max_yaw_deg = max_yaw_deg
+        self.max_roll_deg = max_roll_deg
+        self.cornea_diameter_mm = cornea_diameter_mm
+
+        self._face_mesh = None
+        if mp is not None and hasattr(mp, "solutions") and hasattr(mp.solutions, "face_mesh"):
+            try:
+                self._face_mesh = mp.solutions.face_mesh.FaceMesh(
+                    static_image_mode=True,
+                    max_num_faces=1,
+                    refine_landmarks=True,
+                    min_detection_confidence=0.5,
+                    min_tracking_confidence=0.5,
+                )
+            except Exception as exc:
+                logger.warning("Could not initialize MediaPipe FaceMesh: %s", exc)
+
+    def compute_blur_variance(self, image: np.ndarray) -> float:
+        """Calculates image sharpness using Laplacian variance."""
+        gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY) if (image.ndim == 3 and image.shape[2] >= 3) else image
+        return float(cv2.Laplacian(gray, cv2.CV_64F).var())
+
+    def estimate_head_pose(
+        self,
+        landmarks: List[Dict[str, float]],
+        image_shape: Tuple[int, int],
+    ) -> Tuple[float, float, float, str, List[str]]:
+        """Estimates 3D Head Pose (Pitch, Yaw, Roll in degrees) using cv2.solvePnP."""
+        h, w = image_shape[:2]
+        key_indices = [1, 152, 263, 33, 287, 57]
+        reasons: List[str] = []
+
+        if len(landmarks) < 468 or any(idx >= len(landmarks) for idx in key_indices):
+            return 0.0, 0.0, 0.0, "UNKNOWN", ["LANDMARKS_INSUFFICIENT_FOR_HEAD_POSE"]
+
+        image_points = []
+        for idx in key_indices:
+            pt = landmarks[idx]
+            image_points.append([pt["x"] * w, pt["y"] * h])
+        image_points = np.array(image_points, dtype=np.float64)
+
+        focal_length = float(w)
+        center = (float(w) / 2.0, float(h) / 2.0)
+        camera_matrix = np.array([
+            [focal_length, 0, center[0]],
+            [0, focal_length, center[1]],
+            [0, 0, 1]
+        ], dtype=np.float64)
+        dist_coeffs = np.zeros((4, 1), dtype=np.float64)
+
+        success, rvec, _tvec = cv2.solvePnP(
+            FACIAL_MODEL_3D,
+            image_points,
+            camera_matrix,
+            dist_coeffs,
+            flags=cv2.SOLVEPNP_ITERATIVE,
+        )
+
+        if not success:
+            return 0.0, 0.0, 0.0, "ESTIMATION_FAILED", ["HEAD_POSE_ESTIMATION_FAILED"]
+
+        R, _ = cv2.Rodrigues(rvec)
+        angles, _, _, _, _, _ = cv2.RQDecomp3x3(R)
+        pitch, yaw, roll = float(angles[0]), float(angles[1]), float(angles[2])
+
+        is_exceeded = False
+        if abs(pitch) > self.max_pitch_deg:
+            reasons.append(f"HEAD_PITCH_EXCEEDED: |pitch|={abs(pitch):.1f}° > {self.max_pitch_deg}°")
+            is_exceeded = True
+        if abs(yaw) > self.max_yaw_deg:
+            reasons.append(f"HEAD_YAW_EXCEEDED: |yaw|={abs(yaw):.1f}° > {self.max_yaw_deg}°")
+            is_exceeded = True
+        if abs(roll) > self.max_roll_deg:
+            reasons.append(f"HEAD_ROLL_EXCEEDED: |roll|={abs(roll):.1f}° > {self.max_roll_deg}°")
+            is_exceeded = True
+
+        if is_exceeded:
+            status = "EXCEEDED_TOLERANCE"
+        elif abs(pitch) > (self.max_pitch_deg * 0.6) or abs(yaw) > (self.max_yaw_deg * 0.6):
+            status = "MILD_TILT"
+        else:
+            status = "OPTIMAL"
+
+        return pitch, yaw, roll, status, reasons
+
+    def level_interpupillary_line(
+        self,
+        image: np.ndarray,
+        right_pupil_px: Tuple[float, float],
+        left_pupil_px: Tuple[float, float],
+        landmarks: List[Dict[str, float]],
+    ) -> Tuple[np.ndarray, List[Dict[str, float]], float, np.ndarray]:
+        """Performs 2D Affine rotation so that the inter-pupillary line is horizontal."""
+        h, w = image.shape[:2]
+        xr, yr = right_pupil_px
+        xl, yl = left_pupil_px
+
+        dx = xl - xr
+        dy = yl - yr
+        angle_rad = math.atan2(dy, dx)
+        angle_deg = math.degrees(angle_rad)
+
+        mid_x = (xr + xl) / 2.0
+        mid_y = (yr + yl) / 2.0
+
+        M = cv2.getRotationMatrix2D((mid_x, mid_y), angle_deg, 1.0)
+        leveled_img = cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REFLECT)
+
+        leveled_landmarks: List[Dict[str, float]] = []
+        for lm in landmarks:
+            px = lm["x"] * w
+            py = lm["y"] * h
+            rot_x = M[0, 0] * px + M[0, 1] * py + M[0, 2]
+            rot_y = M[1, 0] * px + M[1, 1] * py + M[1, 2]
+            leveled_landmarks.append({
+                "x": float(rot_x / w),
+                "y": float(rot_y / h),
+                "z": lm.get("z", 0.0),
+            })
+
+        return leveled_img, leveled_landmarks, angle_deg, M
+
+    def hunt_corneal_light_reflex(
+        self,
+        image: np.ndarray,
+        iris_cx: float,
+        iris_cy: float,
+        iris_diameter: float,
+    ) -> Tuple[Optional[float], Optional[float], str]:
+        """Corneal Light Reflex (CLR) Hunter:
+        Identifies peak specular glint within iris radius using Luma adaptive thresholding.
+        """
+        candidates, status, _tier = detect_reflexes_in_roi(image, iris_cx, iris_cy, iris_diameter)
+        if candidates and status == REFLEX_SUCCESS_STATUS:
+            return float(candidates[0]["x"]), float(candidates[0]["y"]), "DETECTED"
+        return None, None, status
+
+    def compute_scleral_area_ratio(
+        self,
+        landmarks: List[Dict[str, float]],
+        eye: str,
+        iris_cx: float,
+        iris_cy: float,
+        iris_diameter: float,
+        image_shape: Tuple[int, int],
+    ) -> Tuple[float, float, float]:
+        """Computes Nasal-to-Temporal Scleral Area Ratio for the specified eye."""
+        h, w = image_shape[:2]
+        r = iris_diameter / 2.0
+
+        if eye == "left":
+            nasal_idx = LEFT_CORNERS["nasal"]      # 362 (inner, toward nose)
+            temporal_idx = LEFT_CORNERS["temporal"] # 263 (outer, toward ear)
+            upper_lid_idx = 386
+            lower_lid_idx = 374
+
+            nasal_x = landmarks[nasal_idx]["x"] * w
+            temporal_x = landmarks[temporal_idx]["x"] * w
+            upper_y = landmarks[upper_lid_idx]["y"] * h
+            lower_y = landmarks[lower_lid_idx]["y"] * h
+            fissure_height = max(1.0, abs(lower_y - upper_y))
+
+            medial_edge = iris_cx - r
+            lateral_edge = iris_cx + r
+            nasal_width = max(0.5, medial_edge - nasal_x)
+            temporal_width = max(0.5, temporal_x - lateral_edge)
+
+        else:
+            nasal_idx = RIGHT_CORNERS["nasal"]      # 133 (inner, toward nose)
+            temporal_idx = RIGHT_CORNERS["temporal"] # 33 (outer, toward ear)
+            upper_lid_idx = 159
+            lower_lid_idx = 145
+
+            nasal_x = landmarks[nasal_idx]["x"] * w
+            temporal_x = landmarks[temporal_idx]["x"] * w
+            upper_y = landmarks[upper_lid_idx]["y"] * h
+            lower_y = landmarks[lower_lid_idx]["y"] * h
+            fissure_height = max(1.0, abs(lower_y - upper_y))
+
+            medial_edge = iris_cx + r
+            lateral_edge = iris_cx - r
+            nasal_width = max(0.5, nasal_x - medial_edge)
+            temporal_width = max(0.5, lateral_edge - temporal_x)
+
+        area_nasal = float(0.5 * nasal_width * fissure_height)
+        area_temporal = float(0.5 * temporal_width * fissure_height)
+        ratio = round(float(area_nasal / max(0.1, area_temporal)), 4)
+        return round(area_nasal, 2), round(area_temporal, 2), ratio
+
+    def extract_rois(
+        self,
+        image_leveled: np.ndarray,
+        left_eye_center: Tuple[float, float],
+        right_eye_center: Tuple[float, float],
+        left_corners: Tuple[float, float],
+        right_corners: Tuple[float, float],
+        avg_iris_diameter: float,
+    ) -> ROICrops:
+        """Extracts 3 ROI crop levels: Bino-periocular, Left eye 224x224, Right eye 224x224."""
+        h, w = image_leveled.shape[:2]
+        xr, yr = right_eye_center
+        xl, yl = left_eye_center
+        ipd = max(10.0, math.hypot(xl - xr, yl - yr))
+
+        # (a) Bino-periocular crop
+        temp_r = right_corners[1]
+        temp_l = left_corners[1]
+        x_min_span = min(temp_r, xr - avg_iris_diameter * 1.5)
+        x_max_span = max(temp_l, xl + avg_iris_diameter * 1.5)
+        margin_x = 0.15 * ipd
+        x0_bino = max(0, int(round(x_min_span - margin_x)))
+        x1_bino = min(w, int(round(x_max_span + margin_x)))
+
+        mid_y = (yr + yl) / 2.0
+        y0_bino = max(0, int(round(mid_y - 0.40 * ipd)))
+        y1_bino = min(h, int(round(mid_y + 0.35 * ipd)))
+
+        bino_crop = image_leveled[y0_bino:y1_bino, x0_bino:x1_bino] if (x1_bino > x0_bino and y1_bino > y0_bino) else None
+
+        # (b) Left eye 224x224
+        half_crop_l = max(16.0, avg_iris_diameter * 1.6)
+        x0_l = max(0, int(round(xl - half_crop_l)))
+        x1_l = min(w, int(round(xl + half_crop_l)))
+        y0_l = max(0, int(round(yl - half_crop_l)))
+        y1_l = min(h, int(round(yl + half_crop_l)))
+        left_crop_raw = image_leveled[y0_l:y1_l, x0_l:x1_l]
+        left_224 = cv2.resize(left_crop_raw, (224, 224), interpolation=cv2.INTER_LANCZOS4) if left_crop_raw.size > 0 else None
+
+        # (c) Right eye 224x224
+        half_crop_r = max(16.0, avg_iris_diameter * 1.6)
+        x0_r = max(0, int(round(xr - half_crop_r)))
+        x1_r = min(w, int(round(xr + half_crop_r)))
+        y0_r = max(0, int(round(yr - half_crop_r)))
+        y1_r = min(h, int(round(yr + half_crop_r)))
+        right_crop_raw = image_leveled[y0_r:y1_r, x0_r:x1_r]
+        right_224 = cv2.resize(right_crop_raw, (224, 224), interpolation=cv2.INTER_LANCZOS4) if right_crop_raw.size > 0 else None
+
+        return ROICrops(
+            bino_periocular=bino_crop,
+            left_eye_224=left_224,
+            right_eye_224=right_224,
+        )
+
+    def check_pseudostrabismus_rule(
+        self,
+        left_meas: Optional[EyeHirschbergMeasurement],
+        right_meas: Optional[EyeHirschbergMeasurement],
+    ) -> Tuple[bool, str]:
+        """Evaluates clinical rule check to distinguish Pseudostrabismus from Esotropia."""
+        if not left_meas or not right_meas or left_meas.dx_mm is None or right_meas.dx_mm is None:
+            return False, "MEASUREMENT_INCOMPLETE_CANNOT_EVALUATE_RULE"
+
+        dx_l = left_meas.dx_mm
+        dx_r = right_meas.dx_mm
+        ratio_l = left_meas.nasal_to_temporal_scleral_ratio
+        ratio_r = right_meas.nasal_to_temporal_scleral_ratio
+        symmetry_dev = abs(dx_l - dx_r)
+
+        # Normal orthophoric decentration bound: |dx| < 0.40 mm
+        is_orthophoric = (abs(dx_l) < 0.40) and (abs(dx_r) < 0.40) and (symmetry_dev < 0.50)
+        # Narrow nasal scleral margin (epicanthal fold / flat nasal bridge)
+        has_narrow_nasal_sclera = (ratio_l < 0.70) or (ratio_r < 0.70)
+
+        if is_orthophoric and has_narrow_nasal_sclera:
+            return True, (
+                "Bilateral corneal light reflexes are orthophoric (|dx| < 0.40mm) despite narrow nasal sclera "
+                f"(scleral ratios: OS={ratio_l:.2f}, OD={ratio_r:.2f}), confirming characteristic Pseudostrabismus."
+            )
+        elif (abs(dx_l) >= 0.40) or (abs(dx_r) >= 0.40) or (symmetry_dev >= 0.50):
+            return False, (
+                "Corneal light reflex shows significant decentration (|dx| >= 0.40mm or asymmetry >= 0.50mm); "
+                "points to genuine strabismus (Esotropia / Exotropia), not Pseudostrabismus."
+            )
+        else:
+            return False, "Orthophoric bilateral corneal reflexes with normal scleral exposure."
+
+    def process_image(
+        self,
+        image_bgr_or_rgb: np.ndarray,
+        landmarks_provided: Optional[List[Dict[str, float]]] = None,
+    ) -> ResearchMeasurementOutput:
+        """Runs end-to-end Quality Gate, Affine Leveling, Hirschberg CLR Hunter, Scleral Ratios, ROIs & Safety Check."""
+        img = image_bgr_or_rgb
+        if img.ndim != 3:
+            raise ValueError("Input image must be a 3-channel image (H, W, 3).")
+        h, w = img.shape[:2]
+
+        rejection_reasons: List[str] = []
+
+        # 1. Blur check
+        blur_var = self.compute_blur_variance(img)
+        is_blurry = blur_var < self.min_blur_var
+        if is_blurry:
+            rejection_reasons.append(f"IMAGE_BLURRY: var={blur_var:.1f} < {self.min_blur_var}")
+
+        # 2. Extract landmarks
+        landmarks = landmarks_provided
+        if landmarks is None and self._face_mesh is not None:
+            rgb_for_mp = img if img.dtype == np.uint8 else (img * 255).astype(np.uint8)
+            results = self._face_mesh.process(rgb_for_mp)
+            if results.multi_face_landmarks:
+                landmarks = [
+                    {"x": lm.x, "y": lm.y, "z": lm.z}
+                    for lm in results.multi_face_landmarks[0].landmark
+                ]
+
+        face_detected = landmarks is not None and len(landmarks) >= 468
+        if not face_detected:
+            rejection_reasons.append("FACE_OR_LANDMARKS_NOT_DETECTED")
+            quality_metrics = QualityGateMetrics(
+                is_acceptable=False,
+                blur_variance=round(blur_var, 1),
+                is_blurry=is_blurry,
+                head_pose_pitch=0.0,
+                head_pose_yaw=0.0,
+                head_pose_roll=0.0,
+                head_pose_status="REJECTED_EXCEEDED_TOLERANCE",
+                inter_pupillary_angle_deg=0.0,
+                face_detected=False,
+                landmarks_count=len(landmarks) if landmarks else 0,
+                confidence_score=0.1,
+                rejection_reasons=rejection_reasons,
+            )
+            return ResearchMeasurementOutput(
+                is_acceptable=False,
+                confidence_score=0.1,
+                rejection_reasons=rejection_reasons,
+                quality=quality_metrics,
+                hirschberg_left=None,
+                hirschberg_right=None,
+                intercanthal_distance_px=None,
+                intercanthal_distance_mm=None,
+                symmetry_deviation_mm=None,
+                is_likely_pseudostrabismus=False,
+                pseudostrabismus_notes="Face detection failed.",
+                rois=ROICrops(),
+            )
+
+        # 3. Head Pose Estimation
+        pitch, yaw, roll, pose_status, pose_reasons = self.estimate_head_pose(landmarks, (h, w))
+        rejection_reasons.extend(pose_reasons)
+
+        # 4. Extract Iris centers for leveling
+        left_geom = _iris_geometry(landmarks, LEFT_IRIS, w, h)
+        right_geom = _iris_geometry(landmarks, RIGHT_IRIS, w, h)
+
+        if not left_geom or not right_geom:
+            rejection_reasons.append("IRIS_LANDMARKS_INVALID")
+            quality_metrics = QualityGateMetrics(
+                is_acceptable=False,
+                blur_variance=round(blur_var, 1),
+                is_blurry=is_blurry,
+                head_pose_pitch=round(pitch, 2),
+                head_pose_yaw=round(yaw, 2),
+                head_pose_roll=round(roll, 2),
+                head_pose_status=pose_status,
+                inter_pupillary_angle_deg=0.0,
+                face_detected=True,
+                landmarks_count=len(landmarks),
+                confidence_score=0.3,
+                rejection_reasons=rejection_reasons,
+            )
+            return ResearchMeasurementOutput(
+                is_acceptable=False,
+                confidence_score=0.3,
+                rejection_reasons=rejection_reasons,
+                quality=quality_metrics,
+                hirschberg_left=None,
+                hirschberg_right=None,
+                intercanthal_distance_px=None,
+                intercanthal_distance_mm=None,
+                symmetry_deviation_mm=None,
+                is_likely_pseudostrabismus=False,
+                pseudostrabismus_notes="Iris geometry invalid.",
+                rois=ROICrops(),
+            )
+
+        left_cx, left_cy, left_d = left_geom
+        right_cx, right_cy, right_d = right_geom
+
+        # 5. Affine Inter-pupillary Line Leveling
+        leveled_img, leveled_landmarks, angle_deg, M = self.level_interpupillary_line(
+            img, (right_cx, right_cy), (left_cx, left_cy), landmarks
+        )
+
+        lev_right_cx = M[0, 0] * right_cx + M[0, 1] * right_cy + M[0, 2]
+        lev_right_cy = M[1, 0] * right_cx + M[1, 1] * right_cy + M[1, 2]
+        lev_left_cx = M[0, 0] * left_cx + M[0, 1] * left_cy + M[0, 2]
+        lev_left_cy = M[1, 0] * left_cx + M[1, 1] * left_cy + M[1, 2]
+        avg_d = (left_d + right_d) / 2.0
+
+        # 6. Hunt CLR on leveled image
+        clr_l_x, clr_l_y, clr_l_status = self.hunt_corneal_light_reflex(leveled_img, lev_left_cx, lev_left_cy, left_d)
+        clr_r_x, clr_r_y, clr_r_status = self.hunt_corneal_light_reflex(leveled_img, lev_right_cx, lev_right_cy, right_d)
+
+        if clr_l_status != "DETECTED":
+            rejection_reasons.append(f"LEFT_EYE_REFLEX_{clr_l_status}")
+        if clr_r_status != "DETECTED":
+            rejection_reasons.append(f"RIGHT_EYE_REFLEX_{clr_r_status}")
+
+        nasal_a_l, temp_a_l, ratio_l = self.compute_scleral_area_ratio(
+            leveled_landmarks, "left", lev_left_cx, lev_left_cy, left_d, (h, w)
+        )
+        nasal_a_r, temp_a_r, ratio_r = self.compute_scleral_area_ratio(
+            leveled_landmarks, "right", lev_right_cx, lev_right_cy, right_d, (h, w)
+        )
+
+        dx_l_px = (clr_l_x - lev_left_cx) if clr_l_x is not None else None
+        dy_l_px = (clr_l_y - lev_left_cy) if clr_l_y is not None else None
+        dx_l_mm = round((dx_l_px / left_d) * self.cornea_diameter_mm, 4) if dx_l_px is not None else None
+        dy_l_mm = round((dy_l_px / left_d) * self.cornea_diameter_mm, 4) if dy_l_px is not None else None
+
+        dx_r_px = (clr_r_x - lev_right_cx) if clr_r_x is not None else None
+        dy_r_px = (clr_r_y - lev_right_cy) if clr_r_y is not None else None
+        dx_r_mm = round((dx_r_px / right_d) * self.cornea_diameter_mm, 4) if dx_r_px is not None else None
+        dy_r_mm = round((dy_r_px / right_d) * self.cornea_diameter_mm, 4) if dy_r_px is not None else None
+
+        left_meas = EyeHirschbergMeasurement(
+            eye="left",
+            pupil_center_x_px=round(lev_left_cx, 2),
+            pupil_center_y_px=round(lev_left_cy, 2),
+            iris_diameter_px=round(left_d, 2),
+            clr_found=clr_l_status == "DETECTED",
+            clr_x_px=round(clr_l_x, 2) if clr_l_x else None,
+            clr_y_px=round(clr_l_y, 2) if clr_l_y else None,
+            dx_px=round(dx_l_px, 2) if dx_l_px else None,
+            dy_px=round(dy_l_px, 2) if dy_l_px else None,
+            dx_mm=dx_l_mm,
+            dy_mm=dy_l_mm,
+            nasal_scleral_area=nasal_a_l,
+            temporal_scleral_area=temp_a_l,
+            nasal_to_temporal_scleral_ratio=ratio_l,
+            status=clr_l_status,
+        )
+
+        right_meas = EyeHirschbergMeasurement(
+            eye="right",
+            pupil_center_x_px=round(lev_right_cx, 2),
+            pupil_center_y_px=round(lev_right_cy, 2),
+            iris_diameter_px=round(right_d, 2),
+            clr_found=clr_r_status == "DETECTED",
+            clr_x_px=round(clr_r_x, 2) if clr_r_x else None,
+            clr_y_px=round(clr_r_y, 2) if clr_r_y else None,
+            dx_px=round(dx_r_px, 2) if dx_r_px else None,
+            dy_px=round(dy_r_px, 2) if dy_r_px else None,
+            dx_mm=dx_r_mm,
+            dy_mm=dy_r_mm,
+            nasal_scleral_area=nasal_a_r,
+            temporal_scleral_area=temp_a_r,
+            nasal_to_temporal_scleral_ratio=ratio_r,
+            status=clr_r_status,
+        )
+
+        inner_l_x = leveled_landmarks[LEFT_CORNERS["nasal"]]["x"] * w
+        inner_l_y = leveled_landmarks[LEFT_CORNERS["nasal"]]["y"] * h
+        inner_r_x = leveled_landmarks[RIGHT_CORNERS["nasal"]]["x"] * w
+        inner_r_y = leveled_landmarks[RIGHT_CORNERS["nasal"]]["y"] * h
+        intercanthal_px = float(math.hypot(inner_l_x - inner_r_x, inner_l_y - inner_r_y))
+        intercanthal_mm = round((intercanthal_px / avg_d) * self.cornea_diameter_mm, 2)
+
+        sym_dev_mm = round(abs(dx_l_mm - dx_r_mm), 4) if (dx_l_mm is not None and dx_r_mm is not None) else None
+
+        outer_l_x = leveled_landmarks[LEFT_CORNERS["temporal"]]["x"] * w
+        outer_r_x = leveled_landmarks[RIGHT_CORNERS["temporal"]]["x"] * w
+        rois = self.extract_rois(
+            leveled_img,
+            (lev_left_cx, lev_left_cy),
+            (lev_right_cx, lev_right_cy),
+            (inner_l_x, outer_l_x),
+            (inner_r_x, outer_r_x),
+            avg_d,
+        )
+
+        is_pseudo, pseudo_notes = self.check_pseudostrabismus_rule(left_meas, right_meas)
+
+        is_acceptable = len(rejection_reasons) == 0
+        conf_score = 0.95 if is_acceptable else max(0.1, 0.95 - 0.15 * len(rejection_reasons))
+
+        quality_metrics = QualityGateMetrics(
+            is_acceptable=is_acceptable,
+            blur_variance=round(blur_var, 1),
+            is_blurry=is_blurry,
+            head_pose_pitch=round(pitch, 2),
+            head_pose_yaw=round(yaw, 2),
+            head_pose_roll=round(roll, 2),
+            head_pose_status=pose_status,
+            inter_pupillary_angle_deg=round(angle_deg, 2),
+            face_detected=True,
+            landmarks_count=len(landmarks),
+            confidence_score=round(conf_score, 2),
+            rejection_reasons=rejection_reasons,
+        )
+
+        return ResearchMeasurementOutput(
+            is_acceptable=is_acceptable,
+            confidence_score=round(conf_score, 2),
+            rejection_reasons=rejection_reasons,
+            quality=quality_metrics,
+            hirschberg_left=left_meas,
+            hirschberg_right=right_meas,
+            intercanthal_distance_px=round(intercanthal_px, 2),
+            intercanthal_distance_mm=intercanthal_mm,
+            symmetry_deviation_mm=sym_dev_mm,
+            is_likely_pseudostrabismus=is_pseudo,
+            pseudostrabismus_notes=pseudo_notes,
+            rois=rois,
+            leveled_image=leveled_img,
+        )
+
 
 
 

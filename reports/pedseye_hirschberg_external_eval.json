@@ -1,0 +1,2076 @@
+{
+  "createdAt": "2026-10-04T06:47:12.377107+00:00",
+  "status": "COMPLETED_RESEARCH_EVALUATION",
+  "dataset": {
+    "path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest",
+    "version": "dataset_by_pedseye_manifest-v0.1",
+    "counts": {
+      "esotropia": 20,
+      "exotropia": 14,
+      "normal": 33
+    },
+    "total": 67,
+    "label_source": "user-provided Pedseye folder labels",
+    "participant_ids_available": false,
+    "leakage_risk": "unknown because participant_id/group_id manifest is not available"
+  },
+  "current_service_model_eval": {
+    "evaluated_samples": 67,
+    "unavailable_predictions": 0,
+    "confusion_matrix_labels": [
+      "esotropia",
+      "exotropia",
+      "normal"
+    ],
+    "confusion_matrix": [
+      [
+        20,
+        0,
+        0
+      ],
+      [
+        13,
+        0,
+        1
+      ],
+      [
+        29,
+        0,
+        4
+      ]
+    ],
+    "balanced_accuracy": 0.3737,
+    "macro_f1": 0.2328,
+    "per_class": {
+      "esotropia": {
+        "precision": 0.3225806451612903,
+        "recall": 1.0,
+        "f1-score": 0.4878048780487805,
+        "support": 20.0
+      },
+      "exotropia": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 14.0
+      },
+      "normal": {
+        "precision": 0.8,
+        "recall": 0.12121212121212122,
+        "f1-score": 0.21052631578947367,
+        "support": 33.0
+      },
+      "accuracy": 0.3582089552238806,
+      "macro avg": {
+        "precision": 0.3741935483870968,
+        "recall": 0.3737373737373737,
+        "f1-score": 0.23277706461275138,
+        "support": 67.0
+      },
+      "weighted avg": {
+        "precision": 0.49032258064516127,
+        "recall": 0.3582089552238806,
+        "f1-score": 0.24930546241833196,
+        "support": 67.0
+      }
+    },
+    "binary_strabismus_vs_normal": {
+      "tp": 33,
+      "tn": 4,
+      "fp": 29,
+      "fn": 1,
+      "sensitivity": 0.9706,
+      "specificity": 0.1212
+    }
+  },
+  "current_service_prediction_details": [
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\estropia-01-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-01-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.5162,
+        "probabilities": {
+          "esotropia": 0.5162,
+          "exotropia": 0.0024,
+          "normal": 0.4814
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\estropia-02-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-02-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.534,
+        "probabilities": {
+          "esotropia": 0.534,
+          "exotropia": 0.0002,
+          "normal": 0.4658
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\estropia-03-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-03-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.5412,
+        "probabilities": {
+          "esotropia": 0.5412,
+          "exotropia": 0.0001,
+          "normal": 0.4587
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-01-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-01-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9983,
+        "probabilities": {
+          "esotropia": 0.9983,
+          "exotropia": 0.0,
+          "normal": 0.0016
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-02-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-02-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9999,
+        "probabilities": {
+          "esotropia": 0.9999,
+          "exotropia": 0.0,
+          "normal": 0.0001
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-03-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-03-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.5362,
+        "probabilities": {
+          "esotropia": 0.5362,
+          "exotropia": 0.0001,
+          "normal": 0.4637
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-04-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-04-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.997,
+        "probabilities": {
+          "esotropia": 0.997,
+          "exotropia": 0.0001,
+          "normal": 0.0029
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-05-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-05-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9989,
+        "probabilities": {
+          "esotropia": 0.9989,
+          "exotropia": 0.0002,
+          "normal": 0.0009
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-06-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-06-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9999,
+        "probabilities": {
+          "esotropia": 0.9999,
+          "exotropia": 0.0,
+          "normal": 0.0001
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-07-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-07-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.8248,
+        "probabilities": {
+          "esotropia": 0.8248,
+          "exotropia": 0.0002,
+          "normal": 0.175
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-08-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-08-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9987,
+        "probabilities": {
+          "esotropia": 0.9987,
+          "exotropia": 0.0002,
+          "normal": 0.0011
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-09-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-09-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9662,
+        "probabilities": {
+          "esotropia": 0.9662,
+          "exotropia": 0.0,
+          "normal": 0.0338
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-10-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-10-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9782,
+        "probabilities": {
+          "esotropia": 0.9782,
+          "exotropia": 0.0,
+          "normal": 0.0218
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-11-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-11-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9832,
+        "probabilities": {
+          "esotropia": 0.9832,
+          "exotropia": 0.0001,
+          "normal": 0.0167
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-12-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-12-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9991,
+        "probabilities": {
+          "esotropia": 0.9991,
+          "exotropia": 0.0,
+          "normal": 0.0009
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-13-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-13-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.7314,
+        "probabilities": {
+          "esotropia": 0.7314,
+          "exotropia": 0.0,
+          "normal": 0.2686
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-14-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-14-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.5394,
+        "probabilities": {
+          "esotropia": 0.5394,
+          "exotropia": 0.0002,
+          "normal": 0.4604
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-15-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-15-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9123,
+        "probabilities": {
+          "esotropia": 0.9123,
+          "exotropia": 0.0001,
+          "normal": 0.0877
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-16-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-16-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.5075,
+        "probabilities": {
+          "esotropia": 0.5075,
+          "exotropia": 0.0,
+          "normal": 0.4925
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-17-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-17-before.jpg",
+      "label": "esotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.8644,
+        "probabilities": {
+          "esotropia": 0.8644,
+          "exotropia": 0.0,
+          "normal": 0.1356
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-01-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-01-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9668,
+        "probabilities": {
+          "esotropia": 0.9668,
+          "exotropia": 0.0025,
+          "normal": 0.0307
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-02-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-02-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.7703,
+        "probabilities": {
+          "esotropia": 0.7703,
+          "exotropia": 0.004,
+          "normal": 0.2256
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-03-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-03-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9967,
+        "probabilities": {
+          "esotropia": 0.9967,
+          "exotropia": 0.0027,
+          "normal": 0.0006
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-04-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-04-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9287,
+        "probabilities": {
+          "esotropia": 0.9287,
+          "exotropia": 0.0008,
+          "normal": 0.0706
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-05-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-05-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9801,
+        "probabilities": {
+          "esotropia": 0.9801,
+          "exotropia": 0.013,
+          "normal": 0.0069
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-06-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-06-before.jpg",
+      "label": "exotropia",
+      "prediction": "normal",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "NORMAL",
+        "confidence": 0.8582,
+        "probabilities": {
+          "esotropia": 0.1266,
+          "exotropia": 0.0152,
+          "normal": 0.8582
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-07-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-07-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.8763,
+        "probabilities": {
+          "esotropia": 0.8763,
+          "exotropia": 0.0902,
+          "normal": 0.0335
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-08-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-08-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9377,
+        "probabilities": {
+          "esotropia": 0.9377,
+          "exotropia": 0.0006,
+          "normal": 0.0617
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-09-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-09-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.6568,
+        "probabilities": {
+          "esotropia": 0.6568,
+          "exotropia": 0.0064,
+          "normal": 0.3368
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-10-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-10-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.5862,
+        "probabilities": {
+          "esotropia": 0.5862,
+          "exotropia": 0.0002,
+          "normal": 0.4136
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-11-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-11-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.8577,
+        "probabilities": {
+          "esotropia": 0.8577,
+          "exotropia": 0.0,
+          "normal": 0.1422
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-12-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-12-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9376,
+        "probabilities": {
+          "esotropia": 0.9376,
+          "exotropia": 0.0612,
+          "normal": 0.0011
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-13-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-13-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.76,
+        "probabilities": {
+          "esotropia": 0.76,
+          "exotropia": 0.0001,
+          "normal": 0.2399
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-14-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-14-before.jpg",
+      "label": "exotropia",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.8709,
+        "probabilities": {
+          "esotropia": 0.8709,
+          "exotropia": 0.0971,
+          "normal": 0.032
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (1).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (1).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.933,
+        "probabilities": {
+          "esotropia": 0.933,
+          "exotropia": 0.0,
+          "normal": 0.067
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (10).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (10).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9997,
+        "probabilities": {
+          "esotropia": 0.9997,
+          "exotropia": 0.0002,
+          "normal": 0.0
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (11).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (11).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.751,
+        "probabilities": {
+          "esotropia": 0.751,
+          "exotropia": 0.0,
+          "normal": 0.249
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (12).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (12).jpg",
+      "label": "normal",
+      "prediction": "normal",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "NORMAL",
+        "confidence": 0.7683,
+        "probabilities": {
+          "esotropia": 0.2313,
+          "exotropia": 0.0004,
+          "normal": 0.7683
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (13).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (13).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.6388,
+        "probabilities": {
+          "esotropia": 0.6388,
+          "exotropia": 0.0,
+          "normal": 0.3611
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (14).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (14).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9974,
+        "probabilities": {
+          "esotropia": 0.9974,
+          "exotropia": 0.0,
+          "normal": 0.0025
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (15).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (15).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.7487,
+        "probabilities": {
+          "esotropia": 0.7487,
+          "exotropia": 0.0003,
+          "normal": 0.251
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (16).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (16).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.5322,
+        "probabilities": {
+          "esotropia": 0.5322,
+          "exotropia": 0.0,
+          "normal": 0.4678
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (17).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (17).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9988,
+        "probabilities": {
+          "esotropia": 0.9988,
+          "exotropia": 0.0001,
+          "normal": 0.0011
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (18).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (18).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9998,
+        "probabilities": {
+          "esotropia": 0.9998,
+          "exotropia": 0.0,
+          "normal": 0.0002
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (19).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (19).jpg",
+      "label": "normal",
+      "prediction": "normal",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "NORMAL",
+        "confidence": 0.5239,
+        "probabilities": {
+          "esotropia": 0.476,
+          "exotropia": 0.0001,
+          "normal": 0.5239
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (2).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (2).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9993,
+        "probabilities": {
+          "esotropia": 0.9993,
+          "exotropia": 0.0,
+          "normal": 0.0007
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (20).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (20).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.7677,
+        "probabilities": {
+          "esotropia": 0.7677,
+          "exotropia": 0.0,
+          "normal": 0.2323
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (21).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (21).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9993,
+        "probabilities": {
+          "esotropia": 0.9993,
+          "exotropia": 0.0006,
+          "normal": 0.0002
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (22).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (22).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9128,
+        "probabilities": {
+          "esotropia": 0.9128,
+          "exotropia": 0.0002,
+          "normal": 0.087
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (23).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (23).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9877,
+        "probabilities": {
+          "esotropia": 0.9877,
+          "exotropia": 0.0121,
+          "normal": 0.0002
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (24).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (24).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.8198,
+        "probabilities": {
+          "esotropia": 0.8198,
+          "exotropia": 0.0002,
+          "normal": 0.1801
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (25).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (25).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9064,
+        "probabilities": {
+          "esotropia": 0.9064,
+          "exotropia": 0.0016,
+          "normal": 0.092
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (26).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (26).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.6119,
+        "probabilities": {
+          "esotropia": 0.6119,
+          "exotropia": 0.0019,
+          "normal": 0.3861
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (27).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (27).jpg",
+      "label": "normal",
+      "prediction": "normal",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "NORMAL",
+        "confidence": 0.7831,
+        "probabilities": {
+          "esotropia": 0.2151,
+          "exotropia": 0.0018,
+          "normal": 0.7831
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (28).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (28).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9981,
+        "probabilities": {
+          "esotropia": 0.9981,
+          "exotropia": 0.0007,
+          "normal": 0.0013
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (29).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (29).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9987,
+        "probabilities": {
+          "esotropia": 0.9987,
+          "exotropia": 0.0002,
+          "normal": 0.0011
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (3).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (3).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.6547,
+        "probabilities": {
+          "esotropia": 0.6547,
+          "exotropia": 0.0026,
+          "normal": 0.3426
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (30).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (30).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.6351,
+        "probabilities": {
+          "esotropia": 0.6351,
+          "exotropia": 0.3556,
+          "normal": 0.0093
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (31).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (31).jpg",
+      "label": "normal",
+      "prediction": "normal",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "NORMAL",
+        "confidence": 0.5514,
+        "probabilities": {
+          "esotropia": 0.4485,
+          "exotropia": 0.0001,
+          "normal": 0.5514
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (32).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (32).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9945,
+        "probabilities": {
+          "esotropia": 0.9945,
+          "exotropia": 0.0006,
+          "normal": 0.0049
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (33).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (33).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.6993,
+        "probabilities": {
+          "esotropia": 0.6993,
+          "exotropia": 0.0716,
+          "normal": 0.229
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (4).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (4).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.922,
+        "probabilities": {
+          "esotropia": 0.922,
+          "exotropia": 0.0,
+          "normal": 0.078
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (5).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (5).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9556,
+        "probabilities": {
+          "esotropia": 0.9556,
+          "exotropia": 0.0,
+          "normal": 0.0444
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (6).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (6).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9999,
+        "probabilities": {
+          "esotropia": 0.9999,
+          "exotropia": 0.0,
+          "normal": 0.0
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (7).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (7).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9263,
+        "probabilities": {
+          "esotropia": 0.9263,
+          "exotropia": 0.0,
+          "normal": 0.0737
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (8).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (8).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.8842,
+        "probabilities": {
+          "esotropia": 0.8842,
+          "exotropia": 0.0,
+          "normal": 0.1158
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    },
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (9).jpg",
+      "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (9).jpg",
+      "label": "normal",
+      "prediction": "esotropia",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "ESOTROPIA",
+        "confidence": 0.9998,
+        "probabilities": {
+          "esotropia": 0.9998,
+          "exotropia": 0.0,
+          "normal": 0.0002
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    }
+  ],
+  "current_service_false_negative_review": [
+    {
+      "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-06-before.jpg",
+      "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-06-before.jpg",
+      "label": "exotropia",
+      "prediction": "normal",
+      "aiPrediction": {
+        "status": "PREDICTED",
+        "predictedClass": "NORMAL",
+        "confidence": 0.8582,
+        "probabilities": {
+          "esotropia": 0.1266,
+          "exotropia": 0.0152,
+          "normal": 0.8582
+        },
+        "modelId": "hirschberg-candidate-v0.1",
+        "datasetVersion": "hirschberg-folder-labels-v0.1",
+        "evaluationSummary": "Balanced Accuracy 76%, Sensitivity 91%, Specificity 76%, ROC-AUC 0.912",
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa."
+      }
+    }
+  ],
+  "training": {
+    "trained": true,
+    "model_output": "D:\\REMICARE-STRABISMUS-AI\\app\\models\\research\\hirschberg_candidate_v0.3_pedseye.joblib",
+    "selected_model": "random_forest_balanced",
+    "cv_splits": 5,
+    "feature_count": 73,
+    "model_comparison": {
+      "logistic_regression_balanced": {
+        "evaluated_samples": 67,
+        "unavailable_predictions": 0,
+        "confusion_matrix_labels": [
+          "esotropia",
+          "exotropia",
+          "normal"
+        ],
+        "confusion_matrix": [
+          [
+            5,
+            1,
+            14
+          ],
+          [
+            1,
+            8,
+            5
+          ],
+          [
+            13,
+            6,
+            14
+          ]
+        ],
+        "balanced_accuracy": 0.4152,
+        "macro_f1": 0.4108,
+        "per_class": {
+          "esotropia": {
+            "precision": 0.2631578947368421,
+            "recall": 0.25,
+            "f1-score": 0.2564102564102564,
+            "support": 20.0
+          },
+          "exotropia": {
+            "precision": 0.5333333333333333,
+            "recall": 0.5714285714285714,
+            "f1-score": 0.5517241379310345,
+            "support": 14.0
+          },
+          "normal": {
+            "precision": 0.42424242424242425,
+            "recall": 0.42424242424242425,
+            "f1-score": 0.42424242424242425,
+            "support": 33.0
+          },
+          "accuracy": 0.40298507462686567,
+          "macro avg": {
+            "precision": 0.4069112174375333,
+            "recall": 0.4152236652236652,
+            "f1-score": 0.4107922728612384,
+            "support": 67.0
+          },
+          "weighted avg": {
+            "precision": 0.3989526053940822,
+            "recall": 0.40298507462686567,
+            "f1-score": 0.4007812396901434,
+            "support": 67.0
+          }
+        },
+        "binary_strabismus_vs_normal": {
+          "tp": 15,
+          "tn": 14,
+          "fp": 19,
+          "fn": 19,
+          "sensitivity": 0.4412,
+          "specificity": 0.4242
+        }
+      },
+      "random_forest_balanced": {
+        "evaluated_samples": 67,
+        "unavailable_predictions": 0,
+        "confusion_matrix_labels": [
+          "esotropia",
+          "exotropia",
+          "normal"
+        ],
+        "confusion_matrix": [
+          [
+            9,
+            0,
+            11
+          ],
+          [
+            1,
+            8,
+            5
+          ],
+          [
+            10,
+            11,
+            12
+          ]
+        ],
+        "balanced_accuracy": 0.4617,
+        "macro_f1": 0.4428,
+        "per_class": {
+          "esotropia": {
+            "precision": 0.45,
+            "recall": 0.45,
+            "f1-score": 0.45,
+            "support": 20.0
+          },
+          "exotropia": {
+            "precision": 0.42105263157894735,
+            "recall": 0.5714285714285714,
+            "f1-score": 0.48484848484848486,
+            "support": 14.0
+          },
+          "normal": {
+            "precision": 0.42857142857142855,
+            "recall": 0.36363636363636365,
+            "f1-score": 0.39344262295081966,
+            "support": 33.0
+          },
+          "accuracy": 0.43283582089552236,
+          "macro avg": {
+            "precision": 0.4332080200501253,
+            "recall": 0.4616883116883117,
+            "f1-score": 0.44276370259976816,
+            "support": 67.0
+          },
+          "weighted avg": {
+            "precision": 0.4333969251486926,
+            "recall": 0.43283582089552236,
+            "f1-score": 0.42942515440680357,
+            "support": 67.0
+          }
+        },
+        "binary_strabismus_vs_normal": {
+          "tp": 18,
+          "tn": 12,
+          "fp": 21,
+          "fn": 16,
+          "sensitivity": 0.5294,
+          "specificity": 0.3636
+        }
+      },
+      "hist_gradient_boosting": {
+        "evaluated_samples": 67,
+        "unavailable_predictions": 0,
+        "confusion_matrix_labels": [
+          "esotropia",
+          "exotropia",
+          "normal"
+        ],
+        "confusion_matrix": [
+          [
+            7,
+            0,
+            13
+          ],
+          [
+            1,
+            8,
+            5
+          ],
+          [
+            9,
+            5,
+            19
+          ]
+        ],
+        "balanced_accuracy": 0.4991,
+        "macro_f1": 0.5046,
+        "per_class": {
+          "esotropia": {
+            "precision": 0.4117647058823529,
+            "recall": 0.35,
+            "f1-score": 0.3783783783783784,
+            "support": 20.0
+          },
+          "exotropia": {
+            "precision": 0.6153846153846154,
+            "recall": 0.5714285714285714,
+            "f1-score": 0.5925925925925926,
+            "support": 14.0
+          },
+          "normal": {
+            "precision": 0.5135135135135135,
+            "recall": 0.5757575757575758,
+            "f1-score": 0.5428571428571428,
+            "support": 33.0
+          },
+          "accuracy": 0.5074626865671642,
+          "macro avg": {
+            "precision": 0.5135542782601606,
+            "recall": 0.49906204906204904,
+            "f1-score": 0.5046093712760379,
+            "support": 67.0
+          },
+          "weighted avg": {
+            "precision": 0.5044272340145913,
+            "recall": 0.5074626865671642,
+            "f1-score": 0.5041514862410386,
+            "support": 67.0
+          }
+        },
+        "binary_strabismus_vs_normal": {
+          "tp": 16,
+          "tn": 19,
+          "fp": 14,
+          "fn": 18,
+          "sensitivity": 0.4706,
+          "specificity": 0.5758
+        }
+      }
+    },
+    "feature_extraction": [
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\estropia-01-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-01-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\estropia-02-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-02-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\estropia-03-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-03-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-01-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-01-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-02-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-02-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-03-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-03-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-04-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-04-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-05-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-05-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-06-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-06-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-07-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-07-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-08-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-08-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-09-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-09-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-10-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-10-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-11-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-11-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-12-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-12-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-13-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-13-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-14-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-14-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-15-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-15-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-16-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-16-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\esotropia_patient_before\\infantile-estropia-17-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-17-before.jpg",
+        "label": "esotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-01-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-01-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-02-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-02-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-03-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-03-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-04-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-04-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-05-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-05-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-06-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-06-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-07-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-07-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-08-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-08-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-09-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-09-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-10-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-10-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-11-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-11-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-12-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-12-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-13-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-13-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\exotropia_patient_before\\exotropia-14-before.jpg",
+        "relative_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-14-before.jpg",
+        "label": "exotropia",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (1).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (1).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (10).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (10).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (11).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (11).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (12).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (12).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (13).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (13).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (14).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (14).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (15).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (15).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (16).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (16).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (17).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (17).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (18).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (18).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (19).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (19).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (2).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (2).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (20).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (20).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (21).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (21).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (22).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (22).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (23).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (23).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (24).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (24).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (25).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (25).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (26).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (26).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (27).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (27).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (28).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (28).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (29).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (29).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (3).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (3).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (30).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (30).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (31).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (31).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (32).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (32).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (33).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (33).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (4).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (4).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (5).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (5).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (6).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (6).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (7).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (7).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (8).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (8).jpg",
+        "label": "normal",
+        "feature_count": 73
+      },
+      {
+        "image_path": "D:\\REMICARE-STRABISMUS-AI\\dataset_by_pedseye_manifest\\normal_patient_minifest_after\\normal_patient (9).jpg",
+        "relative_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (9).jpg",
+        "label": "normal",
+        "feature_count": 73
+      }
+    ]
+  },
+  "governance": [
+    "Research-only evaluation; no production endpoint changed.",
+    "Pedseye folder labels are used as external reference labels, not independently verified clinical ground truth.",
+    "No clinical probability or diagnosis claim is made.",
+    "New model artifact, if trained, is versioned separately and not auto-loaded by the backend service."
+  ]
+}
