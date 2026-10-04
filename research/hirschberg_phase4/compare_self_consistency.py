@@ -20,14 +20,23 @@ OLD_COLUMNS = {
 
 
 def summarize(
-    errors: list[float], expected: int, missing_normalizers: int = 0,
-    caution_threshold: float | None = None,
+    clusters: list[list[float]], expected: int, missing_normalizers: int = 0,
+    caution_threshold: float | None = None, seed: int = 20261004,
 ) -> dict:
-    values = np.asarray(errors, dtype=float)
+    values = np.asarray([value for group in clusters for value in group], dtype=float)
     if values.size == 0:
         return {"n": 0, "expected": expected, "missing": expected,
                 "mean": None, "median": None, "p90": None,
                 "normalized_missing": missing_normalizers}
+    point_stats = np.empty((5000, 3), dtype=float)
+    rng = np.random.default_rng(seed)
+    populated = [np.asarray(group, dtype=float) for group in clusters if group]
+    for index in range(len(point_stats)):
+        chosen = rng.integers(0, len(populated), size=len(populated))
+        bootstrap = np.concatenate([populated[item] for item in chosen])
+        point_stats[index] = (
+            bootstrap.mean(), np.median(bootstrap), np.percentile(bootstrap, 90)
+        )
     result = {
         "n": int(values.size),
         "expected": expected,
@@ -35,6 +44,10 @@ def summarize(
         "mean": float(values.mean()),
         "median": float(np.median(values)),
         "p90": float(np.percentile(values, 90)),
+        "ci95_image_cluster_bootstrap": {
+            metric: [float(x) for x in np.percentile(point_stats[:, column], [2.5, 97.5])]
+            for column, metric in enumerate(("mean", "median", "p90"))
+        },
         "normalized_missing": missing_normalizers,
     }
     if caution_threshold is not None:
@@ -63,11 +76,15 @@ def compare(csv_path: Path, sample_path: Path, annotations_path: Path) -> dict:
         if annotation is None:
             for target in expected:
                 expected[target] += 2
+                errors_px[target].append([])
+                errors_norm[target].append([])
             continue
         old = old_rows[selected_row["relative_path"]]
         old_od = [float(old["od_pupil_x"]), float(old["od_pupil_y"])]
         old_os = [float(old["os_pupil_x"]), float(old["os_pupil_y"])]
         inter_pupil_px = math.dist(old_od, old_os)
+        sample_errors_px = {"pupil": [], "reflex": []}
+        sample_errors_norm = {"pupil": [], "reflex": []}
         for point_name, columns in OLD_COLUMNS.items():
             target = "pupil" if point_name.endswith("pupil") else "reflex"
             expected[target] += 1
@@ -76,20 +93,40 @@ def compare(csv_path: Path, sample_path: Path, annotations_path: Path) -> dict:
                 continue
             old_xy = [float(old[columns[0]]), float(old[columns[1]])]
             error = math.dist(old_xy, [float(xy[0]), float(xy[1])])
-            errors_px[target].append(error)
+            sample_errors_px[target].append(error)
             if inter_pupil_px > 0 and math.isfinite(inter_pupil_px):
-                errors_norm[target].append(error / inter_pupil_px)
+                sample_errors_norm[target].append(error / inter_pupil_px)
             else:
                 normalization_missing[target] += 1
+        for target in expected:
+            errors_px[target].append(sample_errors_px[target])
+            errors_norm[target].append(sample_errors_norm[target])
+
+    annotation_source = json.loads(annotations_path.read_text(encoding="utf-8")).get(
+        "annotation_source", "manual_repeat"
+    )
+    is_ai_estimate = annotation_source == "assistant_visual_estimate"
+    purpose = (
+        "AI visual-estimate agreement with legacy clicks; not original-annotator self-consistency, "
+        "detector error, or clinician ground truth"
+        if is_ai_estimate else
+        "same-annotator agreement with legacy clicks; not detector error or clinical ground truth"
+    )
 
     return {
-        "purpose": "same-annotator agreement with legacy clicks; not detector error or clinical ground truth",
+        "purpose": purpose,
+        "annotation_source": annotation_source,
         "sample_n": len(selected),
         "annotated_n": len(by_sample),
         "strata_counts": sample.get("strata_counts", {}),
         "pixel_coordinate_space": "stored legacy crop pixels; no original-image transform is available",
         "normalization": "per-point Euclidean error divided by that image's legacy OD-OS pupil-center distance",
-        "approximately_3px_caution": "If repeat-click disagreement exceeds about 3 px, these labels cannot support a 3 px detector benchmark. This is only a practical warning, not a statistical test.",
+        "approximately_3px_caution": (
+            "AI visual estimates are not a repeat annotation by the original person; this comparison cannot test label self-consistency or a detector benchmark."
+            if is_ai_estimate else
+            "If repeat-click disagreement exceeds about 3 px, these labels cannot support a 3 px detector benchmark. This is only a practical warning, not a statistical test."
+        ),
+        "interval_method": "95% percentile bootstrap CI resampling images as clusters (both eyes stay together), 5000 replicates; descriptive for this small sampled set",
         "results": {
             target: {
                 "px": summarize(errors_px[target], expected[target], caution_threshold=3.0),

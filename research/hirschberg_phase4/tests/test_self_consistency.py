@@ -19,12 +19,13 @@ def test_stratified_sample_is_seeded_and_approximately_proportional():
 
 
 def test_summary_does_not_turn_missing_points_into_zero():
-    result = summarize([2.0, 4.0], expected=4, caution_threshold=3.0)
+    result = summarize([[2.0], [4.0]], expected=4, caution_threshold=3.0)
     assert result["n"] == 2
     assert result["missing"] == 2
     assert result["mean"] == 3.0
     assert result["mean_exceeds_approx_3px"] is False
     assert result["p90_exceeds_approx_3px"] is True
+    assert result["ci95_image_cluster_bootstrap"]["mean"][0] <= 3.0
 
 
 def test_compare_reports_per_eye_px_and_normalized_errors(tmp_path):
@@ -46,7 +47,7 @@ def test_compare_reports_per_eye_px_and_normalized_errors(tmp_path):
     )
     annotations_path = tmp_path / "repeat.json"
     annotations_path.write_text(
-        '{"annotations":[{"sample_id":"S001","points":{'
+        '{"annotation_source":"manual_repeat","annotations":[{"sample_id":"S001","points":{'
         '"OD pupil":[13,14],"OD reflex":[12,10],"OS pupil":[30,10],'
         '"OS reflex":[32,10]}}]}', encoding="utf-8"
     )
@@ -55,4 +56,7 @@ def test_compare_reports_per_eye_px_and_normalized_errors(tmp_path):
     assert pupil_px["n"] == 2
     assert pupil_px["mean"] == 2.5
     assert pupil_px["missing"] == 0
-    assert report["results"]["pupil"]["fraction_of_inter_pupil_distance"]["mean"] == 0.125
+    normalized = report["results"]["pupil"]["fraction_of_inter_pupil_distance"]
+    assert normalized["mean"] == 0.125
+    assert "mean_exceeds_approx_3px" not in normalized
+    assert len(pupil_px["ci95_image_cluster_bootstrap"]["mean"]) == 2
