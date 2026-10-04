@@ -148,3 +148,23 @@ def test_legacy_import_quarantines_without_reading_images(tmp_path):
     assert result[0]["coordinate_space"] == "legacy_crop"
     with pytest.raises(ValueError):
         validate(result)
+
+
+def test_legacy_owner_confirmation_does_not_certify_coordinates(tmp_path):
+    path = tmp_path / "old.csv"
+    path.write_text("relative_path,class_label,od_pupil_x,od_pupil_y,od_reflex_x,od_reflex_y,"
+                    "os_pupil_x,os_pupil_y,os_reflex_x,os_reflex_y,notes\n"
+                    "missing.jpg,normal,1,2,3,4,5,6,7,8,old\n", encoding="utf-8")
+    attestation = {"record_id": "owner-review", "evidence_type": "project_owner_statement",
+                   "approves_training_rights": True,
+                   "clinical_label_confirmation": "reported_by_project_owner"}
+    row = convert(path, attestation)[0]
+    assert row["rights_status"] == "approved" and row["clinician_confirmed"] is True
+    assert row["landmarks_clinician_confirmed"] is False
+    assert row["patient_id"] is None and row["training_ready"] is False
+    assert row["coordinate_space"] == "legacy_crop"
+    with pytest.raises(ValueError):
+        validate([row])
+    attestation["approves_training_rights"] = False
+    with pytest.raises(ValueError, match="Attestation"):
+        convert(path, attestation)

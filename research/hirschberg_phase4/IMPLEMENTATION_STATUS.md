@@ -27,15 +27,30 @@ versions are recorded, but a fully pinned environment is still outstanding.
 
 ## Not Completed, No Claim Of Full Phase 4 Completion
 
-M0 permission/consent/patient linking and M1 native gold clinical/landmark labels
-are not established. A1 image ROI/ellipse/glint detector, pixel-error benchmark,
+The project owner has now stated that all supplied data were confirmed by a
+physician. This is recorded in `annotation/user_attestation_20261004.json` as
+owner-reported clinical confirmation, not an independent medical review. Earlier
+audit findings describe the metadata available at that time; absence of a stored
+confirmation field does not mean that a physician did not review the data.
+
+The owner clarified that physician confirmation covers disease labels only and
+that the supplied images have permission and consent for research use. Research
+image-use permission is accepted on that explicit statement, not reclassified as
+a public dataset license or permission to redistribute images. The new attested
+import records these facts without overwriting the historical HOLD import.
+Verification of this increment: 62 attested rows, all with research-use permission
+and owner-reported physician-confirmed disease labels; zero genuine patient IDs.
+The extended test suite passes 23 tests including the existing manifest regression.
+
+Real patient linking and native landmark review remain outstanding. Legacy
+coordinate annotations are not physician-confirmed. A1 image ROI/ellipse/glint detector, pixel-error benchmark,
 epicanthal/canthal automation, OOF/nested patient-CV, bootstrap CIs and the clinical
 private test have not been implemented or run in this increment. No actual patient
 training, clinical validation, runtime change, push or deployment occurred.
 
-Next: review actual source/license/consent scope and clinician-confirmed records;
-otherwise continue nonpatient infrastructure/synthetic detector fixtures only.
-Changing manifest flags without genuine documentation does not satisfy M0.
+Next: establish genuine patient grouping/native coordinates and gold landmark
+review. Do not manufacture patient IDs from image IDs or duplicate clusters.
+User permission applies to supplied data, not external datasets or public release.
 
 ## Verification Commands Used
 

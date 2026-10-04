@@ -61,10 +61,24 @@ patient IDs, no clinical verification and legacy_crop coordinates. It is deliber
 not accepted by the trainer. Native images and genuine crop transforms must be
 obtained lawfully before converting/reannotating to the native contract.
 
+The owner subsequently confirmed clinical disease labels and consent/permission
+for research use of supplied images, but not physician review of coordinates.
+Record that explicitly, in a new output, with:
+
+```powershell
+.\.venv312\Scripts\python.exe -B -m research.hirschberg_phase4.import_legacy --csv processed/hirschberg_manual_annotations.csv --attestation research/hirschberg_phase4/annotation/user_attestation_20261004.json --output research/hirschberg_phase4/runs/legacy_attested.json
+```
+
+Attested rows accept research-use permission and clinical confirmation while
+retaining unknown patient IDs, legacy coordinates and unconfirmed landmark labels.
+They are still not training-ready. This does not approve external datasets or
+public image redistribution; no consent form or identifying patient data is stored
+in this repository.
+
 ## Next Gates
 
-See `audits/phase3_20261004/IMPROVEMENT_PROPOSAL.md`. M0 rights/consent/patient linking
-and M1 native gold annotations remain outstanding. No OOF clinical evaluation,
+See `audits/phase3_20261004/IMPROVEMENT_PROPOSAL.md`. Genuine patient linking and
+M1 native gold annotations remain outstanding. No OOF clinical evaluation,
 bootstrap CI, detector pixel benchmark, morphology model, mm/PD validation or
 deployment is claimed here. Missing WTW means no mm; there is no PD conversion or
 fake glint fallback. The next implementation is A1 ROI/ellipse/glint with gold

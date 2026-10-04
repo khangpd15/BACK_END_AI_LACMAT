@@ -1,0 +1,21 @@
+{
+  "record_id": "user-clinical-confirmation-20261004",
+  "recorded_date": "2026-10-04",
+  "evidence_type": "project_owner_statement",
+  "scope_statement": "All data supplied by the project owner have been confirmed by a physician.",
+  "clinical_label_confirmation": "reported_by_project_owner",
+  "physician_identity": null,
+  "confirmation_date": null,
+  "exam_method": null,
+  "per_image_review_mapping": "not_yet_recorded",
+  "landmark_coordinate_review_scope": "physician_confirmed_disease_labels_only",
+  "image_use_permission": "project_owner_confirms_permission_for_noncommercial_research_training",
+  "participant_consent_scope": "project_owner_confirms_consent_for_image_use",
+  "patient_linkage": "not_yet_recorded",
+  "native_image_provenance": "not_yet_recorded",
+  "changes_raw_labels": false,
+  "approves_training_rights": true,
+  "rights_basis": "project_owner_statement_not_public_dataset_license",
+  "public_redistribution_permission": "not_granted",
+  "research_only": true
+}
