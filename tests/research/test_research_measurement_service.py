@@ -419,7 +419,7 @@ def test_hirschberg_clustered_reflex_reason_codes():
 
 
 def test_hirschberg_includes_ai_prediction():
-    """Unit test: Hirschberg request runs trained candidate AI model and returns predicted class and probabilities."""
+    """Unit test: Hirschberg request runs trained candidate AI model and returns a guarded prediction payload."""
     image_data_url, landmarks = _synthetic_hirschberg_payload(with_pupil=True, num_reflexes=1)
     req = ResearchMeasurementRequest(
         schemaVersion="remicare-research-quality-v0.1",
@@ -438,12 +438,14 @@ def test_hirschberg_includes_ai_prediction():
     assert "aiPrediction" in result
     assert "aiPrediction" in result["measurements"]
     ai = result["aiPrediction"]
-    assert ai["status"] == "PREDICTED"
-    assert ai["predictedClass"] in {"NORMAL", "ESOTROPIA", "EXOTROPIA"}
+    assert ai["status"] in {"PREDICTED", "INCONCLUSIVE"}
+    assert ai["predictedClass"] in {"NORMAL", "ESOTROPIA", "EXOTROPIA", "INCONCLUSIVE"}
     assert 0.0 <= ai["confidence"] <= 1.0
     assert "probabilities" in ai
     assert "modelId" in ai
-    assert ai["modelId"] == "hirschberg-candidate-v0.3-pedseye"
+    assert ai["modelId"] == "hirschberg-candidate-v0.5-safe"
+    assert ai["featureContract"] == "hirschberg_pair_features_v0.5"
+    assert "decisionPolicy" in ai
 
 
 def test_hirschberg_without_landmarks_runs_ai_fallback():
@@ -467,5 +469,5 @@ def test_hirschberg_without_landmarks_runs_ai_fallback():
     assert result["result"] == "MEASUREMENT_ONLY"
     assert "CLIENT_LANDMARKS_NOT_PROVIDED_AI_INFERRED" in result["reasonCodes"]
     assert "aiPrediction" in result
-    assert result["aiPrediction"]["status"] == "PREDICTED"
-    assert result["aiPrediction"]["predictedClass"] in {"NORMAL", "ESOTROPIA", "EXOTROPIA"}
+    assert result["aiPrediction"]["status"] in {"PREDICTED", "INCONCLUSIVE"}
+    assert result["aiPrediction"]["predictedClass"] in {"NORMAL", "ESOTROPIA", "EXOTROPIA", "INCONCLUSIVE"}

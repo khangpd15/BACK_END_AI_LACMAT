@@ -1,8 +1,9 @@
 ﻿"""Hirschberg AI Inference Service.
 
-Loads the trained Hirschberg exploratory classifier (`hirschberg-candidate-v0.3-pedseye`)
+Loads the trained Hirschberg exploratory classifier (`hirschberg-candidate-v0.5-safe`)
 and the ONNX representation model (`best_model.onnx`).
-Performs feature extraction (73 geometry and appearance features) and runs model prediction.
+Performs feature extraction and runs model prediction with a conservative
+research-only abstention policy.
 """
 
 from __future__ import annotations
@@ -20,7 +21,7 @@ import onnxruntime as ort
 logger = logging.getLogger("remicare.services.hirschberg_ai")
 
 APP_DIR = Path(__file__).resolve().parent.parent
-DEFAULT_MODEL_PATH = APP_DIR / "models" / "research" / "hirschberg_candidate_v0.3_pedseye.joblib"
+DEFAULT_MODEL_PATH = APP_DIR / "models" / "research" / "hirschberg_candidate_v0.5_safe.joblib"
 MODEL_PATH = Path(os.getenv("HIRSCHBERG_RESEARCH_MODEL_PATH", str(DEFAULT_MODEL_PATH)))
 ONNX_PATH = APP_DIR / "models" / "best_model.onnx"
 
@@ -239,6 +240,26 @@ def crop_eye_from_landmarks(
     return cv2.resize(crop, (target_size, target_size))
 
 
+def _pair_feature_vector(left: np.ndarray, right: np.ndarray) -> np.ndarray:
+    return np.concatenate([left, right, left - right, np.abs(left - right), (left + right) / 2.0]).astype(np.float32)
+
+
+def _features_for_bundle(crops: List[np.ndarray], onnx_sess: ort.InferenceSession, bundle: Dict[str, Any]) -> np.ndarray:
+    crop_features = [np.array(extract_features_from_crop(crop, onnx_sess), dtype=np.float32) for crop in crops]
+    feature_contract = bundle.get("feature_contract")
+    expected_count = len(bundle.get("feature_names") or [])
+
+    if feature_contract == "hirschberg_pair_features_v0.5" or expected_count == 365:
+        if len(crop_features) == 1:
+            left = right = crop_features[0]
+        else:
+            left, right = crop_features[0], crop_features[1]
+        return _pair_feature_vector(left, right).reshape(1, -1)
+
+    feature_vector = np.mean(np.array(crop_features, dtype=np.float32), axis=0)
+    return feature_vector.reshape(1, -1)
+
+
 def predict_hirschberg(
     image_bgr: np.ndarray,
     landmarks: Optional[List[Dict[str, Any]]] = None,
@@ -280,37 +301,64 @@ def predict_hirschberg(
                 cv2.resize(right_half, (224, 224)),
             ]
 
-    # Predict on each crop and aggregate probabilities
-    all_probs = []
-    for crop in crops:
-        feats = extract_features_from_crop(crop, onnx_sess)
-        X = np.array(feats, dtype=np.float32).reshape(1, -1)
-        prob = pipeline.predict_proba(X)[0]
-        all_probs.append(prob)
-
-    avg_probs = np.mean(all_probs, axis=0)
+    X = _features_for_bundle(crops, onnx_sess, bundle)
+    avg_probs = pipeline.predict_proba(X)[0]
     pred_idx = int(np.argmax(avg_probs))
     pred_class = classes[pred_idx]
     confidence = float(avg_probs[pred_idx])
+    sorted_probs = np.sort(avg_probs)
+    margin = float(sorted_probs[-1] - sorted_probs[-2]) if len(sorted_probs) > 1 else confidence
 
     prob_dict = {cls_name: round(float(avg_probs[i]), 4) for i, cls_name in enumerate(classes)}
+    decision_policy = bundle.get("decision_policy") or {}
+    threshold = float(decision_policy.get("threshold", 0.0) or 0.0)
+    margin_threshold = float(decision_policy.get("margin_threshold", 0.0) or 0.0)
+    model_id = bundle.get("model_id", "hirschberg-candidate-v0.5-safe")
+    dataset_version = bundle.get("dataset_version", "hirschberg-folder-labels-v0.1")
+    evaluation_summary = {
+        "balancedAccuracy": metrics.get("balanced_accuracy"),
+        "macroF1": metrics.get("macro_f1"),
+        "binaryStrabismusVsNormal": metrics.get("binary_strabismus_vs_normal"),
+        "abstentionPolicy": metrics.get("abstention_policy_oof"),
+        "source": "research_candidate_internal_eval",
+    }
+
+    base_payload = {
+        "confidence": round(confidence, 4),
+        "margin": round(margin, 4),
+        "probabilities": prob_dict,
+        "modelId": model_id,
+        "datasetVersion": dataset_version,
+        "featureContract": bundle.get("feature_contract", "hirschberg_crop_mean_features_v0.1"),
+        "evaluationSummary": evaluation_summary,
+        "deploymentWarning": (
+            "Research-only Hirschberg candidate with limited validation. "
+            "Low-confidence cases intentionally return INCONCLUSIVE. "
+            "Not suitable for clinical diagnosis or clearance."
+        ),
+        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa.",
+    }
+
+    if confidence < threshold or margin < margin_threshold:
+        return {
+            "status": "INCONCLUSIVE",
+            "predictedClass": "INCONCLUSIVE",
+            "reason": "LOW_CONFIDENCE_RESEARCH_MODEL",
+            "decisionPolicy": {
+                "type": decision_policy.get("type", "confidence_margin_abstention"),
+                "threshold": threshold,
+                "marginThreshold": margin_threshold,
+            },
+            **base_payload,
+        }
 
     return {
         "status": "PREDICTED",
         "predictedClass": pred_class.upper(),
-        "confidence": round(confidence, 4),
-        "probabilities": prob_dict,
-        "modelId": bundle.get("model_id", "hirschberg-candidate-v0.3-pedseye"),
-        "datasetVersion": bundle.get("dataset_version", "hirschberg-folder-labels-v0.1"),
-        "evaluationSummary": {
-            "balancedAccuracy": metrics.get("balanced_accuracy"),
-            "macroF1": metrics.get("macro_f1"),
-            "binaryStrabismusVsNormal": metrics.get("binary_strabismus_vs_normal"),
-            "source": "research_candidate_internal_eval",
+        "decisionPolicy": {
+            "type": decision_policy.get("type", "confidence_margin_abstention"),
+            "threshold": threshold,
+            "marginThreshold": margin_threshold,
         },
-        "deploymentWarning": (
-            "Research-only Pedseye candidate with limited validation. "
-            "Not suitable for clinical diagnosis or clearance."
-        ),
-        "nonClinicalDeclaration": "Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa.",
+        **base_payload,
     }

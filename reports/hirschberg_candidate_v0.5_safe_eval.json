@@ -1,0 +1,1880 @@
+{
+  "createdAt": "2026-10-04T07:37:43.426183+00:00",
+  "status": "COMPLETED_RESEARCH_CANDIDATE_WITH_ABSTENTION",
+  "manifest_path": "D:\\REMICARE-STRABISMUS-AI\\datasets\\pedseye_hirschberg_manifest_v0.1.jsonl",
+  "model_output": "D:\\REMICARE-STRABISMUS-AI\\app\\models\\research\\hirschberg_candidate_v0.5_safe.joblib",
+  "model_card_output": "D:\\REMICARE-STRABISMUS-AI\\docs\\research\\hirschberg\\hirschberg_candidate_v0.5_safe_model_card.md",
+  "seed": 20261004,
+  "manifest_validation": {
+    "errors": [],
+    "warnings": [
+      "Missing class in manifest: pseudostrabismus",
+      "Missing class in manifest: poor_quality",
+      "Class esotropia is very small for ML training: 20 images",
+      "Class exotropia is very small for ML training: 14 images",
+      "participant_id is inferred from near-duplicate clustering; true patient independence is unproven."
+    ],
+    "label_counts": {
+      "esotropia": 20,
+      "exotropia": 14,
+      "normal": 33
+    },
+    "participant_count": 52,
+    "participant_id_source_counts": {
+      "inferred_near_duplicate_cluster_not_real_patient_id": 67
+    },
+    "participant_leakage": {
+      "is_disjoint": true,
+      "violating_participants": {}
+    },
+    "total_trainable_rows": 67,
+    "missing_expected_labels": [
+      "pseudostrabismus",
+      "poor_quality"
+    ]
+  },
+  "training": {
+    "trained": true,
+    "model_id": "hirschberg-candidate-v0.5-safe",
+    "selected_model": "random_forest_pair_balanced",
+    "cv": {
+      "name": "StratifiedGroupKFold",
+      "splits": 5,
+      "group_source": "manifest participant_id inferred from near-duplicate clusters"
+    },
+    "classes": [
+      "esotropia",
+      "exotropia",
+      "normal"
+    ],
+    "class_to_idx": {
+      "esotropia": 0,
+      "exotropia": 1,
+      "normal": 2
+    },
+    "feature_count": 365,
+    "comparisons": {
+      "logistic_regression_balanced": {
+        "forced_3class_metrics": {
+          "balanced_accuracy": 0.4075,
+          "macro_f1": 0.4027,
+          "confusion_matrix_labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              8,
+              0,
+              12
+            ],
+            [
+              1,
+              6,
+              7
+            ],
+            [
+              9,
+              11,
+              13
+            ]
+          ],
+          "per_class_recall": {
+            "esotropia": 0.4,
+            "exotropia": 0.4286,
+            "normal": 0.3939
+          },
+          "per_class_precision": {
+            "esotropia": 0.4444,
+            "exotropia": 0.3529,
+            "normal": 0.4062
+          },
+          "binary_strabismus_vs_normal": {
+            "tp": 15,
+            "tn": 13,
+            "fp": 20,
+            "fn": 19,
+            "sensitivity": 0.4412,
+            "specificity": 0.3939,
+            "ppv": 0.4286,
+            "npv": 0.4062,
+            "roc_auc": 0.4661
+          }
+        },
+        "abstention_policy_oof": {
+          "threshold": 0.98,
+          "margin_threshold": 0.0,
+          "coverage": 0.3284,
+          "covered_count": 22,
+          "abstained_count": 45,
+          "correct_confident": 11,
+          "wrong_confident": 11,
+          "covered_accuracy": 0.5,
+          "covered_confusion_matrix_labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "covered_confusion_matrix": [
+            [
+              4,
+              0,
+              4
+            ],
+            [
+              0,
+              4,
+              3
+            ],
+            [
+              2,
+              2,
+              3
+            ]
+          ],
+          "covered_binary_strabismus_vs_normal": {
+            "tp": 8,
+            "tn": 3,
+            "fp": 4,
+            "fn": 7,
+            "sensitivity": 0.5333,
+            "specificity": 0.4286
+          },
+          "selection_rule": "Minimize confident wrong predictions first; use coverage only as a tie-breaker.",
+          "grid_summary": {
+            "best_zero_wrong": [],
+            "max_coverage": {
+              "threshold": 0.34,
+              "margin_threshold": 0.0,
+              "coverage": 1.0,
+              "covered_count": 67,
+              "abstained_count": 0,
+              "correct_confident": 27,
+              "wrong_confident": 40,
+              "covered_accuracy": 0.403,
+              "covered_confusion_matrix_labels": [
+                "esotropia",
+                "exotropia",
+                "normal"
+              ],
+              "covered_confusion_matrix": [
+                [
+                  8,
+                  0,
+                  12
+                ],
+                [
+                  1,
+                  6,
+                  7
+                ],
+                [
+                  9,
+                  11,
+                  13
+                ]
+              ],
+              "covered_binary_strabismus_vs_normal": {
+                "tp": 15,
+                "tn": 13,
+                "fp": 20,
+                "fn": 19,
+                "sensitivity": 0.4412,
+                "specificity": 0.3939
+              }
+            }
+          }
+        },
+        "selection_score": 0.9666
+      },
+      "random_forest_pair_balanced": {
+        "forced_3class_metrics": {
+          "balanced_accuracy": 0.5789,
+          "macro_f1": 0.5669,
+          "confusion_matrix_labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              13,
+              0,
+              7
+            ],
+            [
+              1,
+              8,
+              5
+            ],
+            [
+              8,
+              8,
+              17
+            ]
+          ],
+          "per_class_recall": {
+            "esotropia": 0.65,
+            "exotropia": 0.5714,
+            "normal": 0.5152
+          },
+          "per_class_precision": {
+            "esotropia": 0.5909,
+            "exotropia": 0.5,
+            "normal": 0.5862
+          },
+          "binary_strabismus_vs_normal": {
+            "tp": 22,
+            "tn": 17,
+            "fp": 16,
+            "fn": 12,
+            "sensitivity": 0.6471,
+            "specificity": 0.5152,
+            "ppv": 0.5789,
+            "npv": 0.5862,
+            "roc_auc": 0.549
+          }
+        },
+        "abstention_policy_oof": {
+          "threshold": 0.34,
+          "margin_threshold": 0.5,
+          "coverage": 0.0448,
+          "covered_count": 3,
+          "abstained_count": 64,
+          "correct_confident": 3,
+          "wrong_confident": 0,
+          "covered_accuracy": 1.0,
+          "covered_confusion_matrix_labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "covered_confusion_matrix": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "covered_binary_strabismus_vs_normal": {
+            "tp": 2,
+            "tn": 1,
+            "fp": 0,
+            "fn": 0,
+            "sensitivity": 1.0,
+            "specificity": 1.0
+          },
+          "selection_rule": "Minimize confident wrong predictions first; use coverage only as a tie-breaker.",
+          "grid_summary": {
+            "best_zero_wrong": [
+              {
+                "threshold": 0.34,
+                "margin_threshold": 0.5,
+                "coverage": 0.0448,
+                "covered_count": 3,
+                "abstained_count": 64,
+                "correct_confident": 3,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    2,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 2,
+                  "tn": 1,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 1.0
+                }
+              },
+              {
+                "threshold": 0.36,
+                "margin_threshold": 0.5,
+                "coverage": 0.0448,
+                "covered_count": 3,
+                "abstained_count": 64,
+                "correct_confident": 3,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    2,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 2,
+                  "tn": 1,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 1.0
+                }
+              },
+              {
+                "threshold": 0.38,
+                "margin_threshold": 0.5,
+                "coverage": 0.0448,
+                "covered_count": 3,
+                "abstained_count": 64,
+                "correct_confident": 3,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    2,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 2,
+                  "tn": 1,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 1.0
+                }
+              },
+              {
+                "threshold": 0.4,
+                "margin_threshold": 0.5,
+                "coverage": 0.0448,
+                "covered_count": 3,
+                "abstained_count": 64,
+                "correct_confident": 3,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    2,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 2,
+                  "tn": 1,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 1.0
+                }
+              },
+              {
+                "threshold": 0.42,
+                "margin_threshold": 0.5,
+                "coverage": 0.0448,
+                "covered_count": 3,
+                "abstained_count": 64,
+                "correct_confident": 3,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    2,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    1
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 2,
+                  "tn": 1,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 1.0
+                }
+              }
+            ],
+            "max_coverage": {
+              "threshold": 0.34,
+              "margin_threshold": 0.0,
+              "coverage": 1.0,
+              "covered_count": 67,
+              "abstained_count": 0,
+              "correct_confident": 38,
+              "wrong_confident": 29,
+              "covered_accuracy": 0.5672,
+              "covered_confusion_matrix_labels": [
+                "esotropia",
+                "exotropia",
+                "normal"
+              ],
+              "covered_confusion_matrix": [
+                [
+                  13,
+                  0,
+                  7
+                ],
+                [
+                  1,
+                  8,
+                  5
+                ],
+                [
+                  8,
+                  8,
+                  17
+                ]
+              ],
+              "covered_binary_strabismus_vs_normal": {
+                "tp": 22,
+                "tn": 17,
+                "fp": 16,
+                "fn": 12,
+                "sensitivity": 0.6471,
+                "specificity": 0.5152
+              }
+            }
+          }
+        },
+        "selection_score": 3.4495
+      },
+      "extra_trees_pair_balanced": {
+        "forced_3class_metrics": {
+          "balanced_accuracy": 0.5789,
+          "macro_f1": 0.5702,
+          "confusion_matrix_labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              13,
+              0,
+              7
+            ],
+            [
+              1,
+              8,
+              5
+            ],
+            [
+              10,
+              6,
+              17
+            ]
+          ],
+          "per_class_recall": {
+            "esotropia": 0.65,
+            "exotropia": 0.5714,
+            "normal": 0.5152
+          },
+          "per_class_precision": {
+            "esotropia": 0.5417,
+            "exotropia": 0.5714,
+            "normal": 0.5862
+          },
+          "binary_strabismus_vs_normal": {
+            "tp": 22,
+            "tn": 17,
+            "fp": 16,
+            "fn": 12,
+            "sensitivity": 0.6471,
+            "specificity": 0.5152,
+            "ppv": 0.5789,
+            "npv": 0.5862,
+            "roc_auc": 0.5499
+          }
+        },
+        "abstention_policy_oof": {
+          "threshold": 0.72,
+          "margin_threshold": 0.0,
+          "coverage": 0.0299,
+          "covered_count": 2,
+          "abstained_count": 65,
+          "correct_confident": 2,
+          "wrong_confident": 0,
+          "covered_accuracy": 1.0,
+          "covered_confusion_matrix_labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "covered_confusion_matrix": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "covered_binary_strabismus_vs_normal": {
+            "tp": 2,
+            "tn": 0,
+            "fp": 0,
+            "fn": 0,
+            "sensitivity": 1.0,
+            "specificity": 0.0
+          },
+          "selection_rule": "Minimize confident wrong predictions first; use coverage only as a tie-breaker.",
+          "grid_summary": {
+            "best_zero_wrong": [
+              {
+                "threshold": 0.34,
+                "margin_threshold": 0.5,
+                "coverage": 0.0149,
+                "covered_count": 1,
+                "abstained_count": 66,
+                "correct_confident": 1,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    0
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 1,
+                  "tn": 0,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 0.0
+                }
+              },
+              {
+                "threshold": 0.36,
+                "margin_threshold": 0.5,
+                "coverage": 0.0149,
+                "covered_count": 1,
+                "abstained_count": 66,
+                "correct_confident": 1,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    0
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 1,
+                  "tn": 0,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 0.0
+                }
+              },
+              {
+                "threshold": 0.38,
+                "margin_threshold": 0.5,
+                "coverage": 0.0149,
+                "covered_count": 1,
+                "abstained_count": 66,
+                "correct_confident": 1,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    0
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 1,
+                  "tn": 0,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 0.0
+                }
+              },
+              {
+                "threshold": 0.4,
+                "margin_threshold": 0.5,
+                "coverage": 0.0149,
+                "covered_count": 1,
+                "abstained_count": 66,
+                "correct_confident": 1,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    0
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 1,
+                  "tn": 0,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 0.0
+                }
+              },
+              {
+                "threshold": 0.42,
+                "margin_threshold": 0.5,
+                "coverage": 0.0149,
+                "covered_count": 1,
+                "abstained_count": 66,
+                "correct_confident": 1,
+                "wrong_confident": 0,
+                "covered_accuracy": 1.0,
+                "covered_confusion_matrix_labels": [
+                  "esotropia",
+                  "exotropia",
+                  "normal"
+                ],
+                "covered_confusion_matrix": [
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    0
+                  ]
+                ],
+                "covered_binary_strabismus_vs_normal": {
+                  "tp": 1,
+                  "tn": 0,
+                  "fp": 0,
+                  "fn": 0,
+                  "sensitivity": 1.0,
+                  "specificity": 0.0
+                }
+              }
+            ],
+            "max_coverage": {
+              "threshold": 0.34,
+              "margin_threshold": 0.0,
+              "coverage": 1.0,
+              "covered_count": 67,
+              "abstained_count": 0,
+              "correct_confident": 38,
+              "wrong_confident": 29,
+              "covered_accuracy": 0.5672,
+              "covered_confusion_matrix_labels": [
+                "esotropia",
+                "exotropia",
+                "normal"
+              ],
+              "covered_confusion_matrix": [
+                [
+                  13,
+                  0,
+                  7
+                ],
+                [
+                  1,
+                  8,
+                  5
+                ],
+                [
+                  10,
+                  6,
+                  17
+                ]
+              ],
+              "covered_binary_strabismus_vs_normal": {
+                "tp": 22,
+                "tn": 17,
+                "fp": 16,
+                "fn": 12,
+                "sensitivity": 0.6471,
+                "specificity": 0.5152
+              }
+            }
+          }
+        },
+        "selection_score": 3.4346
+      },
+      "hist_gradient_boosting": {
+        "forced_3class_metrics": {
+          "balanced_accuracy": 0.4205,
+          "macro_f1": 0.4327,
+          "confusion_matrix_labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              8,
+              0,
+              12
+            ],
+            [
+              0,
+              4,
+              10
+            ],
+            [
+              10,
+              4,
+              19
+            ]
+          ],
+          "per_class_recall": {
+            "esotropia": 0.4,
+            "exotropia": 0.2857,
+            "normal": 0.5758
+          },
+          "per_class_precision": {
+            "esotropia": 0.4444,
+            "exotropia": 0.5,
+            "normal": 0.4634
+          },
+          "binary_strabismus_vs_normal": {
+            "tp": 12,
+            "tn": 19,
+            "fp": 14,
+            "fn": 22,
+            "sensitivity": 0.3529,
+            "specificity": 0.5758,
+            "ppv": 0.4615,
+            "npv": 0.4634,
+            "roc_auc": 0.4759
+          }
+        },
+        "abstention_policy_oof": {
+          "threshold": 0.98,
+          "margin_threshold": 0.0,
+          "coverage": 0.0,
+          "covered_count": 0,
+          "abstained_count": 67,
+          "correct_confident": 0,
+          "wrong_confident": 0,
+          "covered_accuracy": 0.0,
+          "covered_confusion_matrix_labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "covered_confusion_matrix": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "covered_binary_strabismus_vs_normal": null,
+          "selection_rule": "Minimize confident wrong predictions first; use coverage only as a tie-breaker.",
+          "grid_summary": {
+            "best_zero_wrong": [],
+            "max_coverage": {
+              "threshold": 0.34,
+              "margin_threshold": 0.0,
+              "coverage": 1.0,
+              "covered_count": 67,
+              "abstained_count": 0,
+              "correct_confident": 31,
+              "wrong_confident": 36,
+              "covered_accuracy": 0.4627,
+              "covered_confusion_matrix_labels": [
+                "esotropia",
+                "exotropia",
+                "normal"
+              ],
+              "covered_confusion_matrix": [
+                [
+                  8,
+                  0,
+                  12
+                ],
+                [
+                  0,
+                  4,
+                  10
+                ],
+                [
+                  10,
+                  4,
+                  19
+                ]
+              ],
+              "covered_binary_strabismus_vs_normal": {
+                "tp": 12,
+                "tn": 19,
+                "fp": 14,
+                "fn": 22,
+                "sensitivity": 0.3529,
+                "specificity": 0.5758
+              }
+            }
+          }
+        },
+        "selection_score": 0.6408
+      }
+    },
+    "selected_forced_3class_metrics": {
+      "balanced_accuracy": 0.5789,
+      "macro_f1": 0.5669,
+      "confusion_matrix_labels": [
+        "esotropia",
+        "exotropia",
+        "normal"
+      ],
+      "confusion_matrix": [
+        [
+          13,
+          0,
+          7
+        ],
+        [
+          1,
+          8,
+          5
+        ],
+        [
+          8,
+          8,
+          17
+        ]
+      ],
+      "per_class_recall": {
+        "esotropia": 0.65,
+        "exotropia": 0.5714,
+        "normal": 0.5152
+      },
+      "per_class_precision": {
+        "esotropia": 0.5909,
+        "exotropia": 0.5,
+        "normal": 0.5862
+      },
+      "binary_strabismus_vs_normal": {
+        "tp": 22,
+        "tn": 17,
+        "fp": 16,
+        "fn": 12,
+        "sensitivity": 0.6471,
+        "specificity": 0.5152,
+        "ppv": 0.5789,
+        "npv": 0.5862,
+        "roc_auc": 0.549
+      }
+    },
+    "selected_abstention_policy_oof": {
+      "threshold": 0.34,
+      "margin_threshold": 0.5,
+      "coverage": 0.0448,
+      "covered_count": 3,
+      "abstained_count": 64,
+      "correct_confident": 3,
+      "wrong_confident": 0,
+      "covered_accuracy": 1.0,
+      "covered_confusion_matrix_labels": [
+        "esotropia",
+        "exotropia",
+        "normal"
+      ],
+      "covered_confusion_matrix": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "covered_binary_strabismus_vs_normal": {
+        "tp": 2,
+        "tn": 1,
+        "fp": 0,
+        "fn": 0,
+        "sensitivity": 1.0,
+        "specificity": 1.0
+      },
+      "selection_rule": "Minimize confident wrong predictions first; use coverage only as a tie-breaker.",
+      "grid_summary": {
+        "best_zero_wrong": [
+          {
+            "threshold": 0.34,
+            "margin_threshold": 0.5,
+            "coverage": 0.0448,
+            "covered_count": 3,
+            "abstained_count": 64,
+            "correct_confident": 3,
+            "wrong_confident": 0,
+            "covered_accuracy": 1.0,
+            "covered_confusion_matrix_labels": [
+              "esotropia",
+              "exotropia",
+              "normal"
+            ],
+            "covered_confusion_matrix": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "covered_binary_strabismus_vs_normal": {
+              "tp": 2,
+              "tn": 1,
+              "fp": 0,
+              "fn": 0,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            }
+          },
+          {
+            "threshold": 0.36,
+            "margin_threshold": 0.5,
+            "coverage": 0.0448,
+            "covered_count": 3,
+            "abstained_count": 64,
+            "correct_confident": 3,
+            "wrong_confident": 0,
+            "covered_accuracy": 1.0,
+            "covered_confusion_matrix_labels": [
+              "esotropia",
+              "exotropia",
+              "normal"
+            ],
+            "covered_confusion_matrix": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "covered_binary_strabismus_vs_normal": {
+              "tp": 2,
+              "tn": 1,
+              "fp": 0,
+              "fn": 0,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            }
+          },
+          {
+            "threshold": 0.38,
+            "margin_threshold": 0.5,
+            "coverage": 0.0448,
+            "covered_count": 3,
+            "abstained_count": 64,
+            "correct_confident": 3,
+            "wrong_confident": 0,
+            "covered_accuracy": 1.0,
+            "covered_confusion_matrix_labels": [
+              "esotropia",
+              "exotropia",
+              "normal"
+            ],
+            "covered_confusion_matrix": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "covered_binary_strabismus_vs_normal": {
+              "tp": 2,
+              "tn": 1,
+              "fp": 0,
+              "fn": 0,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            }
+          },
+          {
+            "threshold": 0.4,
+            "margin_threshold": 0.5,
+            "coverage": 0.0448,
+            "covered_count": 3,
+            "abstained_count": 64,
+            "correct_confident": 3,
+            "wrong_confident": 0,
+            "covered_accuracy": 1.0,
+            "covered_confusion_matrix_labels": [
+              "esotropia",
+              "exotropia",
+              "normal"
+            ],
+            "covered_confusion_matrix": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "covered_binary_strabismus_vs_normal": {
+              "tp": 2,
+              "tn": 1,
+              "fp": 0,
+              "fn": 0,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            }
+          },
+          {
+            "threshold": 0.42,
+            "margin_threshold": 0.5,
+            "coverage": 0.0448,
+            "covered_count": 3,
+            "abstained_count": 64,
+            "correct_confident": 3,
+            "wrong_confident": 0,
+            "covered_accuracy": 1.0,
+            "covered_confusion_matrix_labels": [
+              "esotropia",
+              "exotropia",
+              "normal"
+            ],
+            "covered_confusion_matrix": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "covered_binary_strabismus_vs_normal": {
+              "tp": 2,
+              "tn": 1,
+              "fp": 0,
+              "fn": 0,
+              "sensitivity": 1.0,
+              "specificity": 1.0
+            }
+          }
+        ],
+        "max_coverage": {
+          "threshold": 0.34,
+          "margin_threshold": 0.0,
+          "coverage": 1.0,
+          "covered_count": 67,
+          "abstained_count": 0,
+          "correct_confident": 38,
+          "wrong_confident": 29,
+          "covered_accuracy": 0.5672,
+          "covered_confusion_matrix_labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "covered_confusion_matrix": [
+            [
+              13,
+              0,
+              7
+            ],
+            [
+              1,
+              8,
+              5
+            ],
+            [
+              8,
+              8,
+              17
+            ]
+          ],
+          "covered_binary_strabismus_vs_normal": {
+            "tp": 22,
+            "tn": 17,
+            "fp": 16,
+            "fn": 12,
+            "sensitivity": 0.6471,
+            "specificity": 0.5152
+          }
+        }
+      }
+    },
+    "confident_wrong_review": [],
+    "confidence_distribution": {
+      "min": 0.3848,
+      "p25": 0.4907,
+      "median": 0.5347,
+      "p75": 0.5802,
+      "max": 0.7857,
+      "margin_median": 0.1645
+    },
+    "feature_extraction_rows": [
+      {
+        "image_id": "pedseye_0001",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-01-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0001",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0002",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-02-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0002",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0003",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/estropia-03-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0003",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0004",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-01-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0004",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0005",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-02-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0005",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0006",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-03-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0006",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0007",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-04-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0007",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0008",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-05-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0008",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0009",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-06-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0009",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0010",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-07-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0011",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-08-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0011",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0012",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-09-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0012",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0013",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-10-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0013",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0014",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-11-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0014",
+        "split": "val",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0015",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-12-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0016",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-13-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0015",
+        "split": "val",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0017",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-14-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0016",
+        "split": "val",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0018",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-15-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0008",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0019",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-16-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0017",
+        "split": "test",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0020",
+        "file_path": "dataset_by_pedseye_manifest/esotropia_patient_before/infantile-estropia-17-before.jpg",
+        "label": "esotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0018",
+        "split": "test",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0021",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-01-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0019",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0022",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-02-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0020",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0023",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-03-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0021",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0024",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-04-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0022",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0025",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-05-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0023",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0026",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-06-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0024",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0027",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-07-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0025",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0028",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-08-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0026",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0029",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-09-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0027",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0030",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-10-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0028",
+        "split": "val",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0031",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-11-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0029",
+        "split": "val",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0032",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-12-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0030",
+        "split": "test",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0033",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-13-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0031",
+        "split": "test",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0034",
+        "file_path": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-14-before.jpg",
+        "label": "exotropia",
+        "participant_id": "PEDSEYE_INFERRED_G0025",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0035",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (1).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0032",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0036",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (10).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0033",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0037",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (11).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0038",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (12).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0034",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0039",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (13).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0032",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0040",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (14).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0041",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (15).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0035",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0042",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (16).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0017",
+        "split": "test",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0043",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (17).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0008",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0044",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (18).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0036",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0045",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (19).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0032",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0046",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (2).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0037",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0047",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (20).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0038",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0048",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (21).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0039",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0049",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (22).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0025",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0050",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (23).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0040",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0051",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (24).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0052",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (25).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0028",
+        "split": "val",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0053",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (26).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0041",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0054",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (27).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0042",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0055",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (28).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0039",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0056",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (29).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0025",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0057",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (3).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0043",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0058",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (30).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0044",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0059",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (31).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0045",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0060",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (32).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0046",
+        "split": "val",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0061",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (33).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0047",
+        "split": "val",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0062",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (4).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0048",
+        "split": "val",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0063",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (5).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0010",
+        "split": "train",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0064",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (6).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0049",
+        "split": "test",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0065",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (7).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0050",
+        "split": "test",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0066",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (8).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0051",
+        "split": "test",
+        "feature_count": 365
+      },
+      {
+        "image_id": "pedseye_0067",
+        "file_path": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (9).jpg",
+        "label": "normal",
+        "participant_id": "PEDSEYE_INFERRED_G0052",
+        "split": "test",
+        "feature_count": 365
+      }
+    ]
+  },
+  "deployment_recommendation": {
+    "deploy": true,
+    "scope": "research_candidate_screening_only",
+    "reason": "v0.5 reduces forced label flips by returning INCONCLUSIVE for weak evidence.",
+    "must_keep_warning": true
+  },
+  "governance": [
+    "Production endpoint /api/v1/strabismus/predict remains unchanged.",
+    "Existing v0.1 and v0.3 artifacts were not overwritten.",
+    "Output is sàng lọc nghiên cứu only, not diagnosis."
+  ]
+}
