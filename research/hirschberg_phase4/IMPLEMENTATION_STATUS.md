@@ -42,14 +42,25 @@ Verification of this increment: 62 attested rows, all with research-use permissi
 and owner-reported physician-confirmed disease labels; zero genuine patient IDs.
 The extended test suite passes 23 tests including the existing manifest regression.
 
-Real patient linking and native landmark review remain outstanding. Legacy
-coordinate annotations are not physician-confirmed. A1 image ROI/ellipse/glint detector, pixel-error benchmark,
-epicanthal/canthal automation, OOF/nested patient-CV, bootstrap CIs and the clinical
-private test have not been implemented or run in this increment. No actual patient
-training, clinical validation, runtime change, push or deployment occurred.
+The owner has no patient-to-image mapping and delegated this decision. Per
+`GROUPING_DECISION.md`, filename/hash groups are provisional similarity clusters,
+not patient IDs. A 5-fold exploratory OOF classifier was run on the 62 legacy
+annotated crops using these provisional groups. At hash threshold 4: BA 0.716,
+macro-F1 0.694, with 59 groups; threshold 8 gives BA 0.828 but one validation fold
+contains just one group. Neither is patient-independent validation or clinical
+evidence. Features use legacy pupil/reflex clicks, not the runtime detector, and
+the cohort has no pseudo cases. Full result and sensitivity analysis are in the
+ignored local `runs/exploratory_primary4_20261004/report.json`.
 
-Next: establish genuine patient grouping/native coordinates and gold landmark
-review. Do not manufacture patient IDs from image IDs or duplicate clusters.
+Real patient linkage and native landmark review remain outstanding. Legacy
+coordinates are not physician-confirmed. A1 image ROI/ellipse/glint detector,
+pixel-error benchmark, epicanthal/canthal automation, nested patient-CV, bootstrap
+CIs and the clinical private test have not been implemented. No final model,
+clinical validation, runtime change, push or deployment occurred.
+
+Next: use authorized supplied images only for exploratory development; obtain
+genuine patient grouping before reporting generalization. Do not
+manufacture patient IDs from image IDs or duplicate clusters.
 User permission applies to supplied data, not external datasets or public release.
 
 ## Verification Commands Used

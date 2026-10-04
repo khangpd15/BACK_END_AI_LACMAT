@@ -42,6 +42,8 @@ def validate(records, require_approved=True):
                     raise ValueError(f"Missing human permission field: {key}")
             if row.get("clinician_confirmed") is not True:
                 raise ValueError("Human clinical label not confirmed")
+            if row.get("patient_id_basis") != "verified":
+                raise ValueError("Verified patient linkage required; provisional groups are exploratory only")
         if row.get("label") not in LABELS:
             raise ValueError("Unsupported label; indeterminate needs a separate cohort")
         if row.get("coordinate_space") != "native":

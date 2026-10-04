@@ -45,6 +45,10 @@ def test_human_requires_documented_scope_and_clinician():
         rows[0][key] = "reviewed-record"
     with pytest.raises(ValueError, match="clinical"):
         validate(rows)
+    rows[0]["clinician_confirmed"] = True
+    rows[0]["patient_id_basis"] = "provisional_cluster"
+    with pytest.raises(ValueError, match="Verified patient"):
+        validate(rows)
 
 
 def test_missing_glint_abstains_no_fake_point():

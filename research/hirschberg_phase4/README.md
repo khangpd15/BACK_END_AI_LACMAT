@@ -17,7 +17,8 @@ not the validated A1 detector or a four-class clinical screening system.
 All output paths must be new. Writers refuse existing files/run directories.
 Synthetic toy labels only exercise the software contract. Pseudo and normal have
 the same geometric generating distribution intentionally: these features do not
-establish a clinical distinction. Do not present smoke-test accuracy as evidence.
+establish a clinical distinction. The current model is an unvalidated research
+artifact; no accuracy claim is supported by this smoke test.
 The synthetic `test` split is a fixture, not the future private clinical test.
 
 Dependencies use the existing environment: numpy, scikit-learn, joblib and pytest.
@@ -75,11 +76,27 @@ They are still not training-ready. This does not approve external datasets or
 public image redistribution; no consent form or identifying patient data is stored
 in this repository.
 
+## Provisional Group Exploration
+
+The no-ID decision and interpretation are documented in `GROUPING_DECISION.md`.
+An exploratory three-class OOF run on legacy click features, grouped by conservative
+image hashes, can be reproduced with a new output directory:
+
+```powershell
+.\.venv312\Scripts\python.exe -B -m research.hirschberg_phase4.exploratory --root . --output-dir research/hirschberg_phase4/runs/another_exploratory_run
+```
+
+This is explicitly not patient-independent evaluation. Hash collisions/grouping
+can be wrong; broader thresholds can collapse folds. It uses old pupil/reflex
+clicks, not an automatic detector; there are only three classes and no pseudo.
+
 ## Next Gates
 
-See `audits/phase3_20261004/IMPROVEMENT_PROPOSAL.md`. Genuine patient linking and
-M1 native gold annotations remain outstanding. No OOF clinical evaluation,
-bootstrap CI, detector pixel benchmark, morphology model, mm/PD validation or
-deployment is claimed here. Missing WTW means no mm; there is no PD conversion or
-fake glint fallback. The next implementation is A1 ROI/ellipse/glint with gold
-native labels after these gates, not a runtime swap based on toy scores.
+See `GROUPING_DECISION.md` for the no-patient-ID decision and the exploratory
+command/output path. See `audits/phase3_20261004/IMPROVEMENT_PROPOSAL.md`.
+Genuine patient linking and M1 native gold annotations remain outstanding.
+Clinical evaluation, bootstrap confidence intervals, detector pixel benchmarks,
+morphology validation, mm/PD validation and deployment have not been performed.
+Missing WTW means no mm; there is no PD conversion or fake glint fallback. The
+next implementation is A1 ROI/ellipse/glint with gold native labels after these
+gates, not a runtime swap based on toy scores.

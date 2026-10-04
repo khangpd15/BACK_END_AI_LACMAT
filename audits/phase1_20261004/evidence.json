@@ -1,0 +1,1541 @@
+{
+  "notice": "Research screening support only; not medical diagnosis. No training, downloads or source edits.",
+  "inventory": {
+    ".env": {
+      "(no extension)": 1
+    },
+    ".env.example": {
+      ".example": 1
+    },
+    ".gitignore": {
+      "(no extension)": 1
+    },
+    ".python-version": {
+      "(no extension)": 1
+    },
+    "README.md": {
+      ".md": 1
+    },
+    "filter_harschberg.py": {
+      ".py": 1
+    },
+    "pytest.ini": {
+      ".ini": 1
+    },
+    "requirements.txt": {
+      ".txt": 1
+    },
+    "runtime.txt": {
+      ".txt": 1
+    },
+    "app": {
+      ".py": 37,
+      "(no extension)": 1,
+      ".onnx": 1,
+      ".pt": 1,
+      ".joblib": 7
+    },
+    "cv": {
+      ".py": 2
+    },
+    "data": {
+      ".mp4": 6,
+      ".csv": 1,
+      ".json": 42
+    },
+    "dataset_by_pedseye_manifest": {
+      ".jpg": 67
+    },
+    "datasets": {
+      ".jsonl": 1
+    },
+    "docs": {
+      ".md": 37
+    },
+    "harschberg_data_detect": {
+      ".csv": 1,
+      ".jpg": 522
+    },
+    "migrations": {
+      ".sql": 3
+    },
+    "processed": {
+      ".csv": 3,
+      ".json": 1
+    },
+    "reports": {
+      ".json": 10,
+      ".md": 3,
+      ".jpg": 82,
+      ".csv": 1,
+      ".png": 6
+    },
+    "scripts": {
+      ".py": 16
+    },
+    "tests": {
+      ".json": 1,
+      ".mjs": 1,
+      ".py": 13
+    }
+  },
+  "notebooks": [],
+  "artifacts": [
+    {
+      "path": "app/models/best_model.onnx",
+      "bytes": 44965967
+    },
+    {
+      "path": "app/models/best_model.pt",
+      "bytes": 45052934
+    },
+    {
+      "path": "app/models/research/hirschberg_branch_v02_eyecrop.joblib",
+      "bytes": 884046
+    },
+    {
+      "path": "app/models/research/hirschberg_candidate_v0.1.joblib",
+      "bytes": 1295703
+    },
+    {
+      "path": "app/models/research/hirschberg_candidate_v0.2.joblib",
+      "bytes": 3173643
+    },
+    {
+      "path": "app/models/research/hirschberg_candidate_v0.3_pedseye.joblib",
+      "bytes": 649183
+    },
+    {
+      "path": "app/models/research/hirschberg_candidate_v0.5_safe.joblib",
+      "bytes": 1492722
+    },
+    {
+      "path": "app/models/research/hirschberg_candidate_v0.6_ensemble.joblib",
+      "bytes": 1460
+    },
+    {
+      "path": "app/models/research/hirschberg_candidate_v0.6_ensemble_v2.joblib",
+      "bytes": 2375690
+    }
+  ],
+  "image_summary": {
+    "dataset_by_pedseye_manifest/esotropia_patient_before": {
+      "count": 20,
+      "formats": {
+        "JPEG": 20
+      },
+      "resolutions": {
+        "855x235": 20
+      },
+      "blur_laplacian": {
+        "min": 6.3204866309047905,
+        "median": 17.064558095949444,
+        "max": 222.8494625146058
+      },
+      "blur_below_15": 8
+    },
+    "dataset_by_pedseye_manifest/exotropia_patient_before": {
+      "count": 14,
+      "formats": {
+        "JPEG": 14
+      },
+      "resolutions": {
+        "855x235": 14
+      },
+      "blur_laplacian": {
+        "min": 25.400511696833775,
+        "median": 82.67824621106232,
+        "max": 224.2239840212453
+      },
+      "blur_below_15": 0
+    },
+    "dataset_by_pedseye_manifest/normal_patient_minifest_after": {
+      "count": 33,
+      "formats": {
+        "JPEG": 33
+      },
+      "resolutions": {
+        "855x235": 33
+      },
+      "blur_laplacian": {
+        "min": 6.530526315690392,
+        "median": 32.50396731010578,
+        "max": 168.25559949508752
+      },
+      "blur_below_15": 8
+    },
+    "harschberg_data_detect/debug": {
+      "count": 20,
+      "formats": {
+        "JPEG": 20
+      },
+      "resolutions": {
+        "224x224": 20
+      },
+      "blur_laplacian": {
+        "min": 711.3624392139668,
+        "median": 1498.9470170236339,
+        "max": 2598.7480065287377
+      },
+      "blur_below_15": 0
+    },
+    "harschberg_data_detect/esotropia_harschberg": {
+      "count": 55,
+      "formats": {
+        "JPEG": 55
+      },
+      "resolutions": {
+        "224x224": 55
+      },
+      "blur_laplacian": {
+        "min": 32.35734942554187,
+        "median": 275.99795438805404,
+        "max": 1417.7908743838875
+      },
+      "blur_below_15": 0
+    },
+    "harschberg_data_detect/exotropia_harschberg": {
+      "count": 40,
+      "formats": {
+        "JPEG": 40
+      },
+      "resolutions": {
+        "224x224": 40
+      },
+      "blur_laplacian": {
+        "min": 15.022341310357312,
+        "median": 184.32392978370314,
+        "max": 711.2997427399781
+      },
+      "blur_below_15": 0
+    },
+    "harschberg_data_detect/normal_harschberg": {
+      "count": 41,
+      "formats": {
+        "JPEG": 41
+      },
+      "resolutions": {
+        "224x224": 41
+      },
+      "blur_laplacian": {
+        "min": 14.954034208705258,
+        "median": 217.24017263918506,
+        "max": 1375.952951374872
+      },
+      "blur_below_15": 1
+    },
+    "harschberg_data_detect/rejected": {
+      "count": 366,
+      "formats": {
+        "JPEG": 366
+      },
+      "resolutions": {
+        "224x224": 366
+      },
+      "blur_laplacian": {
+        "min": 5.389520891802055,
+        "median": 156.9700563882401,
+        "max": 1375.275438310702
+      },
+      "blur_below_15": 24
+    }
+  },
+  "image_read_errors": {},
+  "manifest": {
+    "rows": 67,
+    "classes": {
+      "esotropia": 20,
+      "exotropia": 14,
+      "normal": 33
+    },
+    "splits": {
+      "train": 49,
+      "val": 9,
+      "test": 9
+    },
+    "participants_inferred": 52,
+    "cross_split_inferred_groups": 0,
+    "clinician_confirmed": 0,
+    "missing_files": 0,
+    "quality_flags": {
+      "blur": {
+        "False": 11,
+        "True": 56
+      },
+      "eyes_closed": {
+        "None": 67
+      },
+      "face_off_axis": {
+        "None": 67
+      },
+      "no_corneal_reflex": {
+        "False": 67
+      },
+      "too_dark": {
+        "False": 67
+      }
+    },
+    "pupil_detected_both": 15,
+    "reflex_detected_both": 65
+  },
+  "annotations": {
+    "rows": 62,
+    "classes": {
+      "esotropia": 33,
+      "exotropia": 19,
+      "normal": 10
+    },
+    "duplicate_path_rows": 0,
+    "valid_coordinate_and_folder_rows": 62,
+    "issues": {},
+    "note_rows": 0
+  },
+  "duplicate_screen": {
+    "dhash_le4_candidate_pairs": 12,
+    "v06_train_val_candidate_pairs": 4
+  },
+  "current_eye_crop_detector_comparison": {
+    "method": "Current v2 eye-crop iris center compared to manual pupil center; anatomical targets differ.",
+    "status_counts": {
+      "iris_dark_component": 113,
+      "reflex_DETECTED": 120,
+      "iris_hough": 11,
+      "reflex_LOCAL_MAX_FALLBACK": 4
+    },
+    "iris_vs_manual_pupil": {
+      "n": 124,
+      "mean_px": 14.156610909678275,
+      "median_px": 10.379491054574208,
+      "p90_px": 31.834090662848308
+    },
+    "reflex_vs_manual_reflex": {
+      "n": 124,
+      "mean_px": 13.540288548159108,
+      "median_px": 3.124920284442555,
+      "p90_px": 37.21847053100433
+    }
+  },
+  "filter_report": {
+    "rows": 502,
+    "status": {
+      "REJECT": 366,
+      "PASS": 136
+    },
+    "source_labels": {
+      "esotropia": 171,
+      "exotropia": 189,
+      "normal": 142
+    },
+    "detection_method": {
+      "PERIOCULAR_CROP_HEURISTIC": 500,
+      "FACEMESH_LANDMARKS": 2
+    },
+    "rejection_reasons": {
+      "MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: LOW_PEAK_BRIGHTNESS)": 132,
+      "MISSING_LEFT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX)": 45,
+      "MISSING_RIGHT_EYE_REFLEX (NO_VALID_COMPACT_REFLEX)": 41,
+      "MISSING_LEFT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS)": 37,
+      "MISSING_BOTH_REFLEXES (OD: LOW_PEAK_BRIGHTNESS, OS: NO_VALID_COMPACT_REFLEX)": 26,
+      "MISSING_RIGHT_EYE_REFLEX (LOW_PEAK_BRIGHTNESS)": 21,
+      "MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: NO_VALID_COMPACT_REFLEX)": 35,
+      "MISSING_BOTH_REFLEXES (OD: NO_VALID_COMPACT_REFLEX, OS: LOW_PEAK_BRIGHTNESS)": 29
+    }
+  },
+  "duplicate_candidate_examples": [
+    {
+      "a": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-14-before.jpg",
+      "b": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-07-before.jpg",
+      "dhash_distance": 0,
+      "exact": false,
+      "v06_a_split": null,
+      "v06_b_split": null
+    },
+    {
+      "a": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (25).jpg",
+      "b": "dataset_by_pedseye_manifest/exotropia_patient_before/exotropia-10-before.jpg",
+      "dhash_distance": 2,
+      "exact": false,
+      "v06_a_split": null,
+      "v06_b_split": null
+    },
+    {
+      "a": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (28).jpg",
+      "b": "dataset_by_pedseye_manifest/normal_patient_minifest_after/normal_patient (21).jpg",
+      "dhash_distance": 2,
+      "exact": false,
+      "v06_a_split": null,
+      "v06_b_split": null
+    },
+    {
+      "a": "harschberg_data_detect/esotropia_harschberg/esotropia_042.jpg",
+      "b": "harschberg_data_detect/esotropia_harschberg/esotropia_024.jpg",
+      "dhash_distance": 4,
+      "exact": false,
+      "v06_a_split": "train",
+      "v06_b_split": "train"
+    },
+    {
+      "a": "harschberg_data_detect/esotropia_harschberg/esotropia_060.jpg",
+      "b": "harschberg_data_detect/esotropia_harschberg/esotropia_055.jpg",
+      "dhash_distance": 0,
+      "exact": false,
+      "v06_a_split": "train",
+      "v06_b_split": "train"
+    },
+    {
+      "a": "harschberg_data_detect/esotropia_harschberg/esotropia_131.jpg",
+      "b": "harschberg_data_detect/esotropia_harschberg/esotropia_124.jpg",
+      "dhash_distance": 3,
+      "exact": false,
+      "v06_a_split": "train",
+      "v06_b_split": "train"
+    },
+    {
+      "a": "harschberg_data_detect/esotropia_harschberg/esotropia_147.jpg",
+      "b": "harschberg_data_detect/esotropia_harschberg/esotropia_083.jpg",
+      "dhash_distance": 3,
+      "exact": false,
+      "v06_a_split": "val",
+      "v06_b_split": "train"
+    },
+    {
+      "a": "harschberg_data_detect/esotropia_harschberg/esotropia_172.jpg",
+      "b": "harschberg_data_detect/esotropia_harschberg/esotropia_126.jpg",
+      "dhash_distance": 3,
+      "exact": false,
+      "v06_a_split": "val",
+      "v06_b_split": "train"
+    },
+    {
+      "a": "harschberg_data_detect/exotropia_harschberg/exotropia_132.jpg",
+      "b": "harschberg_data_detect/exotropia_harschberg/exotropia_105.jpg",
+      "dhash_distance": 3,
+      "exact": false,
+      "v06_a_split": "val",
+      "v06_b_split": "train"
+    },
+    {
+      "a": "harschberg_data_detect/normal_harschberg/normal_023.jpg",
+      "b": "harschberg_data_detect/normal_harschberg/normal_015.jpg",
+      "dhash_distance": 3,
+      "exact": false,
+      "v06_a_split": "val",
+      "v06_b_split": "train"
+    },
+    {
+      "a": "harschberg_data_detect/normal_harschberg/normal_070.jpg",
+      "b": "harschberg_data_detect/normal_harschberg/normal_066.jpg",
+      "dhash_distance": 1,
+      "exact": false,
+      "v06_a_split": "train",
+      "v06_b_split": "train"
+    },
+    {
+      "a": "harschberg_data_detect/normal_harschberg/normal_145.jpg",
+      "b": "harschberg_data_detect/normal_harschberg/normal_046.jpg",
+      "dhash_distance": 4,
+      "exact": false,
+      "v06_a_split": "train",
+      "v06_b_split": "train"
+    }
+  ],
+  "v06_split_reconstructed": {
+    "train": 109,
+    "val": 27
+  },
+  "saved_report_metrics": {
+    "hirschberg_candidate_v0.2_eval.json": {
+      "top_keys": [
+        "model_id",
+        "status",
+        "createdAt",
+        "seed",
+        "total_samples",
+        "total_participants",
+        "metrics",
+        "feature_count"
+      ],
+      "metric_nodes": {
+        "/metrics": {
+          "n": 450,
+          "labels": null,
+          "confusion_matrix": [
+            [
+              105,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              105,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              90,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              90,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              60
+            ]
+          ],
+          "precision": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "recall": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "f1": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 1.0,
+          "macro_f1_reported": 1.0
+        }
+      }
+    },
+    "hirschberg_candidate_v0.4_eval.json": {
+      "top_keys": [
+        "createdAt",
+        "status",
+        "manifest_path",
+        "model_output",
+        "model_card_output",
+        "seed",
+        "manifest_validation",
+        "training",
+        "deployment_recommendation",
+        "governance"
+      ],
+      "metric_nodes": {
+        "/training/comparisons/logistic_regression_balanced": {
+          "n": 67,
+          "labels": [
+            "normal",
+            "esotropia",
+            "exotropia"
+          ],
+          "confusion_matrix": [
+            [
+              16,
+              10,
+              7
+            ],
+            [
+              16,
+              4,
+              0
+            ],
+            [
+              4,
+              1,
+              9
+            ]
+          ],
+          "precision": [
+            0.4444444444444444,
+            0.26666666666666666,
+            0.5625
+          ],
+          "recall": [
+            0.48484848484848486,
+            0.2,
+            0.6428571428571429
+          ],
+          "f1": [
+            0.463768115942029,
+            0.2285714285714286,
+            0.6000000000000001
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.4426,
+          "macro_f1_reported": 0.4308
+        },
+        "/training/comparisons/random_forest_balanced": {
+          "n": 67,
+          "labels": [
+            "normal",
+            "esotropia",
+            "exotropia"
+          ],
+          "confusion_matrix": [
+            [
+              13,
+              14,
+              6
+            ],
+            [
+              11,
+              9,
+              0
+            ],
+            [
+              5,
+              1,
+              8
+            ]
+          ],
+          "precision": [
+            0.4482758620689655,
+            0.375,
+            0.5714285714285714
+          ],
+          "recall": [
+            0.3939393939393939,
+            0.45,
+            0.5714285714285714
+          ],
+          "f1": [
+            0.41935483870967744,
+            0.4090909090909091,
+            0.5714285714285714
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.4718,
+          "macro_f1_reported": 0.4666
+        },
+        "/training/comparisons/hist_gradient_boosting": {
+          "n": 67,
+          "labels": [
+            "normal",
+            "esotropia",
+            "exotropia"
+          ],
+          "confusion_matrix": [
+            [
+              20,
+              8,
+              5
+            ],
+            [
+              16,
+              4,
+              0
+            ],
+            [
+              7,
+              0,
+              7
+            ]
+          ],
+          "precision": [
+            0.46511627906976744,
+            0.3333333333333333,
+            0.5833333333333334
+          ],
+          "recall": [
+            0.6060606060606061,
+            0.2,
+            0.5
+          ],
+          "f1": [
+            0.5263157894736842,
+            0.25,
+            0.5384615384615384
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.4354,
+          "macro_f1_reported": 0.4383
+        },
+        "/training/selected_metrics": {
+          "n": 67,
+          "labels": [
+            "normal",
+            "esotropia",
+            "exotropia"
+          ],
+          "confusion_matrix": [
+            [
+              13,
+              14,
+              6
+            ],
+            [
+              11,
+              9,
+              0
+            ],
+            [
+              5,
+              1,
+              8
+            ]
+          ],
+          "precision": [
+            0.4482758620689655,
+            0.375,
+            0.5714285714285714
+          ],
+          "recall": [
+            0.3939393939393939,
+            0.45,
+            0.5714285714285714
+          ],
+          "f1": [
+            0.41935483870967744,
+            0.4090909090909091,
+            0.5714285714285714
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.4718,
+          "macro_f1_reported": 0.4666
+        }
+      }
+    },
+    "hirschberg_candidate_v0.5_safe_eval.json": {
+      "top_keys": [
+        "createdAt",
+        "status",
+        "manifest_path",
+        "model_output",
+        "model_card_output",
+        "seed",
+        "manifest_validation",
+        "training",
+        "deployment_recommendation",
+        "governance"
+      ],
+      "metric_nodes": {
+        "/training/comparisons/logistic_regression_balanced/forced_3class_metrics": {
+          "n": 67,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              8,
+              0,
+              12
+            ],
+            [
+              1,
+              6,
+              7
+            ],
+            [
+              9,
+              11,
+              13
+            ]
+          ],
+          "precision": [
+            0.4444444444444444,
+            0.35294117647058826,
+            0.40625
+          ],
+          "recall": [
+            0.4,
+            0.42857142857142855,
+            0.3939393939393939
+          ],
+          "f1": [
+            0.4210526315789474,
+            0.3870967741935484,
+            0.4
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.4075,
+          "macro_f1_reported": 0.4027
+        },
+        "/training/comparisons/random_forest_pair_balanced/forced_3class_metrics": {
+          "n": 67,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              13,
+              0,
+              7
+            ],
+            [
+              1,
+              8,
+              5
+            ],
+            [
+              8,
+              8,
+              17
+            ]
+          ],
+          "precision": [
+            0.5909090909090909,
+            0.5,
+            0.5862068965517241
+          ],
+          "recall": [
+            0.65,
+            0.5714285714285714,
+            0.5151515151515151
+          ],
+          "f1": [
+            0.6190476190476191,
+            0.5333333333333333,
+            0.5483870967741935
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.5789,
+          "macro_f1_reported": 0.5669
+        },
+        "/training/comparisons/extra_trees_pair_balanced/forced_3class_metrics": {
+          "n": 67,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              13,
+              0,
+              7
+            ],
+            [
+              1,
+              8,
+              5
+            ],
+            [
+              10,
+              6,
+              17
+            ]
+          ],
+          "precision": [
+            0.5416666666666666,
+            0.5714285714285714,
+            0.5862068965517241
+          ],
+          "recall": [
+            0.65,
+            0.5714285714285714,
+            0.5151515151515151
+          ],
+          "f1": [
+            0.5909090909090908,
+            0.5714285714285714,
+            0.5483870967741935
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.5789,
+          "macro_f1_reported": 0.5702
+        },
+        "/training/comparisons/hist_gradient_boosting/forced_3class_metrics": {
+          "n": 67,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              8,
+              0,
+              12
+            ],
+            [
+              0,
+              4,
+              10
+            ],
+            [
+              10,
+              4,
+              19
+            ]
+          ],
+          "precision": [
+            0.4444444444444444,
+            0.5,
+            0.4634146341463415
+          ],
+          "recall": [
+            0.4,
+            0.2857142857142857,
+            0.5757575757575758
+          ],
+          "f1": [
+            0.4210526315789474,
+            0.36363636363636365,
+            0.5135135135135135
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.4205,
+          "macro_f1_reported": 0.4327
+        },
+        "/training/selected_forced_3class_metrics": {
+          "n": 67,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              13,
+              0,
+              7
+            ],
+            [
+              1,
+              8,
+              5
+            ],
+            [
+              8,
+              8,
+              17
+            ]
+          ],
+          "precision": [
+            0.5909090909090909,
+            0.5,
+            0.5862068965517241
+          ],
+          "recall": [
+            0.65,
+            0.5714285714285714,
+            0.5151515151515151
+          ],
+          "f1": [
+            0.6190476190476191,
+            0.5333333333333333,
+            0.5483870967741935
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.5789,
+          "macro_f1_reported": 0.5669
+        }
+      }
+    },
+    "hirschberg_candidate_v0.6_ensemble_eval.json": {
+      "top_keys": [
+        "createdAt",
+        "model_id",
+        "status",
+        "dataset",
+        "audit_notes",
+        "individual_benchmarks",
+        "ensemble_tuning",
+        "v06_full_metrics",
+        "comparison",
+        "elapsed_seconds",
+        "governance"
+      ],
+      "metric_nodes": {
+        "/individual_benchmarks/v05_forced": {
+          "n": 136,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              42,
+              2,
+              11
+            ],
+            [
+              13,
+              4,
+              23
+            ],
+            [
+              31,
+              1,
+              9
+            ]
+          ],
+          "precision": [
+            0.4883720930232558,
+            0.5714285714285714,
+            0.20930232558139536
+          ],
+          "recall": [
+            0.7636363636363637,
+            0.1,
+            0.21951219512195122
+          ],
+          "f1": [
+            0.5957446808510638,
+            0.1702127659574468,
+            0.2142857142857143
+          ],
+          "coverage": 1.0,
+          "n_total": 136,
+          "balanced_accuracy_reported": 0.361,
+          "macro_f1_reported": 0.3267
+        },
+        "/individual_benchmarks/v02_effnet_only": {
+          "n": 136,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              55
+            ],
+            [
+              0,
+              0,
+              40
+            ],
+            [
+              0,
+              0,
+              41
+            ]
+          ],
+          "precision": [
+            0.0,
+            0.0,
+            0.3014705882352941
+          ],
+          "recall": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "f1": [
+            0.0,
+            0.0,
+            0.46327683615819204
+          ],
+          "coverage": 1.0,
+          "n_total": 136,
+          "balanced_accuracy_reported": 0.3333,
+          "macro_f1_reported": 0.1544
+        },
+        "/ensemble_tuning/best_val_metrics": {
+          "n": 8,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              5,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "precision": [
+            0.625,
+            0.0,
+            0.0
+          ],
+          "recall": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "f1": [
+            0.7692307692307693,
+            0.0,
+            0.0
+          ],
+          "coverage": 0.2963,
+          "n_total": 27,
+          "balanced_accuracy_reported": 0.3333,
+          "macro_f1_reported": 0.2564
+        },
+        "/v06_full_metrics": {
+          "n": 45,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              17,
+              0,
+              5
+            ],
+            [
+              4,
+              0,
+              9
+            ],
+            [
+              7,
+              0,
+              3
+            ]
+          ],
+          "precision": [
+            0.6071428571428571,
+            0.0,
+            0.17647058823529413
+          ],
+          "recall": [
+            0.7727272727272727,
+            0.0,
+            0.3
+          ],
+          "f1": [
+            0.68,
+            0.0,
+            0.22222222222222224
+          ],
+          "coverage": 0.3309,
+          "n_total": 136,
+          "balanced_accuracy_reported": 0.3576,
+          "macro_f1_reported": 0.3007
+        }
+      }
+    },
+    "hirschberg_candidate_v0.6_ensemble_v2_eval.json": {
+      "top_keys": [
+        "createdAt",
+        "model_id",
+        "status",
+        "dataset",
+        "eye_crop_geometry",
+        "benchmarks",
+        "tuning",
+        "elapsed_seconds",
+        "governance"
+      ],
+      "metric_nodes": {
+        "/benchmarks/v05_forced": {
+          "n": 136,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              42,
+              2,
+              11
+            ],
+            [
+              13,
+              4,
+              23
+            ],
+            [
+              31,
+              1,
+              9
+            ]
+          ],
+          "precision": [
+            0.4883720930232558,
+            0.5714285714285714,
+            0.20930232558139536
+          ],
+          "recall": [
+            0.7636363636363637,
+            0.1,
+            0.21951219512195122
+          ],
+          "f1": [
+            0.5957446808510638,
+            0.1702127659574468,
+            0.2142857142857143
+          ],
+          "coverage": 1.0,
+          "n_total": 136,
+          "balanced_accuracy_reported": 0.361,
+          "macro_f1_reported": 0.3267
+        },
+        "/benchmarks/v02_eyecrop": {
+          "n": 136,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              53,
+              1,
+              1
+            ],
+            [
+              7,
+              30,
+              3
+            ],
+            [
+              4,
+              7,
+              30
+            ]
+          ],
+          "precision": [
+            0.828125,
+            0.7894736842105263,
+            0.8823529411764706
+          ],
+          "recall": [
+            0.9636363636363636,
+            0.75,
+            0.7317073170731707
+          ],
+          "f1": [
+            0.8907563025210083,
+            0.7692307692307692,
+            0.8
+          ],
+          "coverage": 1.0,
+          "n_total": 136,
+          "balanced_accuracy_reported": 0.8151,
+          "macro_f1_reported": 0.82
+        },
+        "/benchmarks/v06_v2_ensemble": {
+          "n": 105,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              46,
+              0,
+              1
+            ],
+            [
+              2,
+              25,
+              1
+            ],
+            [
+              0,
+              1,
+              29
+            ]
+          ],
+          "precision": [
+            0.9583333333333334,
+            0.9615384615384616,
+            0.9354838709677419
+          ],
+          "recall": [
+            0.9787234042553191,
+            0.8928571428571429,
+            0.9666666666666667
+          ],
+          "f1": [
+            0.968421052631579,
+            0.9259259259259259,
+            0.9508196721311476
+          ],
+          "coverage": 0.7721,
+          "n_total": 136,
+          "balanced_accuracy_reported": 0.9461,
+          "macro_f1_reported": 0.9484
+        },
+        "/tuning/best_val_metrics": {
+          "n": 13,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              5,
+              0,
+              1
+            ],
+            [
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              3
+            ]
+          ],
+          "precision": [
+            0.7142857142857143,
+            1.0,
+            0.75
+          ],
+          "recall": [
+            0.8333333333333334,
+            0.5,
+            1.0
+          ],
+          "f1": [
+            0.7692307692307692,
+            0.6666666666666666,
+            0.8571428571428571
+          ],
+          "coverage": 0.4815,
+          "n_total": 27,
+          "balanced_accuracy_reported": 0.7778,
+          "macro_f1_reported": 0.7643
+        }
+      }
+    },
+    "pedseye_hirschberg_external_eval.json": {
+      "top_keys": [
+        "createdAt",
+        "status",
+        "dataset",
+        "current_service_model_eval",
+        "current_service_prediction_details",
+        "current_service_false_negative_review",
+        "training",
+        "governance"
+      ],
+      "metric_nodes": {
+        "/current_service_model_eval": {
+          "n": 67,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              20,
+              0,
+              0
+            ],
+            [
+              13,
+              0,
+              1
+            ],
+            [
+              29,
+              0,
+              4
+            ]
+          ],
+          "precision": [
+            0.3225806451612903,
+            0.0,
+            0.8
+          ],
+          "recall": [
+            1.0,
+            0.0,
+            0.12121212121212122
+          ],
+          "f1": [
+            0.4878048780487805,
+            0.0,
+            0.2105263157894737
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.3737,
+          "macro_f1_reported": 0.2328
+        },
+        "/training/model_comparison/logistic_regression_balanced": {
+          "n": 67,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              5,
+              1,
+              14
+            ],
+            [
+              1,
+              8,
+              5
+            ],
+            [
+              13,
+              6,
+              14
+            ]
+          ],
+          "precision": [
+            0.2631578947368421,
+            0.5333333333333333,
+            0.42424242424242425
+          ],
+          "recall": [
+            0.25,
+            0.5714285714285714,
+            0.42424242424242425
+          ],
+          "f1": [
+            0.25641025641025644,
+            0.5517241379310344,
+            0.4242424242424243
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.4152,
+          "macro_f1_reported": 0.4108
+        },
+        "/training/model_comparison/random_forest_balanced": {
+          "n": 67,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              9,
+              0,
+              11
+            ],
+            [
+              1,
+              8,
+              5
+            ],
+            [
+              10,
+              11,
+              12
+            ]
+          ],
+          "precision": [
+            0.45,
+            0.42105263157894735,
+            0.42857142857142855
+          ],
+          "recall": [
+            0.45,
+            0.5714285714285714,
+            0.36363636363636365
+          ],
+          "f1": [
+            0.45,
+            0.48484848484848486,
+            0.3934426229508197
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.4617,
+          "macro_f1_reported": 0.4428
+        },
+        "/training/model_comparison/hist_gradient_boosting": {
+          "n": 67,
+          "labels": [
+            "esotropia",
+            "exotropia",
+            "normal"
+          ],
+          "confusion_matrix": [
+            [
+              7,
+              0,
+              13
+            ],
+            [
+              1,
+              8,
+              5
+            ],
+            [
+              9,
+              5,
+              19
+            ]
+          ],
+          "precision": [
+            0.4117647058823529,
+            0.6153846153846154,
+            0.5135135135135135
+          ],
+          "recall": [
+            0.35,
+            0.5714285714285714,
+            0.5757575757575758
+          ],
+          "f1": [
+            0.37837837837837834,
+            0.5925925925925927,
+            0.5428571428571428
+          ],
+          "coverage": null,
+          "n_total": null,
+          "balanced_accuracy_reported": 0.4991,
+          "macro_f1_reported": 0.5046
+        }
+      }
+    }
+  },
+  "environment_versions": {
+    "numpy": "2.5.3",
+    "scikit-learn": "1.9.1",
+    "opencv-python": "4.14.0.94",
+    "onnxruntime": "1.30.0",
+    "timm": null,
+    "torch": null,
+    "torchvision": null,
+    "lightgbm": null,
+    "mediapipe": "0.10.14"
+  }
+}
