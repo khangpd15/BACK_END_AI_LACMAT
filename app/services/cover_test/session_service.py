@@ -406,89 +406,16 @@ class CoverTestSessionService:
                 processing_status = "PARTIAL_SUCCESS"
                 ai_result_payload = None
             else:
-                # Step 2: Optional Korean Shared Model for comparison_models only (Research UI)
+                # Step 2: Korean transfer models have been retired from runtime.
+                # Cover Test results must come from the active RemiCare-trained model only.
                 comparison_models_list = []
-                try:
-                    from app.schemas import CoverCycle, EyeSample, ScreeningRequest
-                    from app.services.korean_transfer import get_korean_transfer_service
-
-                    cycles_payload = []
-                    for c_num in sorted(raw_trajectories.keys()):
-                        c_dict = raw_trajectories[c_num]
-                        samples_list = [EyeSample(**s) for s in c_dict.get("samples", [])]
-                        cycles_payload.append(
-                            CoverCycle(
-                                cycle=c_num,
-                                coveredEye=str(c_dict.get("coveredEye", "LEFT")).upper(),
-                                trackedEye=str(c_dict.get("trackedEye", "RIGHT")).upper(),
-                                samples=samples_list,
-                            )
-                        )
-                    screening_req = ScreeningRequest(
-                        sampleId=session_id_str,
-                        test="COVER_TEST",
-                        cycles=cycles_payload,
-                    )
-                    transfer_svc = get_korean_transfer_service()
-                    korean_resp = transfer_svc.predict_transfer(screening_req)
-                    cand_15 = next((cm for cm in getattr(korean_resp, "comparisonModels", []) if cm.key == "korean_15fps_candidate"), None)
-                    korean_b2_cm = next((cm for cm in getattr(korean_resp, "comparisonModels", []) if cm.key == "korean_b2"), None)
-                    if cand_15:
-                        comparison_models_list.append({
-                            "key": "korean_15fps_candidate",
-                            "label": cand_15.label,
-                            "prediction": cand_15.prediction,
-                            "classProbability": cand_15.classProbability,
-                            "samplingProfile": cand_15.samplingProfile,
-                            "domainShiftWarning": True,
-                            "clinicalMeaning": None,
-                            "notice": cand_15.notice,
-                            "model": {
-                                "name": cand_15.model.name,
-                                "version": cand_15.model.version,
-                            },
-                        })
-                    else:
-                        pred_10_15 = korean_resp.prediction if korean_resp else fps_res.prediction
-                        prob_10_15 = korean_resp.classProbability if korean_resp else fps_res.class_probabilities
-                        comparison_models_list.append({
-                            "key": "korean_15fps_candidate",
-                            "label": "Korean 10–15 FPS candidate",
-                            "prediction": pred_10_15,
-                            "classProbability": prob_10_15,
-                            "samplingProfile": "Korean recordings augmented across fixed and variable 10–15 FPS with simulated frame drops",
-                            "domainShiftWarning": True,
-                            "clinicalMeaning": None,
-                            "notice": "Research transfer experiment only - not a medical diagnosis.",
-                            "model": {
-                                "name": "Korean 10-15 FPS robust transfer candidate",
-                                "version": "remicare-transfer-10to15fps-candidate-v1.1.0",
-                            },
-                        })
-                    if korean_b2_cm:
-                        comparison_models_list.append({
-                            "key": "korean_b2",
-                            "label": korean_b2_cm.label,
-                            "prediction": korean_b2_cm.prediction,
-                            "classProbability": korean_b2_cm.classProbability,
-                            "samplingProfile": korean_b2_cm.samplingProfile,
-                            "domainShiftWarning": True,
-                            "clinicalMeaning": None,
-                            "notice": korean_b2_cm.notice,
-                            "model": {
-                                "name": korean_b2_cm.model.name,
-                                "version": korean_b2_cm.model.version,
-                            },
-                        })
-                except Exception as kor_err:
-                    logger.debug("Korean comparison model generation skipped: %s", kor_err)
 
                 # Step 3: INSERT 1 record into cover_test_results with 10-15 FPS prediction (NO image stored)
-                target_prediction = cand_15.prediction if cand_15 else fps_res.prediction
-                target_probabilities = cand_15.classProbability if cand_15 else fps_res.class_probabilities
-                target_model_name = cand_15.model.name if cand_15 else fps_res.model_name
-                target_model_version = cand_15.model.version if cand_15 else fps_res.model_version
-                target_sampling_profile = cand_15.samplingProfile if cand_15 else "Korean recordings augmented across fixed and variable 10–15 FPS with simulated frame drops"
+                target_prediction = fps_res.prediction
+                target_probabilities = fps_res.class_probabilities
+                target_model_name = fps_res.model_name
+                target_model_version = fps_res.model_version
+                target_sampling_profile = "RemiCare Cover Test numeric trajectory consensus"
                 target_notice = fps_res.notice
 
                 try:

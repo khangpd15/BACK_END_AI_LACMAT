@@ -118,12 +118,12 @@ class ScreeningResponse(BaseModel):
 
 
 # =============================================================================
-# PHASE 4.2: TRANSFER EXPERIMENT SCHEMAS
+# LEGACY TRANSFER EXPERIMENT SCHEMAS
 # =============================================================================
 
 class TransferModelMetadata(BaseModel):
-    name: str = Field("Korean 10–15 FPS Transfer Research Model", description="Model identifier")
-    version: str = Field("remicare-transfer-10to15fps-candidate-v1.1.0", description="Contract/model version")
+    name: str = Field("Retired Transfer Research Model", description="Model identifier")
+    version: str = Field("retired", description="Contract/model version")
 
 
 class TransferDomainShiftInfo(BaseModel):
@@ -150,7 +150,7 @@ class TransferComparisonModelResult(BaseModel):
 
 
 class TransferExperimentResponse(BaseModel):
-    """Output for Phase 4.2 Research Transfer Experiment."""
+    """Legacy output for retired research transfer experiments."""
     model_config = ConfigDict(extra="allow")
 
     sampleId: str
@@ -165,7 +165,7 @@ class TransferExperimentResponse(BaseModel):
     features: Optional[Dict[str, Optional[float]]] = Field(None, description="30 shared technical features for debug")
     comparisonModels: List[TransferComparisonModelResult] = Field(
         default_factory=list,
-        description="Side-by-side Korean B2 and sampling-matched research outputs",
+        description="Legacy side-by-side research outputs",
     )
     notice: str = Field(
         "Research transfer experiment only — not a diagnosis.",

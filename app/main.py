@@ -16,7 +16,6 @@ import time
 from fastapi.responses import JSONResponse
 
 from app import __version__
-from app.api.transfer import router as transfer_router
 from app.api.strabismus import router as strabismus_router
 from app.services.strabismus_inference_service import get_strabismus_inference_service
 from app.api.cover_test_session import router as cover_test_session_router
@@ -29,7 +28,7 @@ from app.services.keep_alive import (
     start_keep_alive,
     stop_keep_alive,
 )
-from app.services.korean_transfer import get_korean_transfer_service
+from app.services.fps_model_service import get_fps_model_service
 
 # Configure structured audit logging
 logging.basicConfig(
@@ -51,16 +50,16 @@ async def lifespan(app: FastAPI):
         logger.warning("Database init check note: %s", e)
 
     try:
-        transfer_svc = get_korean_transfer_service()
+        fps_svc = get_fps_model_service()
         logger.info(
-            "Transfer model loaded: experiment=%s, version=%s, features=%d, path=%s",
-            transfer_svc.experiment,
-            transfer_svc.artifact.get("version") if transfer_svc.artifact else "Unknown",
-            len(transfer_svc.feature_names),
-            transfer_svc.model_path,
+            "Cover Test FPS model state: model=%s, version=%s, loaded=%s, features=%d",
+            fps_svc.model_name,
+            fps_svc.model_version,
+            fps_svc.model is not None,
+            len(fps_svc.feature_names),
         )
     except Exception as e:
-        logger.error("Failed to preload transfer model at startup: %s", e, exc_info=True)
+        logger.error("Failed to initialize Cover Test FPS service at startup: %s", e, exc_info=True)
 
     try:
         strabismus_svc = get_strabismus_inference_service()
@@ -164,7 +163,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 # Register API routes
-app.include_router(transfer_router)
 # Legacy endpoint maintained for compatibility
 app.include_router(cover_test_session_router, prefix="/api/cover-test")
 # New Phase 3 persistent cloud storage router
@@ -213,13 +211,13 @@ async def db_health() -> Dict[str, Any]:
 async def health_check(check_db: bool = False) -> Dict[str, Any]:
     """Health check endpoint responding with operational status, version, and active model info."""
     try:
-        svc = get_korean_transfer_service()
+        svc = get_fps_model_service()
         model_info = {
-            "experiment": svc.experiment,
-            "version": svc.artifact.get("version") if svc.artifact else None,
+            "name": svc.model_name,
+            "version": svc.model_version,
             "featureCount": len(svc.feature_names),
-            "coordinateRescaling": svc.coordinate_rescaling,
-            "ipdScaleFactor": svc.ipd_scale_factor,
+            "loaded": svc.model is not None,
+            "source": "fps_10_15_model",
         }
     except Exception:
         model_info = {"status": "not_loaded"}

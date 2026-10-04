@@ -6,6 +6,7 @@
 > **Trạng thái kiểm thử:** 121/121 Unit & Integration Tests **PASS (100%)**  
 > **Tài liệu Y khoa & Cơ sở Sinh học:** Xem chi tiết tại [docs/CO_SO_LAM_SANG.md](docs/CO_SO_LAM_SANG.md)  
 > **Tuyên bố y khoa bắt buộc:** Hệ thống đóng vai trò là công cụ nghiên cứu chuyển giao (Research Transfer Experiment) và sàng lọc sơ bộ hỗ trợ, **KHÔNG PHẢI** là chẩn đoán y khoa độc lập, không thay thế bác sĩ nhãn khoa chuyên khoa.
+> **Cập nhật runtime 2026-10-04:** Các model chuyển giao từ dữ liệu Hàn Quốc (`korean_shared_model`, `remicare_transfer_model`, `remicare_15fps_candidate`) đã được gỡ khỏi backend runtime và artifact đã bị xóa. Cover Test hiện lưu dữ liệu số an toàn và trả `INCONCLUSIVE` khi chưa có model RemiCare-trained được promote.
 
 ---
 
@@ -57,7 +58,7 @@ Dự án đã trải qua 5 giai đoạn phát triển lớn (Phases 1 đến 5),
   - Quản lý dữ liệu qua 3 bảng quan hệ chuẩn hóa (Tuyệt đối không lưu trữ ảnh khuôn mặt / mắt sinh trắc học của khách hàng):
     1. `cover_test_sessions`: Quản lý phiên khám, tần số lấy mẫu (Hz), thiết bị, phiên bản schema.
     2. `cover_test_cycles`: Chi tiết từng chu kỳ (mắt che, mắt theo dõi, số frame hợp lệ, đường dẫn file số liệu thô).
-    3. `cover_test_results`: Lưu trữ kết quả rà soát chính từ **Mô hình 10-15 FPS** (`model_source = "fps_10_15_model"`, độ tin cậy `confidence`, phân phối xác suất `class_probabilities`), snapshot đặc trưng kỹ thuật, và kết quả Korean model chỉ để nghiên cứu so sánh (`comparison_models`). Cột `image_url` và bảng `cover_test_images` đã được xóa bỏ vĩnh viễn vì ảnh là dữ liệu sinh trắc học cá nhân của khách hàng.
+    3. `cover_test_results`: Lưu trữ kết quả rà soát chính từ model Cover Test RemiCare đã được approve khi có. Các model Korean transfer đã bị retire; `comparison_models` không còn được dùng để đưa kết quả Hàn Quốc vào runtime. Cột `image_url` và bảng `cover_test_images` đã được xóa bỏ vĩnh viễn vì ảnh là dữ liệu sinh trắc học cá nhân của khách hàng.
 - **Supabase Object Storage Service (`app/services/cover_test/storage_service.py`):**
   - Tự động phân cấp lưu trữ theo cấu trúc thư mục y tế: `cover-test-raw/{YYYY}/{MM}/{sessionId}/cycle_0{N}/raw.json` kèm file tổng kết `manifest.json`. Toàn bộ dữ liệu lưu trữ là tọa độ số landmark, không lưu bất kỳ file ảnh nhị phân nào.
   - Hỗ trợ cơ chế Offline Mock Store tự động khi không có internet/chưa cấu hình API Key.

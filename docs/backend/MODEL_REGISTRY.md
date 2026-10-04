@@ -6,9 +6,7 @@ This document is the current file-based registry until a database-backed `model_
 
 | Model ID | Artifact | Status | Feature Version | Input Dimension | Threshold | Notes |
 |---|---|---|---|---:|---:|---|
-| `cover-test-10-15fps` | `app/models/remicare_15fps_candidate.joblib` | active candidate | `shared-v1.0.0` subset | artifact-defined, default 14 | model-defined | Primary Cover Test consensus path when `ENABLE_AI_INFERENCE_ON_SAVE=true`. |
-| `korean-transfer-b2` | `app/models/remicare_transfer_model.joblib` | research comparison | `shared-v1.0.0` | artifact-defined, expected 30 or subset | model-defined | Research transfer only, not clinical diagnosis. |
-| `korean-shared-fallback` | `app/models/korean_shared_model.joblib` | fallback research | `shared-v1.0.0` | artifact-defined | model-defined | Used if transfer artifact missing. |
+| `cover-test-remicare-video` | null | pending training | `cover-test-video-v0.1` | null | null | Korean transfer artifacts were retired. Cover Test returns `INCONCLUSIVE` until a RemiCare-trained artifact is promoted. |
 | `bilateral-roi-onnx` | `app/models/best_model.onnx` | active image ROI screening | image preprocessing v1 | image tensor `1x3x224x224` | `0.20` | Requires bilateral eye ROI, not full face. |
 
 ## Research Candidate Models (Non-Production, Exploratory)

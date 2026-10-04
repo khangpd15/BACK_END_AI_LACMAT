@@ -19,10 +19,9 @@ APP_NAME = "remicare-strabismus-ai"
 API_VERSION = "v1"
 
 # Model Configuration
-# Phase 5: remicare_transfer_model.joblib (domain-adapted) takes priority.
-# Phase 4: korean_shared_model.joblib (Korean baseline fallback).
-DEFAULT_MODEL_PATH = str(PROJECT_ROOT / "models" / "korean_shared_model.joblib")
-REMICARE_TRANSFER_MODEL_PATH = str(PROJECT_ROOT / "app" / "models" / "remicare_transfer_model.joblib")
+# Korean transfer artifacts were retired from runtime. Keep MODEL_PATH only as a
+# future override for a RemiCare-trained Cover Test artifact.
+DEFAULT_MODEL_PATH = str(PROJECT_ROOT / "app" / "models" / "cover_test_remicare_candidate.joblib")
 MODEL_PATH = os.getenv("MODEL_PATH", DEFAULT_MODEL_PATH)
 FEATURE_CONTRACT_VERSION = "shared-v1.0.0"
 

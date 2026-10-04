@@ -5,13 +5,12 @@ Scope: `D:\REMICARE-STRABISMUS-AI` backend. `D:\AI_Check_Lac` was inspected read
 
 ## 1. Current Architecture
 
-FastAPI backend with three active AI/data paths:
+FastAPI backend with two active AI/data paths:
 
 - `POST /api/v1/cover-test/sessions`: primary frontend path. Receives multipart Cover Test session metadata and raw cycle JSON, stores metadata in PostgreSQL/Supabase-compatible tables, uploads raw JSON to Supabase Storage, then optionally runs the 10-15 FPS model consensus path.
-- `POST /api/v1/transfer/strabismus`: research transfer endpoint. Receives raw Cover Test cycles, validates time-series, extracts 30 shared features, and runs Korean transfer/candidate models.
 - `POST /api/v1/strabismus/predict`: bilateral eye ROI image endpoint. Performs MIME/size validation, ROI safety guard, quality gate, ONNX inference, and metadata-only persistence.
 
-The backend preloads Korean transfer and bilateral ONNX services during FastAPI lifespan. The 10-15 FPS model is loaded lazily through `FpsModelService`.
+The backend initializes Cover Test FPS service and bilateral ONNX services during FastAPI lifespan. Korean transfer services and artifacts were retired from runtime.
 
 ## 2. API Flow
 
@@ -22,15 +21,15 @@ Primary Cover Test flow:
 3. `CoverTestSessionService.persist_session` validates raw trajectories.
 4. Repository persists `cover_test_sessions`, `cover_test_cycles`, and optionally `cover_test_results`.
 5. Raw JSON is uploaded to Supabase Storage using `storage_service.py`.
-6. Optional AI inference runs `fps_model_service.py` and comparison via `korean_transfer.py`.
+6. Optional AI inference runs `fps_model_service.py`. If no approved RemiCare-trained artifact is present, the service returns `INCONCLUSIVE`.
 
 Fallback/legacy flow:
 
 - `POST /api/cover-test/sessions` stores JSON locally in `data/cover_test/sessions`. This is still registered because frontend fallback code exists in `aiBackendService.js`.
 
-Transfer flow:
+Retired transfer flow:
 
-- `POST /api/v1/transfer/strabismus` accepts observation-only payloads. It blocks target leakage fields by logging, validates via `validation.py`, extracts backend Python features only, and returns research-only output.
+- `POST /api/v1/transfer/strabismus` and Korean transfer model comparison were removed from runtime because the artifacts were trained on Korean infrared eye-tracker data and are not useful for current RemiCare Cover Test deployment.
 
 ## 3. Feature Pipeline
 
@@ -48,12 +47,9 @@ Frontend Cover Test currently sends raw samples, not model-ready features, throu
 
 Runtime model paths:
 
-- Transfer model priority:
-  - `app/models/remicare_transfer_model.joblib`
-  - fallback `app/models/korean_shared_model.joblib`
-- 10-15 FPS candidate:
-  - `app/models/remicare_15fps_candidate.joblib`
-  - fallback `models/candidates/remicare_15fps_candidate.joblib`
+- Cover Test RemiCare-trained candidate:
+  - pending; Korean transfer artifacts were deleted.
+  - `FpsModelService` remains as the interface and returns safe `INCONCLUSIVE` without an approved artifact.
 - Bilateral ROI ONNX:
   - default `app/models/best_model.onnx`, configurable by `MODEL_PATH`
 
@@ -75,9 +71,7 @@ Object storage stores raw Cover Test JSON and manifest paths under `cover-test-r
 Known declared versions:
 
 - Shared feature contract: `shared-v1.0.0`
-- 10-15 FPS candidate default service version: `10-15fps-v1.1.0`
-- Transfer response model version: `remicare-transfer-10to15fps-candidate-v1.1.0`
-- Korean B2 comparison version: `remicare-transfer-b2-v1.0.0`
+- Cover Test FPS service default version: `10-15fps-v1.1.0` interface only; no approved runtime artifact after Korean cleanup.
 - Bilateral ROI ONNX service version: `remicare-bilateral-resnet18-v1`
 - Bilateral ROI threshold: `0.20`
 
@@ -125,7 +119,6 @@ Fixed in this pass:
 
 Remaining:
 
-- `korean_transfer.py` candidate comparison raises if candidate features are missing; endpoint maps this to 422 but does not return a normalized error code envelope yet.
 - Legacy local file save still exists; keep only while frontend fallback needs it.
 - Auto-migration can drop obsolete image table in PostgreSQL; verify this is acceptable before production startup.
 
@@ -159,7 +152,6 @@ Priority:
 Changed in this pass:
 
 - `app/services/fps_model_service.py`
-- `app/services/korean_transfer.py`
 - `app/services/cover_test/session_service.py`
 - `app/api/cover_test_session.py`
 - `tests/feature_parity/*`
@@ -170,5 +162,5 @@ Changed in this pass:
 ## 14. Files Không Nên Sửa
 
 - `D:\AI_Check_Lac\*`: frontend reference only for this task.
-- Production model binaries under `app/models/*.joblib` and `app/models/*.onnx`: do not alter without retraining/validation/registry update.
+- Production model binaries under `app/models/*.joblib` and `app/models/*.onnx`: do not alter without retraining/validation/registry update. Korean transfer `.joblib` artifacts were deleted because they were no longer useful for Cover Test runtime.
 - Historical normalized datasets under `data/normalized/*`: use read-only for audit/training provenance unless doing explicit data curation.

@@ -14,8 +14,9 @@ from app.db.models.cover_test_session import GUID, JSONType
 class CoverTestResultModel(Base):
     """Database model for cover_test_results.
     
-    Stores primary screening results from 10-15 FPS model (no biometric/facial images stored to preserve customer privacy).
-    Korean model results are kept for research comparison only (in comparison_models).
+    Stores Cover Test screening results from approved RemiCare runtime models.
+    No biometric/facial images are stored to preserve customer privacy.
+    Legacy Korean transfer comparison models have been retired from runtime.
     """
     __tablename__ = "cover_test_results"
 

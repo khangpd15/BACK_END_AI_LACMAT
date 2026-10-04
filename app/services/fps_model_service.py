@@ -1,12 +1,14 @@
-"""10-15 FPS Model Inference & Consensus Aggregation Service.
+"""Cover Test numeric trajectory consensus service.
 
-Primary screening intelligence for RemiCare Cover Test.
+The previous Korean-transfer 10-15 FPS artifact has been retired from runtime.
+Until a RemiCare-trained Cover Test model is available, this service preserves
+the same interface and returns safe INCONCLUSIVE results when no approved model
+artifact is loaded.
 Features:
-- Loads the 10-15 FPS robust model artifact (remicare_15fps_candidate.joblib)
 - Evaluates 14 canonical spatial stability & dispersion features
 - Uses TemporalConsensusAggregator to run multi-frame consensus across temporal sliding windows
 - Rejects blinks, occlusions, and momentary saccadic jitters
-- Produces aggregated consensus prediction, confidence, and class_probabilities
+- Produces aggregated consensus prediction only when an approved artifact exists
 """
 
 from dataclasses import dataclass
@@ -29,7 +31,7 @@ from app.services.shared_feature_contract import (
 
 logger = logging.getLogger("remicare.fps_model_service")
 
-# Paths for 10-15 FPS candidate model
+# Paths for a future RemiCare-trained Cover Test model artifact.
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PRIMARY_15FPS_MODEL_PATH = _PROJECT_ROOT / "models" / "remicare_15fps_candidate.joblib"
 FALLBACK_15FPS_MODEL_PATH = _PROJECT_ROOT.parent / "models" / "candidates" / "remicare_15fps_candidate.joblib"
@@ -92,7 +94,7 @@ class FpsModelService:
         self._load_model(model_path)
 
     def _load_model(self, model_path: Optional[str] = None) -> None:
-        """Loads 10-15 FPS candidate model artifact."""
+        """Loads an approved Cover Test model artifact when available."""
         candidates = []
         if model_path:
             candidates.append(Path(model_path))
@@ -106,7 +108,7 @@ class FpsModelService:
                 break
 
         if loaded_file is None:
-            logger.warning("[FpsModelInit] No 10-15 FPS model artifact found. Will default to safe heuristic mode.")
+            logger.warning("[FpsModelInit] No approved Cover Test model artifact found. Returning INCONCLUSIVE.")
             return
 
         try:
