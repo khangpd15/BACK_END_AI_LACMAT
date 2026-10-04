@@ -32,7 +32,6 @@ CONFIG_VERSION = "TODO_PILOT"
 MAX_IMAGE_BYTES = 4 * 1024 * 1024
 MAX_IMAGE_PIXELS = 2560 * 1440
 MAX_TIMESTAMP_GAP_MS = 600.0
-MIN_AGE_YEARS = 7
 MIN_VALID_FRAME_RATIO = 0.65
 MIN_TRACKING_CONFIDENCE = 0.65
 MIN_COVER_SAMPLES = 6
@@ -143,8 +142,6 @@ def _validate_common(req: ResearchMeasurementRequest) -> List[str]:
     eligibility = req.eligibility
     if not eligibility.consent:
         raise ResearchMeasurementError("INVALID_REQUEST", "Research consent is required.")
-    if eligibility.ageYears is None or eligibility.ageYears < MIN_AGE_YEARS:
-        raise ResearchMeasurementError("INVALID_REQUEST", "Age is outside the supported screening range.")
     if eligibility.redFlag:
         raise ResearchMeasurementError("INVALID_REQUEST", "Red flag present; measurement must not run.")
     return reasons

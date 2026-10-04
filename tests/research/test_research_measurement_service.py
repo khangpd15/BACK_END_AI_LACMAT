@@ -15,7 +15,7 @@ from app.services.research_measurement_service import (
 
 
 def _eligibility():
-    return {"consent": True, "ageYears": 9, "redFlag": False}
+    return {"consent": True, "redFlag": False}
 
 
 def _cover_sample(t, phase, u, quality=0.95):
@@ -160,6 +160,27 @@ def test_hirschberg_measures_reflexes_but_remains_measurement_only():
     assert result["measurements"]["eyes"]["OD"]["reflex_count"] == 1
     assert result["measurements"]["eyes"]["OS"]["reflex_count"] == 1
     assert result["versions"]["modelVersion"] is None
+
+
+def test_hirschberg_allows_missing_age_when_consent_is_present():
+    image_data_url, landmarks = _synthetic_hirschberg_payload(with_pupil=False, num_reflexes=1)
+    req = ResearchMeasurementRequest(
+        schemaVersion="remicare-research-quality-v0.1",
+        featureVersion=FEATURE_VERSION,
+        testType="HIRSCHBERG",
+        sessionId="11111111-1111-4111-8111-111111111111",
+        requestId="hirschberg-no-age",
+        distance_bucket="TARGET_20_25_CM",
+        eligibility={"consent": True, "redFlag": False},
+        imageDataUrl=image_data_url,
+        metadata={"landmarks": landmarks},
+    )
+
+    result = measure_research_request(req)
+
+    assert result["status"] == "INCONCLUSIVE"
+    assert result["result"] == "MEASUREMENT_ONLY"
+    assert "AGE_OUTSIDE_SUPPORTED_RANGE" not in result["reasonCodes"]
 
 
 # ==============================================================================
