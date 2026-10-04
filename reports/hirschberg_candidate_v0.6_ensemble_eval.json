@@ -1,0 +1,255 @@
+{
+  "createdAt": "2026-10-04T08:06:33.147203+00:00",
+  "model_id": "hirschberg-candidate-v0.6-ensemble",
+  "status": "COMPLETED_V06_SAVED",
+  "dataset": {
+    "root": "D:\\REMICARE-STRABISMUS-AI\\harschberg_data_detect",
+    "n_total": 136,
+    "n_train": 109,
+    "n_val": 27,
+    "label_counts": {
+      "esotropia": 55,
+      "exotropia": 40,
+      "normal": 41
+    }
+  },
+  "audit_notes": {
+    "v05_contract": "365 pair features (5x73 ONNX). 3-class. Works on 224x224 crops.",
+    "v02_contract": "35 features = 19 geometric + 16 EfficientNet. Geometric requires MediaPipe.",
+    "v02_limitation": "v0.2 geometric features unavailable on eye-crop data (requires MediaPipe). Geometric inputs set to neutral priors. Only EfficientNet embeddings provide real signal."
+  },
+  "individual_benchmarks": {
+    "v05_forced": {
+      "label": "v0.5_forced",
+      "n_total": 136,
+      "n_covered": 136,
+      "n_uncertain": 0,
+      "coverage": 1.0,
+      "balanced_accuracy": 0.361,
+      "macro_f1": 0.3267,
+      "eso_sensitivity": 0.7636,
+      "exo_sensitivity": 0.1,
+      "normal_specificity": 0.2195,
+      "binary_sensitivity": 0.6421,
+      "binary_specificity": 0.2195,
+      "brier_score": 0.6568,
+      "per_class_recall": {
+        "esotropia": 0.7636,
+        "exotropia": 0.1,
+        "normal": 0.2195
+      },
+      "confusion_matrix_labels": [
+        "esotropia",
+        "exotropia",
+        "normal"
+      ],
+      "confusion_matrix": [
+        [
+          42,
+          2,
+          11
+        ],
+        [
+          13,
+          4,
+          23
+        ],
+        [
+          31,
+          1,
+          9
+        ]
+      ],
+      "binary_counts": {
+        "tp": 61,
+        "tn": 9,
+        "fp": 32,
+        "fn": 34
+      }
+    },
+    "v05_with_abstention": {
+      "label": "v0.5_abstained",
+      "n_total": 136,
+      "n_covered": 0,
+      "n_uncertain": 136,
+      "coverage": 0.0,
+      "balanced_accuracy": null,
+      "macro_f1": null,
+      "eso_sensitivity": null,
+      "exo_sensitivity": null,
+      "normal_specificity": null,
+      "binary_sensitivity": null,
+      "binary_specificity": null,
+      "brier_score": null,
+      "confusion_matrix": null
+    },
+    "v02_effnet_only": {
+      "label": "v0.2_effnet_only",
+      "n_total": 136,
+      "n_covered": 136,
+      "n_uncertain": 0,
+      "coverage": 1.0,
+      "balanced_accuracy": 0.3333,
+      "macro_f1": 0.1544,
+      "eso_sensitivity": 0.0,
+      "exo_sensitivity": 0.0,
+      "normal_specificity": 1.0,
+      "binary_sensitivity": 0.0,
+      "binary_specificity": 1.0,
+      "brier_score": 0.8527,
+      "per_class_recall": {
+        "esotropia": 0.0,
+        "exotropia": 0.0,
+        "normal": 1.0
+      },
+      "confusion_matrix_labels": [
+        "esotropia",
+        "exotropia",
+        "normal"
+      ],
+      "confusion_matrix": [
+        [
+          0,
+          0,
+          55
+        ],
+        [
+          0,
+          0,
+          40
+        ],
+        [
+          0,
+          0,
+          41
+        ]
+      ],
+      "binary_counts": {
+        "tp": 0,
+        "tn": 41,
+        "fp": 0,
+        "fn": 95
+      }
+    }
+  },
+  "ensemble_tuning": {
+    "val_ratio": 0.2,
+    "n_configs_tried": 210,
+    "best_params": {
+      "conf_threshold": 0.5,
+      "margin_threshold": 0.05,
+      "w5": 0.8,
+      "w2": 0.19999999999999996,
+      "agreement_only": false
+    },
+    "best_val_metrics": {
+      "label": "val",
+      "n_total": 27,
+      "n_covered": 8,
+      "n_uncertain": 19,
+      "coverage": 0.2963,
+      "balanced_accuracy": 0.3333,
+      "macro_f1": 0.2564,
+      "eso_sensitivity": 1.0,
+      "exo_sensitivity": 0.0,
+      "normal_specificity": 0.0,
+      "binary_sensitivity": 1.0,
+      "binary_specificity": 0.0,
+      "brier_score": 0.6462,
+      "per_class_recall": {
+        "esotropia": 1.0,
+        "exotropia": 0.0,
+        "normal": 0.0
+      },
+      "confusion_matrix_labels": [
+        "esotropia",
+        "exotropia",
+        "normal"
+      ],
+      "confusion_matrix": [
+        [
+          5,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      "binary_counts": {
+        "tp": 7,
+        "tn": 0,
+        "fp": 1,
+        "fn": 0
+      }
+    }
+  },
+  "v06_full_metrics": {
+    "label": "v0.6_ensemble",
+    "n_total": 136,
+    "n_covered": 45,
+    "n_uncertain": 91,
+    "coverage": 0.3309,
+    "balanced_accuracy": 0.3576,
+    "macro_f1": 0.3007,
+    "eso_sensitivity": 0.7727,
+    "exo_sensitivity": 0.0,
+    "normal_specificity": 0.3,
+    "binary_sensitivity": 0.6,
+    "binary_specificity": 0.3,
+    "brier_score": 0.6652,
+    "per_class_recall": {
+      "esotropia": 0.7727,
+      "exotropia": 0.0,
+      "normal": 0.3
+    },
+    "confusion_matrix_labels": [
+      "esotropia",
+      "exotropia",
+      "normal"
+    ],
+    "confusion_matrix": [
+      [
+        17,
+        0,
+        5
+      ],
+      [
+        4,
+        0,
+        9
+      ],
+      [
+        7,
+        0,
+        3
+      ]
+    ],
+    "binary_counts": {
+      "tp": 21,
+      "tn": 3,
+      "fp": 7,
+      "fn": 14
+    }
+  },
+  "comparison": {
+    "v05_score": 0.6877,
+    "v06_score": 0.7576,
+    "v06_is_better": true,
+    "decision": "SAVE_V06"
+  },
+  "elapsed_seconds": 20.6,
+  "governance": [
+    "v0.5 NOT overwritten.",
+    "v0.2 NOT overwritten.",
+    "Thresholds tuned on val split ONLY.",
+    "research_candidate — NOT clinical diagnosis."
+  ]
+}

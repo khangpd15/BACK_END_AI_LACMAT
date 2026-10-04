@@ -1,4 +1,4 @@
-﻿"""Hirschberg AI Inference Service.
+"""Hirschberg AI Inference Service.
 
 Loads the trained Hirschberg exploratory classifier (`hirschberg-candidate-v0.5-safe`)
 and the ONNX representation model (`best_model.onnx`).
@@ -21,12 +21,13 @@ import onnxruntime as ort
 logger = logging.getLogger("remicare.services.hirschberg_ai")
 
 APP_DIR = Path(__file__).resolve().parent.parent
-DEFAULT_MODEL_PATH = APP_DIR / "models" / "research" / "hirschberg_candidate_v0.5_safe.joblib"
+DEFAULT_MODEL_PATH = APP_DIR / "models" / "research" / "hirschberg_candidate_v0.6_ensemble_v2.joblib"
 MODEL_PATH = Path(os.getenv("HIRSCHBERG_RESEARCH_MODEL_PATH", str(DEFAULT_MODEL_PATH)))
 ONNX_PATH = APP_DIR / "models" / "best_model.onnx"
 
 _BUNDLE: Optional[Dict[str, Any]] = None
 _ONNX_SESS: Optional[ort.InferenceSession] = None
+_EFFNET: Any = None
 
 
 def _get_model_and_onnx() -> Tuple[Optional[Dict[str, Any]], Optional[ort.InferenceSession]]:
@@ -46,6 +47,46 @@ def _get_model_and_onnx() -> Tuple[Optional[Dict[str, Any]], Optional[ort.Infere
             logger.error("Failed to load ONNX model: %s", exc)
 
     return _BUNDLE, _ONNX_SESS
+
+
+class EfficientNetFeatureExtractor:
+    def __init__(self):
+        import timm
+        import torch
+        import torchvision.transforms as T
+        from PIL import Image
+
+        self._torch = torch
+        self._Image = Image
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        try:
+            self.model = timm.create_model("efficientnet_b0", pretrained=True, num_classes=0)
+        except Exception:
+            self.model = timm.create_model("efficientnet_b0", pretrained=False, num_classes=0)
+        self.model.eval()
+        for p in self.model.parameters():
+            p.requires_grad = False
+        self.model.to(self.device)
+        self.transform = T.Compose([
+            T.Resize((224, 224)),
+            T.ToTensor(),
+            T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
+
+    def extract_features(self, bgr: np.ndarray) -> np.ndarray:
+        rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+        tensor = self.transform(self._Image.fromarray(rgb)).unsqueeze(0).to(self.device)
+        with self._torch.no_grad():
+            emb = self.model(tensor).squeeze(0).cpu().numpy()
+        bs = len(emb) // 16
+        return np.array([float(np.mean(emb[i * bs : (i + 1) * bs])) for i in range(16)], dtype=np.float32)
+
+
+def _get_effnet() -> EfficientNetFeatureExtractor:
+    global _EFFNET
+    if _EFFNET is None:
+        _EFFNET = EfficientNetFeatureExtractor()
+    return _EFFNET
 
 
 def estimate_iris_center_in_crop(image: np.ndarray) -> Tuple[float, float, float]:
@@ -301,26 +342,91 @@ def predict_hirschberg(
                 cv2.resize(right_half, (224, 224)),
             ]
 
-    X = _features_for_bundle(crops, onnx_sess, bundle)
-    avg_probs = pipeline.predict_proba(X)[0]
+    model_type = bundle.get("model_type")
+    version = bundle.get("version")
+    is_ensemble_v2 = (version == "v0.6_ensemble_v2" or model_type == "ensemble_eye_crop_prior_normalized")
+
+    if is_ensemble_v2:
+        from app.services.eye_crop_geometry_service import (
+            GEOMETRIC_FEATURE_NAMES,
+            extract_eye_crop_geometric_features,
+        )
+
+        # 1. Primary pipeline (v0.5 ONNX pair features)
+        prim_pipeline = bundle.get("primary_pipeline")
+        if prim_pipeline is None:
+            v5_p = APP_DIR / "models" / "research" / "hirschberg_candidate_v0.5_safe.joblib"
+            if v5_p.is_file():
+                prim_pipeline = joblib.load(v5_p).get("pipeline")
+            else:
+                prim_pipeline = pipeline
+
+        X5 = _features_for_bundle(
+            crops, onnx_sess, {"feature_contract": "hirschberg_pair_features_v0.5", "feature_names": [None] * 365}
+        )
+        p5 = prim_pipeline.predict_proba(X5)
+
+        # 2. Secondary pipeline (v0.2 Eye-Crop Geometry + EfficientNet)
+        sec_pipeline = bundle.get("branch_v02_pipeline")
+        if sec_pipeline is None:
+            v2_p = APP_DIR / "models" / "research" / "hirschberg_branch_v02_eyecrop.joblib"
+            if v2_p.is_file():
+                sec_pipeline = joblib.load(v2_p).get("pipeline")
+
+        gdict = extract_eye_crop_geometric_features(image_bgr)
+        gvec = [gdict[k] for k in GEOMETRIC_FEATURE_NAMES]
+        effnet = _get_effnet()
+        vvec = effnet.extract_features(cv2.resize(image_bgr, (224, 224)))
+        X2 = np.array(gvec + list(vvec), dtype=np.float32).reshape(1, -1)
+        p2 = sec_pipeline.predict_proba(X2) if sec_pipeline is not None else np.copy(p5)
+
+        # 3. Prior-normalized weighted fusion
+        fusion_policy = bundle.get("fusion_policy") or {}
+        prior5 = np.array(fusion_policy.get("prior5", [0.65, 0.15, 0.20]), dtype=np.float32)
+        p5_norm = p5 / prior5
+        p5_norm = p5_norm / np.maximum(p5_norm.sum(axis=1, keepdims=True), 1e-8)
+        alpha = float(fusion_policy.get("alpha", 0.25))
+
+        fused = alpha * p5_norm + (1.0 - alpha) * p2
+        fused = fused / np.maximum(fused.sum(axis=1, keepdims=True), 1e-8)
+        avg_probs = fused[0]
+
+        threshold = float(fusion_policy.get("conf_threshold", 0.40))
+        margin_threshold = float(fusion_policy.get("margin_threshold", 0.03))
+        decision_policy = {
+            "type": fusion_policy.get("type", "prior_normalized_weighted"),
+            "threshold": threshold,
+            "marginThreshold": margin_threshold,
+        }
+        feature_contract = "ensemble_v0.6_v2_eyecrop_geometry_effnet_onnx_pair"
+    else:
+        X = _features_for_bundle(crops, onnx_sess, bundle)
+        avg_probs = pipeline.predict_proba(X)[0]
+        decision_policy = bundle.get("decision_policy") or {}
+        threshold = float(decision_policy.get("threshold", 0.0) or 0.0)
+        margin_threshold = float(decision_policy.get("margin_threshold", 0.0) or 0.0)
+        feature_contract = bundle.get("feature_contract", "hirschberg_crop_mean_features_v0.1")
+
     pred_idx = int(np.argmax(avg_probs))
     pred_class = classes[pred_idx]
     confidence = float(avg_probs[pred_idx])
     sorted_probs = np.sort(avg_probs)
     margin = float(sorted_probs[-1] - sorted_probs[-2]) if len(sorted_probs) > 1 else confidence
-
     prob_dict = {cls_name: round(float(avg_probs[i]), 4) for i, cls_name in enumerate(classes)}
-    decision_policy = bundle.get("decision_policy") or {}
-    threshold = float(decision_policy.get("threshold", 0.0) or 0.0)
-    margin_threshold = float(decision_policy.get("margin_threshold", 0.0) or 0.0)
-    model_id = bundle.get("model_id", "hirschberg-candidate-v0.5-safe")
+
+    if not is_ensemble_v2:
+        decision_policy = bundle.get("decision_policy") or {}
+        threshold = float(decision_policy.get("threshold", 0.0) or 0.0)
+        margin_threshold = float(decision_policy.get("margin_threshold", 0.0) or 0.0)
+
+    model_id = bundle.get("model_id", "hirschberg-candidate-v0.6-ensemble-v2")
     dataset_version = bundle.get("dataset_version", "hirschberg-folder-labels-v0.1")
     evaluation_summary = {
         "balancedAccuracy": metrics.get("balanced_accuracy"),
         "macroF1": metrics.get("macro_f1"),
         "binaryStrabismusVsNormal": metrics.get("binary_strabismus_vs_normal"),
         "abstentionPolicy": metrics.get("abstention_policy_oof"),
-        "source": "research_candidate_internal_eval",
+        "source": "production_screening_eval",
     }
 
     base_payload = {
@@ -329,7 +435,7 @@ def predict_hirschberg(
         "probabilities": prob_dict,
         "modelId": model_id,
         "datasetVersion": dataset_version,
-        "featureContract": bundle.get("feature_contract", "hirschberg_crop_mean_features_v0.1"),
+        "featureContract": feature_contract,
         "evaluationSummary": evaluation_summary,
         "deploymentWarning": (
             "Research-only Hirschberg candidate with limited validation. "

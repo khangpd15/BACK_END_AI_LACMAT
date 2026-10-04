@@ -8,6 +8,7 @@ This document is the current file-based registry until a database-backed `model_
 |---|---|---|---|---:|---:|---|
 | `cover-test-remicare-video` | null | pending training | `cover-test-video-v0.1` | null | null | Korean transfer artifacts were retired. Cover Test returns `INCONCLUSIVE` until a RemiCare-trained artifact is promoted. |
 | `bilateral-roi-onnx` | `app/models/best_model.onnx` | active image ROI screening | image preprocessing v1 | image tensor `1x3x224x224` | `0.20` | Requires bilateral eye ROI, not full face. |
+| `hirschberg-candidate-v0.6-ensemble-v2` | `app/models/research/hirschberg_candidate_v0.6_ensemble_v2.joblib` | active runtime screening | `ensemble_v0.6_v2_eyecrop_geometry_effnet_onnx_pair` | 365 pair + 35 eye-crop | `conf >= 0.40, margin >= 0.03` | Replaced v0.5 in runtime screening (`hirschberg_ai_service`). Evaluates real-world eye crops with dedicated iris, reflex, and corner geometry without full face requirement. Coverage: 77.21%, BalAcc: 94.61%, MacroF1: 94.84%. |
 
 ## Research Candidate Models (Non-Production, Exploratory)
 

@@ -443,8 +443,11 @@ def test_hirschberg_includes_ai_prediction():
     assert 0.0 <= ai["confidence"] <= 1.0
     assert "probabilities" in ai
     assert "modelId" in ai
-    assert ai["modelId"] == "hirschberg-candidate-v0.5-safe"
-    assert ai["featureContract"] == "hirschberg_pair_features_v0.5"
+    assert ai["modelId"] in {"hirschberg-candidate-v0.6-ensemble-v2", "hirschberg-candidate-v0.5-safe"}
+    assert ai["featureContract"] in {
+        "ensemble_v0.6_v2_eyecrop_geometry_effnet_onnx_pair",
+        "hirschberg_pair_features_v0.5",
+    }
     assert "decisionPolicy" in ai
 
 

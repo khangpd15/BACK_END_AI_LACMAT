@@ -1,0 +1,278 @@
+{
+  "createdAt": "2026-10-04T08:19:17.233736+00:00",
+  "model_id": "hirschberg-candidate-v0.6-ensemble-v2",
+  "status": "COMPLETED_SAVED",
+  "dataset": {
+    "root": "D:\\REMICARE-STRABISMUS-AI\\harschberg_data_detect",
+    "n_total": 136,
+    "n_train": 109,
+    "n_val": 27,
+    "label_counts": {
+      "esotropia": 55,
+      "exotropia": 40,
+      "normal": 41
+    }
+  },
+  "eye_crop_geometry": {
+    "module": "app.services.eye_crop_geometry_service",
+    "features": [
+      "dx_left_mm",
+      "dy_left_mm",
+      "dx_right_mm",
+      "dy_right_mm",
+      "abs_dx_left_mm",
+      "abs_dx_right_mm",
+      "symmetry_deviation_mm",
+      "vertical_asymmetry_mm",
+      "scleral_ratio_left",
+      "scleral_ratio_right",
+      "scleral_ratio_min",
+      "scleral_ratio_diff",
+      "intercanthal_distance_mm",
+      "is_likely_pseudostrabismus_flag",
+      "blur_variance",
+      "head_pitch_abs",
+      "head_yaw_abs",
+      "head_roll_abs",
+      "quality_acceptable_flag"
+    ],
+    "fallback_used": false
+  },
+  "benchmarks": {
+    "v05_forced": {
+      "label": "v0.5_forced",
+      "n_total": 136,
+      "n_covered": 136,
+      "n_uncertain": 0,
+      "coverage": 1.0,
+      "balanced_accuracy": 0.361,
+      "macro_f1": 0.3267,
+      "eso_sensitivity": 0.7636,
+      "exo_sensitivity": 0.1,
+      "normal_specificity": 0.2195,
+      "binary_sensitivity": 0.6421,
+      "binary_specificity": 0.2195,
+      "brier_score": 0.6568,
+      "per_class_recall": {
+        "esotropia": 0.7636,
+        "exotropia": 0.1,
+        "normal": 0.2195
+      },
+      "confusion_matrix_labels": [
+        "esotropia",
+        "exotropia",
+        "normal"
+      ],
+      "confusion_matrix": [
+        [
+          42,
+          2,
+          11
+        ],
+        [
+          13,
+          4,
+          23
+        ],
+        [
+          31,
+          1,
+          9
+        ]
+      ],
+      "binary_counts": {
+        "tp": 61,
+        "tn": 9,
+        "fp": 32,
+        "fn": 34
+      }
+    },
+    "v05_abstained": {
+      "label": "v0.5_abstained",
+      "n_total": 136,
+      "n_covered": 0,
+      "n_uncertain": 136,
+      "coverage": 0.0,
+      "balanced_accuracy": null,
+      "macro_f1": null,
+      "eso_sensitivity": null,
+      "exo_sensitivity": null,
+      "normal_specificity": null,
+      "binary_sensitivity": null,
+      "binary_specificity": null,
+      "brier_score": null,
+      "confusion_matrix": null
+    },
+    "v02_eyecrop": {
+      "label": "v0.2_eyecrop",
+      "n_total": 136,
+      "n_covered": 136,
+      "n_uncertain": 0,
+      "coverage": 1.0,
+      "balanced_accuracy": 0.8151,
+      "macro_f1": 0.82,
+      "eso_sensitivity": 0.9636,
+      "exo_sensitivity": 0.75,
+      "normal_specificity": 0.7317,
+      "binary_sensitivity": 0.9579,
+      "binary_specificity": 0.7317,
+      "brier_score": 0.4168,
+      "per_class_recall": {
+        "esotropia": 0.9636,
+        "exotropia": 0.75,
+        "normal": 0.7317
+      },
+      "confusion_matrix_labels": [
+        "esotropia",
+        "exotropia",
+        "normal"
+      ],
+      "confusion_matrix": [
+        [
+          53,
+          1,
+          1
+        ],
+        [
+          7,
+          30,
+          3
+        ],
+        [
+          4,
+          7,
+          30
+        ]
+      ],
+      "binary_counts": {
+        "tp": 91,
+        "tn": 30,
+        "fp": 11,
+        "fn": 4
+      }
+    },
+    "v06_v1_baseline": {
+      "balanced_accuracy": 0.3576,
+      "macro_f1": 0.3007,
+      "coverage": 0.3309,
+      "eso_sensitivity": 0.7727,
+      "exo_sensitivity": 0.0,
+      "normal_specificity": 0.3,
+      "brier_score": 0.6652
+    },
+    "v06_v2_ensemble": {
+      "label": "v0.6_ensemble_v2",
+      "n_total": 136,
+      "n_covered": 105,
+      "n_uncertain": 31,
+      "coverage": 0.7721,
+      "balanced_accuracy": 0.9461,
+      "macro_f1": 0.9484,
+      "eso_sensitivity": 0.9787,
+      "exo_sensitivity": 0.8929,
+      "normal_specificity": 0.9667,
+      "binary_sensitivity": 0.9733,
+      "binary_specificity": 0.9667,
+      "brier_score": 0.4203,
+      "per_class_recall": {
+        "esotropia": 0.9787,
+        "exotropia": 0.8929,
+        "normal": 0.9667
+      },
+      "confusion_matrix_labels": [
+        "esotropia",
+        "exotropia",
+        "normal"
+      ],
+      "confusion_matrix": [
+        [
+          46,
+          0,
+          1
+        ],
+        [
+          2,
+          25,
+          1
+        ],
+        [
+          0,
+          1,
+          29
+        ]
+      ],
+      "binary_counts": {
+        "tp": 73,
+        "tn": 29,
+        "fp": 1,
+        "fn": 2
+      }
+    }
+  },
+  "tuning": {
+    "val_ratio": 0.2,
+    "n_tried": 125,
+    "best_params": {
+      "alpha": 0.25,
+      "conf_t": 0.4,
+      "margin_t": 0.03
+    },
+    "best_val_metrics": {
+      "label": "val",
+      "n_total": 27,
+      "n_covered": 13,
+      "n_uncertain": 14,
+      "coverage": 0.4815,
+      "balanced_accuracy": 0.7778,
+      "macro_f1": 0.7643,
+      "eso_sensitivity": 0.8333,
+      "exo_sensitivity": 0.5,
+      "normal_specificity": 1.0,
+      "binary_sensitivity": 0.9,
+      "binary_specificity": 1.0,
+      "brier_score": 0.5478,
+      "per_class_recall": {
+        "esotropia": 0.8333,
+        "exotropia": 0.5,
+        "normal": 1.0
+      },
+      "confusion_matrix_labels": [
+        "esotropia",
+        "exotropia",
+        "normal"
+      ],
+      "confusion_matrix": [
+        [
+          5,
+          0,
+          1
+        ],
+        [
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ],
+      "binary_counts": {
+        "tp": 9,
+        "tn": 3,
+        "fp": 0,
+        "fn": 1
+      }
+    }
+  },
+  "elapsed_seconds": 14.6,
+  "governance": [
+    "v0.5 NOT overwritten.",
+    "v0.2 original NOT overwritten.",
+    "v0.6 v1 NOT overwritten.",
+    "Eye-crop geometry extracted without full-face dependency.",
+    "Tuned strictly on validation split.",
+    "research_candidate - NOT clinical diagnosis."
+  ]
+}
