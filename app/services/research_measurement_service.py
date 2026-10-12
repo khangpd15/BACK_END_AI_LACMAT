@@ -910,6 +910,7 @@ def measure_research_request(req: ResearchMeasurementRequest) -> Dict[str, Any]:
     }
     if "aiPrediction" in result:
         response["aiPrediction"] = result["aiPrediction"]
+        response["versions"]["modelVersion"] = result["aiPrediction"].get("modelVersion")
     logger.info(
         "[ResearchMeasurement] requestId=%s sessionId=%s testType=%s status=%s result=%s latencyMs=%.3f quality=%s",
         request_id,

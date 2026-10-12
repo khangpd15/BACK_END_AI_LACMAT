@@ -1,0 +1,46 @@
+{
+  "complete": true,
+  "steps_per_branch": 300,
+  "branches": [
+    "control",
+    "color"
+  ],
+  "checkpoint_sha256": {
+    "control": "b275bd844a5ad0638898b1d7e38fa497029de8776964504229019e4a2db312d7",
+    "color": "7e3bda5bfdabbb83920b244b116bf5ee1bc8bd55d80910fc8e4da2d8a36fef79"
+  },
+  "comparison": {
+    "candidate_minus_control_mean_px": 0.003321705041541954,
+    "improved": 83,
+    "worsened": 96,
+    "initial": {
+      "visible": 179,
+      "mean_px": 1.9400545980829758,
+      "median_px": 1.4219664313852514,
+      "p95_px": 5.380338325082828,
+      "within_2px": 115,
+      "false_visible_on_hidden": 63
+    },
+    "control": {
+      "visible": 179,
+      "mean_px": 1.8678471754774668,
+      "median_px": 1.4242248919000597,
+      "p95_px": 4.530347484360903,
+      "within_2px": 113,
+      "false_visible_on_hidden": 63
+    },
+    "color": {
+      "visible": 179,
+      "mean_px": 1.8711688805190088,
+      "median_px": 1.448803338618696,
+      "p95_px": 4.5127153332496315,
+      "within_2px": 113,
+      "false_visible_on_hidden": 63
+    },
+    "warning": "TRAIN fit, no independent generalization estimate"
+  },
+  "protected_changed": [],
+  "runtime_changed": false,
+  "initial_output_preserved": true,
+  "checkpoint_reload": "PASS"
+}

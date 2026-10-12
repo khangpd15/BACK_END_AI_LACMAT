@@ -117,11 +117,8 @@ def _secondary_branch_error() -> Optional[str]:
 
 
 def hirschberg_runtime_status() -> Dict[str, Any]:
-    return {
-        "loaded": _BUNDLE is not None and _ONNX_SESS is not None,
-        "configuredModelId": (_BUNDLE or {}).get("model_id"),
-        "researchOnly": True,
-    }
+    from app.services.trained_hirschberg_service import trained_hirschberg_status
+    return trained_hirschberg_status()
 
 
 def estimate_iris_center_in_crop(image: np.ndarray) -> Tuple[float, float, float]:
@@ -337,6 +334,21 @@ def _features_for_bundle(crops: List[np.ndarray], onnx_sess: ort.InferenceSessio
 
 
 def predict_hirschberg(
+    image_bgr: np.ndarray,
+    landmarks: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
+    """Use the imported CNNs; client landmarks do not choose model geometry."""
+    from app.services.trained_hirschberg_service import predict_trained_hirschberg
+    try:
+        ok, encoded = cv2.imencode('.png', image_bgr)
+        if not ok:
+            return _unavailable_prediction('Cannot encode Hirschberg image', 'INVALID_IMAGE')
+        return predict_trained_hirschberg(encoded.tobytes())
+    except (RuntimeError, ValueError, OSError) as exc:
+        return _unavailable_prediction(str(exc))
+
+
+def predict_legacy_hirschberg(
     image_bgr: np.ndarray,
     landmarks: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:

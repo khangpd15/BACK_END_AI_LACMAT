@@ -23,6 +23,7 @@ from app.services.strabismus_inference_service import get_strabismus_inference_s
 from app.api.cover_test_session import router as cover_test_session_router
 from app.api.cover_test import router as cover_test_v1_router
 from app.api.research_measurement import router as research_measurement_router
+from app.api.hirschberg import router as hirschberg_router
 from app.config import get_allowed_origins
 from app.db.database import check_db_connection, init_db
 from app.services.keep_alive import (
@@ -31,7 +32,8 @@ from app.services.keep_alive import (
     stop_keep_alive,
 )
 from app.services.fps_model_service import get_fps_model_service
-from app.services.hirschberg_ai_service import _get_model_and_onnx, hirschberg_runtime_status
+from app.services.hirschberg_ai_service import hirschberg_runtime_status
+from app.services.trained_hirschberg_service import preload_trained_hirschberg
 
 # Configure structured audit logging
 logging.basicConfig(
@@ -78,7 +80,7 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error("Failed to preload strabismus ONNX model at startup: %s", e, exc_info=True)
 
-    await asyncio.to_thread(_get_model_and_onnx)
+    await asyncio.to_thread(preload_trained_hirschberg)
 
     # Start automated keep-alive self-ping and DB pool warming worker
     start_keep_alive()
@@ -176,6 +178,7 @@ app.include_router(cover_test_v1_router, prefix="/api/v1/cover-test")
 app.include_router(strabismus_router)
 # Research-only geometry measurement router
 app.include_router(research_measurement_router)
+app.include_router(hirschberg_router)
 
 
 @app.get(

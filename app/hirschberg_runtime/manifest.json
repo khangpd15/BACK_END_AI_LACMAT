@@ -1,0 +1,240 @@
+{
+  "source": "D:\\REMICARE_TRAIN_AI\\HIRSCHBERG_METHOD",
+  "modelId": "screening_eyelid_branch_20261011_v1",
+  "pupilVersion": "pupil_color_features_20261012_v1",
+  "researchOnly": true,
+  "files": [
+    {
+      "path": "research/hirschberg_localization/runs/screening_eyelid_branch_20261011_v1/candidate_final.pt",
+      "sha256": "b5460f997a87f185399bb0dcc6f498b377fa85f36667149226e4894ad618fe15",
+      "bytes": 95421087
+    },
+    {
+      "path": "research/hirschberg_localization/runs/screening_eyelid_branch_20261011_v1/completion.json",
+      "sha256": "b38f4f22b4511dc2c8c7ba7239daed9240280d96b13477e64d550ea72ee6e398",
+      "bytes": 1343
+    },
+    {
+      "path": "research/hirschberg_localization/runs/screening_verified_clear_directpupil_iris4_20261011_v1/config.json",
+      "sha256": "df0b95a2c9c3f35e1a9e22df1111f512a11a4298fc135cd04c5c0063c0226a0f",
+      "bytes": 1826
+    },
+    {
+      "path": "research/hirschberg_localization/runs/eyelid_reviewed_20261011_v1/candidate_final.pt",
+      "sha256": "54cb7856f6b91506266b2792354155ee0fd0e3ec566855c4a0b8f7b6a0488423",
+      "bytes": 489445
+    },
+    {
+      "path": "research/hirschberg_localization/runs/pupil_direct_center_20261011_v1/candidate_final.pt",
+      "sha256": "ff1c2f4fb132430989657d0a35ec443011cfa1e58b8ddf094cc49dd898e39c11",
+      "bytes": 486731
+    },
+    {
+      "path": "research/hirschberg_localization/runs/pupil_color_features_20261012_v1/control_final.pt",
+      "sha256": "b275bd844a5ad0638898b1d7e38fa497029de8776964504229019e4a2db312d7",
+      "bytes": 1460519
+    },
+    {
+      "path": "research/hirschberg_localization/runs/pupil_color_features_20261012_v1/completion.json",
+      "sha256": "4c4b985aa573fdb00ac76bb6a9f7c214e9d20b3ae94710bcb7a2fe71afbb3ae9",
+      "bytes": 1300
+    },
+    {
+      "path": "research/hirschberg_localization/runs/iris_four_reviewed_20261011_v1/iris_four_final.pt",
+      "sha256": "af713bb8b396a7be831b904206c96b12ca8258ada1c587edaead9f638fd8940c",
+      "bytes": 1482093
+    },
+    {
+      "path": "research/hirschberg_localization/runs/pupil_iris_reviewed_20261011_v1/pupil_final.pt",
+      "sha256": "131859fd8ea3efd8d4e5f4559c70fb5e9c2972d52ac904d213a97e245b0eaaa0",
+      "bytes": 484755
+    },
+    {
+      "path": "research/hirschberg_localization/runs/crop256_human_review_20261010_v1/final.pt",
+      "sha256": "cbcd29ef7065dfc28be3f09cca399395db2087bb1f87a51413719128748a4f44",
+      "bytes": 483103
+    },
+    {
+      "path": "research/hirschberg_localization/runs/eye_crop_192_v1/best.pt",
+      "sha256": "cc1e9558be005b809b0d5ee79644a56bfe6d8342d251e748d32230b6530d9941",
+      "bytes": 496513
+    },
+    {
+      "path": "frozen_rois.json",
+      "sha256": "a9b0b9be0a0d4e22620c1dfdbc96cd0e62496e2f1171ea8e627f132e524ce859",
+      "bytes": 196840
+    },
+    {
+      "path": "__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "research/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "research/hirschberg_localization/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "research/hirschberg_localization/automatic_upload.py",
+      "sha256": "e4102da4632f79bbb6ea6d37d47389a79e40f29e5d7d221423a7803d8d3187cc",
+      "bytes": 6023
+    },
+    {
+      "path": "research/hirschberg_localization/binocular_guard.py",
+      "sha256": "b0113859773ecdc9e55be65be4ec0871de9990f81d014cc28dd101f8d586a75f",
+      "bytes": 2810
+    },
+    {
+      "path": "research/hirschberg_localization/data.py",
+      "sha256": "0814cd9f7f08744964111de28f22fb70c2a3426b735195a85e5eee6120515211",
+      "bytes": 122
+    },
+    {
+      "path": "research/hirschberg_localization/direct_pupil_inference.py",
+      "sha256": "4f2e48bfa64728f6a568137f5759b42d1eefc2dd4da28995aee670441a8347ed",
+      "bytes": 2563
+    },
+    {
+      "path": "research/hirschberg_localization/eye_crops.py",
+      "sha256": "41b075e79fdd7c8922a1534166d786376cb33b93629f24ae0e0d7c2042453dbd",
+      "bytes": 1099
+    },
+    {
+      "path": "research/hirschberg_localization/eyelid_segmentation.py",
+      "sha256": "0549586a98c3f03aadb91149fc360869aad073e35009b90b7cb160e30ac73860",
+      "bytes": 2708
+    },
+    {
+      "path": "research/hirschberg_localization/iris_context.py",
+      "sha256": "2d0b652bb46a24ba98776d4e96836fec5a28ef977bca25c01113085a175c431c",
+      "bytes": 1217
+    },
+    {
+      "path": "research/hirschberg_localization/iris_four_points.py",
+      "sha256": "904e0e7db8e011d97bd2433e698038880d08378288f925a8b734aa5cd5e9795f",
+      "bytes": 2647
+    },
+    {
+      "path": "research/hirschberg_localization/iris_radius_qc.py",
+      "sha256": "41a8679e0cd010261a6370c3ad2c166f4dde8d4e0b01647aae8fa87d034be2e8",
+      "bytes": 692
+    },
+    {
+      "path": "research/hirschberg_localization/pupil_center_decoder.py",
+      "sha256": "20c6748f94690d11403f4fb5729231d7a3f370fc01b58f95dde7990fa2614263",
+      "bytes": 493
+    },
+    {
+      "path": "research/hirschberg_localization/pupil_iris_prior.py",
+      "sha256": "67bb5297e8997de1e3d318213d35f14ea927989782f2b49fc9ba53f876ac0834",
+      "bytes": 1460
+    },
+    {
+      "path": "research/hirschberg_localization/reflex_roi_qc.py",
+      "sha256": "f3d7a7df8f1d93c0e44f987fd853f4775049a994bfc180861e6f470d0057795e",
+      "bytes": 6407
+    },
+    {
+      "path": "research/hirschberg_localization/resnet_reference.py",
+      "sha256": "319f2a16024ad4e617480f5c5538ef64861804ab889356436d41237b5d61161b",
+      "bytes": 3498
+    },
+    {
+      "path": "research/hirschberg_localization/screening_eyelid_branch.py",
+      "sha256": "54f30c2112f7fe711bfc43589e686460e2a1253e898cc420ef19cd05ee4b67aa",
+      "bytes": 4922
+    },
+    {
+      "path": "research/hirschberg_localization/screening_fusion.py",
+      "sha256": "c84c56438429f6347eeaa55964386b5e143a747f5c27c873170288cf692e0553",
+      "bytes": 3283
+    },
+    {
+      "path": "scripts/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "scripts/export_hirschberg_review163_steps.py",
+      "sha256": "4802c0eba2cd702e28c177407a0ec3dd401f288f4288af2f3290b31198e2ff97",
+      "bytes": 2334
+    },
+    {
+      "path": "scripts/hirschberg_all_image_review.py",
+      "sha256": "dc17ea3372fb9bb223bfbb94054afc36b2e931cbbd13a7527086ba7c00d253fb",
+      "bytes": 1608
+    },
+    {
+      "path": "scripts/hirschberg_crop256_review_pilot.py",
+      "sha256": "9a8afd582984b121165726de108ee98028309a751dfc7d44ea89539713232b9e",
+      "bytes": 566
+    },
+    {
+      "path": "scripts/hirschberg_engine.py",
+      "sha256": "7f42d08b4d40355f5952a3f66cb71e10dee000c97f31d4585cab0d033c309fcc",
+      "bytes": 20396
+    },
+    {
+      "path": "scripts/hirschberg_eye_localizer.py",
+      "sha256": "038ce828899f8bb4fae50e03474f6a252a7052f6ce1a666210ac2d47b65cb3b6",
+      "bytes": 1363
+    },
+    {
+      "path": "scripts/hirschberg_iris_geometry_pilot.py",
+      "sha256": "a8eee15a44c7ab37772f86b6817e52bf04e6b7694b274fd1e08e97550683883c",
+      "bytes": 2059
+    },
+    {
+      "path": "scripts/hirschberg_iris_geometry_stable_pilot.py",
+      "sha256": "6e90a9971b4bc3457f8e97ff73f7e01a8963b4cabecafa118811a034847238b3",
+      "bytes": 544
+    },
+    {
+      "path": "scripts/hirschberg_localizer.py",
+      "sha256": "8a3ee307429535a9533b48f9340138966b347de7f2b18414d5f3682304146ff3",
+      "bytes": 2348
+    },
+    {
+      "path": "scripts/hirschberg_review100_finetune.py",
+      "sha256": "6ae8ac3aac7293c7e22917f5ad9ce505651e3030192fbe98829e70f8fe93096c",
+      "bytes": 221
+    },
+    {
+      "path": "scripts/hirschberg_reviewed_incremental_train.py",
+      "sha256": "517fd71641a4e2327e3c5c75ca87ea3e21afd3ad5522eda07dff57265f7a92e9",
+      "bytes": 431
+    }
+  ],
+  "modules": [
+    "research/hirschberg_localization/automatic_upload.py",
+    "research/hirschberg_localization/binocular_guard.py",
+    "research/hirschberg_localization/data.py",
+    "research/hirschberg_localization/direct_pupil_inference.py",
+    "research/hirschberg_localization/eye_crops.py",
+    "research/hirschberg_localization/eyelid_segmentation.py",
+    "research/hirschberg_localization/iris_context.py",
+    "research/hirschberg_localization/iris_four_points.py",
+    "research/hirschberg_localization/iris_radius_qc.py",
+    "research/hirschberg_localization/pupil_center_decoder.py",
+    "research/hirschberg_localization/pupil_iris_prior.py",
+    "research/hirschberg_localization/reflex_roi_qc.py",
+    "research/hirschberg_localization/resnet_reference.py",
+    "research/hirschberg_localization/screening_eyelid_branch.py",
+    "research/hirschberg_localization/screening_fusion.py",
+    "scripts/export_hirschberg_review163_steps.py",
+    "scripts/hirschberg_all_image_review.py",
+    "scripts/hirschberg_crop256_review_pilot.py",
+    "scripts/hirschberg_engine.py",
+    "scripts/hirschberg_eye_localizer.py",
+    "scripts/hirschberg_iris_geometry_pilot.py",
+    "scripts/hirschberg_iris_geometry_stable_pilot.py",
+    "scripts/hirschberg_localizer.py",
+    "scripts/hirschberg_review100_finetune.py",
+    "scripts/hirschberg_reviewed_incremental_train.py"
+  ]
+}

@@ -18,3 +18,4 @@ mediapipe==0.10.14
 python-dotenv==1.2.4
 onnxruntime==1.30.0
 pillow==12.3.0
+torch==2.7.1

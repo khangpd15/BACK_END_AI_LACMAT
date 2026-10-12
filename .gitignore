@@ -40,3 +40,11 @@ data/models/*.pkl
 
 # PyTorch checkpoints (only ONNX used in production)
 app/models/*.pt
+
+# Local copies organized by research method (original tracked assets unchanged)
+ai/*/datasets/
+ai/*/models/
+ai/*/processed/
+ai/*/source_snapshot/
+ai/*/docs/
+ai/*/reports/

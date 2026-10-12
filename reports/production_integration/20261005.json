@@ -1,0 +1,75 @@
+{
+  "health": {
+    "status": "ok",
+    "service": "remicare-strabismus-ai",
+    "version": "0.1.0",
+    "model": {
+      "name": "remicare-fps-10-15",
+      "version": "10-15fps-v1.1.0",
+      "featureCount": 14,
+      "loaded": false,
+      "source": "fps_10_15_model"
+    },
+    "models": {
+      "coverTest": {
+        "name": "remicare-fps-10-15",
+        "version": "10-15fps-v1.1.0",
+        "featureCount": 14,
+        "loaded": false,
+        "source": "fps_10_15_model"
+      },
+      "hirschberg": {
+        "loaded": true,
+        "configuredModelId": "hirschberg-candidate-v0.6-ensemble-v2",
+        "researchOnly": true
+      }
+    },
+    "deploymentCommit": "75a9dd259c020d311a388de2b485cadab9e49f88",
+    "keepAlive": {
+      "enabled": true,
+      "isRunning": true,
+      "intervalSeconds": 600,
+      "targetUrl": "https://remicare-strabismus-ai.onrender.com",
+      "uptimeSeconds": 166.6,
+      "httpPings": {
+        "total": 1,
+        "successful": 1,
+        "failed": 0,
+        "lastAt": "2026-10-04T18:56:29.868393+00:00",
+        "lastStatusCode": 200,
+        "lastLatencyMs": 1215.96,
+        "lastError": null
+      },
+      "databasePings": {
+        "total": 1,
+        "successful": 1,
+        "failed": 0,
+        "lastAt": "2026-10-04T18:56:31.084765+00:00",
+        "lastStatus": "healthy",
+        "lastLatencyMs": 16.5,
+        "lastError": null
+      }
+    }
+  },
+  "cors": "PASS",
+  "ping_during_hirschberg_ms": 250.0,
+  "hirschberg": {
+    "http_status": 200,
+    "round_trip_ms": 1250.0,
+    "model_id": "hirschberg-candidate-v0.5-safe",
+    "status": "PREDICTED"
+  },
+  "cover_test": {
+    "http_status": 201,
+    "saved": true,
+    "cycles": 3,
+    "synthetic_session_id": "259cc438-cdad-4b9a-965f-6ec46b32ecfd",
+    "reason": "MODEL_NOT_LOADED",
+    "round_trip_ms": 2360.0
+  },
+  "frontend": {
+    "status": "PASS",
+    "asset": "/assets/index-CzrKnMC8.js",
+    "backend_url_present": true
+  }
+}
