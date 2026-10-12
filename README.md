@@ -48,6 +48,27 @@ Copy-Item .env.example .env
 Swagger: `http://127.0.0.1:8000/docs`.
 Không ghi đè `.env` nếu đã có cấu hình local.
 
+## Deploy trên Render
+
+Repository có `render.yaml` cho Render Blueprint. Với Web Service đã tạo thủ công,
+cập nhật trực tiếp trong Render Dashboard (file YAML không tự cập nhật service này):
+
+- **Root Directory:** thư mục gốc repository (để trống).
+- **Build Command:** `python -m pip install -r requirements.txt`
+- **Start Command:** `python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1`
+- **Health Check Path:** `/ping`
+
+Sau đó deploy commit mới. Render cấp biến `PORT`; không dùng lệnh local có
+`--host 127.0.0.1` hoặc `--reload` trên Render. Nếu cần tải model ngoài repository,
+chạy `scripts/download_model.py` trong build, tránh đặt trước Uvicorn trong start.
+Giữ các biến database, Supabase và CORS trong Environment của service.
+
+Hirschberg CNN được nạp ở nền để không trì hoãn mở cổng HTTP. `/ping` xác nhận
+server đang chạy; kiểm tra `/api/v1/hirschberg/health` có `loaded: true` trước khi
+gửi inference. Request inference đến trong lúc warmup có thể phải chờ nạp xong.
+Nếu vẫn timeout, kiểm tra log trước dòng lỗi: `Application startup complete`,
+`Uvicorn running on http://0.0.0.0:...`, traceback hoặc tiến trình bị kill do thiếu RAM.
+
 ## API đang đăng ký
 
 | API | Chức năng |

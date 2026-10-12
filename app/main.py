@@ -5,6 +5,7 @@ health check endpoint, and API router registration.
 """
 
 import asyncio
+from contextlib import suppress
 from contextlib import asynccontextmanager
 import logging
 import math
@@ -80,16 +81,31 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error("Failed to preload strabismus ONNX model at startup: %s", e, exc_info=True)
 
-    await asyncio.to_thread(preload_trained_hirschberg)
+    # Uvicorn binds its HTTP socket only after lifespan reaches yield. The CNN
+    # bundle can take minutes to verify/load on a small Render instance.
+    # Its service lock already serializes warmup with incoming predictions.
+    async def warm_hirschberg():
+        logger.info("Loading Hirschberg CNN in background...")
+        try:
+            await asyncio.to_thread(preload_trained_hirschberg)
+            logger.info("Hirschberg warmup finished; inspect /api/v1/hirschberg/health for readiness.")
+        except Exception:
+            logger.exception("Hirschberg background warmup failed")
+
+    hirschberg_warmup = asyncio.create_task(warm_hirschberg(), name="hirschberg-warmup")
 
     # Start automated keep-alive self-ping and DB pool warming worker
     start_keep_alive()
 
-    yield
-
-    # Clean graceful shutdown
-    logger.info("Shutting down RemiCare Strabismus AI Backend...")
-    await stop_keep_alive()
+    try:
+        yield
+    finally:
+        # Cancelling the await does not interrupt an in-progress loader thread.
+        hirschberg_warmup.cancel()
+        with suppress(asyncio.CancelledError):
+            await hirschberg_warmup
+        logger.info("Shutting down RemiCare Strabismus AI Backend...")
+        await stop_keep_alive()
 
 
 # Initialize FastAPI application
