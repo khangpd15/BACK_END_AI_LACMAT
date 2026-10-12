@@ -1,5 +1,11 @@
 # Cleanup Delete Candidates
 
+> Historical cleanup report. Its endpoint/model inventory describes an older
+> version of the project; it is not a current deletion plan. See
+> [Backend structure](BACKEND_STRUCTURE.md) and the root README for the current
+> runtime, including Hirschberg and ONNX. Tests, offline research and datasets
+> must not be deleted merely because they are outside the API execution path.
+
 ## Mục tiêu
 
 Project chỉ giữ chức năng:

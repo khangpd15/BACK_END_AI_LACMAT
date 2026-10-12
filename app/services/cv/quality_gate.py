@@ -280,4 +280,4 @@ class AdvancedQualityGate:
         )
 
 
-from cv.quality_gate import evaluate_quality  # re-export for root cv
+from app.services.cv.bilateral_quality_gate import evaluate_quality

@@ -27,7 +27,7 @@ except ImportError:
     ort = None
 
 from app.config import PROJECT_ROOT
-from cv.quality_gate import evaluate_quality
+from app.services.cv.bilateral_quality_gate import evaluate_quality
 
 logger = logging.getLogger("remicare.ai.strabismus")
 

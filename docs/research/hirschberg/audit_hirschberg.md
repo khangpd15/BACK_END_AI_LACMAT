@@ -12,7 +12,7 @@ Current image inference is not a Hirschberg-specific 3-class production API. `ap
 
 Existing Hirschberg-related code exists:
 
-- `filter_harschberg.py`: filters/copies Hirschberg crops into `harschberg_data_detect/`, detects corneal reflexes, records `report.csv`, and contains heuristic displacement thresholds. It prioritizes source labels from folder/file names when present; heuristic labels are used only when source labels are unknown.
+- `scripts/filter_harschberg.py`: filters/copies Hirschberg crops into `harschberg_data_detect/`, detects corneal reflexes, records `report.csv`, and contains heuristic displacement thresholds. It prioritizes source labels from folder/file names when present; heuristic labels are used only when source labels are unknown.
 - `app/services/research_measurement_service.py`: research-only Hirschberg geometry measurement, including iris/pupil/reflex helper functions.
 - `app/services/hirschberg_ai_service.py`: loads a research candidate `hirschberg_candidate_v0.1.joblib` and `best_model.onnx`, extracts 73 features from crops, returns 3-class probabilities.
 - `scripts/hirschberg_folder_manifest.py`, `scripts/benchmark_hirschberg_detectors.py`, `scripts/train_hirschberg_research_model.py`: prior exploratory manifest, detector benchmark, and sklearn training scripts.
@@ -67,7 +67,7 @@ Bias risk: all trainable images are square 224x224 ocular crops, not full face/p
 Labels:
 
 - Current accepted labels come from folder/file-name source labels (`esotropia`, `exotropia`, `normal`), not from a separate clinical CSV/JSON manifest in this folder.
-- `filter_harschberg.py` records both `source_label` and `heuristic_label`.
+- `scripts/filter_harschberg.py` records both `source_label` and `heuristic_label`.
 - In `report.csv`, accepted source labels vs heuristic labels disagree often:
   - esotropia source: 24 heuristic esotropia, 18 heuristic exotropia, 13 heuristic normal.
   - exotropia source: 25 heuristic exotropia, 3 heuristic esotropia, 12 heuristic normal.

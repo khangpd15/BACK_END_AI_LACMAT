@@ -41,10 +41,16 @@ data/models/*.pkl
 # PyTorch checkpoints (only ONNX used in production)
 app/models/*.pt
 
-# Local copies organized by research method (original tracked assets unchanged)
-ai/*/datasets/
-ai/*/models/
-ai/*/processed/
-ai/*/source_snapshot/
-ai/*/docs/
-ai/*/reports/
+# Retired duplicate workspaces; use canonical research/data/model paths instead.
+ai/
+
+# Training datasets belong to the separate training projects.
+/datasets/
+/dataset_by_pedseye_manifest/
+/harschberg_data_detect/
+/processed/
+/data/*
+!/data/README.md
+!/data/cover_test/
+/data/cover_test/sessions/*
+!/data/cover_test/sessions/.gitkeep

@@ -70,7 +70,7 @@ Không dùng dung lượng file để suy ra độ chính xác. Số bytes trong
 
 Hai thư mục có 203 file accepted/Pedseye; không coi là 203 bệnh nhân độc lập. So sánh SHA-256 không tìm thấy cặp file giống byte trong 203 file này; kiểm tra dHash vẫn phát hiện ảnh gần giống. Bằng chứng: `evidence.json: image_summary, duplicate_screen`.
 
-`report.csv` bộ lọc có 502 ảnh nguồn: 171 eso, 189 exo, 142 normal. PASS 136/502 = 27,09%; REJECT 366/502 = 72,91%. Thư mục debug thêm 20 ảnh, nên tổng 522 file JPG không phải 522 ảnh train. 500/502 ảnh dùng crop heuristic, chỉ 2 ảnh dùng FaceMesh. **PASS của bộ lọc không có nghĩa ảnh đạt chuẩn lâm sàng.** Bằng chứng: `evidence.json: filter_report`; [filter_harschberg.py](D:/REMICARE-STRABISMUS-AI/filter_harschberg.py:539).
+`report.csv` bộ lọc có 502 ảnh nguồn: 171 eso, 189 exo, 142 normal. PASS 136/502 = 27,09%; REJECT 366/502 = 72,91%. Thư mục debug thêm 20 ảnh, nên tổng 522 file JPG không phải 522 ảnh train. 500/502 ảnh dùng crop heuristic, chỉ 2 ảnh dùng FaceMesh. **PASS của bộ lọc không có nghĩa ảnh đạt chuẩn lâm sàng.** Bằng chứng: `evidence.json: filter_report`; [filter_harschberg.py](D:/REMICARE-STRABISMUS-AI/scripts/filter_harschberg.py:539).
 
 Detector nghiên cứu cũ coi 73/136 ảnh usable = 53,68%, tức các detector có tiêu chí không thống nhất. Pedseye có 65/67 ảnh báo phản xạ cả hai mắt nhưng chỉ 15/67 tìm được đồng tử cả hai mắt; manifest gắn blur cho 56/67. Bằng chứng: [geometry report](D:/REMICARE-STRABISMUS-AI/reports/hirschberg_geometry_research_results.json), `evidence.json: manifest`.
 
