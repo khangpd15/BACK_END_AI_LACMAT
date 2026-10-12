@@ -159,7 +159,7 @@ def test_hirschberg_measures_reflexes_but_remains_measurement_only():
     assert result["result"] == "MEASUREMENT_ONLY"
     assert result["measurements"]["eyes"]["OD"]["reflex_count"] == 1
     assert result["measurements"]["eyes"]["OS"]["reflex_count"] == 1
-    assert result["versions"]["modelVersion"] is None
+    assert result["versions"]["modelVersion"] == "screening_eyelid_branch_20261011_v1"
 
 
 def test_hirschberg_allows_missing_age_when_consent_is_present():
@@ -438,17 +438,15 @@ def test_hirschberg_includes_ai_prediction():
     assert "aiPrediction" in result
     assert "aiPrediction" in result["measurements"]
     ai = result["aiPrediction"]
-    assert ai["status"] in {"PREDICTED", "INCONCLUSIVE"}
+    assert ai["status"] in {"HUMAN_REVIEW", "INCONCLUSIVE"}
     assert ai["predictedClass"] in {"NORMAL", "ESOTROPIA", "EXOTROPIA", "INCONCLUSIVE"}
-    assert 0.0 <= ai["confidence"] <= 1.0
+    assert ai["confidence"] is None or 0.0 <= ai["confidence"] <= 1.0
     assert "probabilities" in ai
     assert "modelId" in ai
-    assert ai["modelId"] in {"hirschberg-candidate-v0.6-ensemble-v2", "hirschberg-candidate-v0.5-safe"}
-    assert ai["featureContract"] in {
-        "ensemble_v0.6_v2_eyecrop_geometry_effnet_onnx_pair",
-        "hirschberg_pair_features_v0.5",
-    }
-    assert "decisionPolicy" in ai
+    assert ai["modelId"] == "screening_eyelid_branch_20261011_v1"
+    assert ai["featureContract"] == "resnet50_hirschberg_geometry_eyelid_v1"
+    assert ai["probabilities"] is None
+    assert result["versions"]["modelVersion"] == ai["modelVersion"]
 
 
 def test_hirschberg_without_landmarks_runs_ai_fallback():
@@ -472,5 +470,5 @@ def test_hirschberg_without_landmarks_runs_ai_fallback():
     assert result["result"] == "MEASUREMENT_ONLY"
     assert "CLIENT_LANDMARKS_NOT_PROVIDED_AI_INFERRED" in result["reasonCodes"]
     assert "aiPrediction" in result
-    assert result["aiPrediction"]["status"] in {"PREDICTED", "INCONCLUSIVE"}
+    assert result["aiPrediction"]["status"] in {"HUMAN_REVIEW", "INCONCLUSIVE"}
     assert result["aiPrediction"]["predictedClass"] in {"NORMAL", "ESOTROPIA", "EXOTROPIA", "INCONCLUSIVE"}

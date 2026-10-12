@@ -1,0 +1,47 @@
+{
+  "classes": [
+    "normal",
+    "esotropia",
+    "exotropia"
+  ],
+  "feature_names": [
+    "left_dx_R",
+    "left_dy_R",
+    "right_dx_R",
+    "right_dy_R",
+    "common_dx_R",
+    "common_dy_R",
+    "difference_dx_R",
+    "difference_dy_R",
+    "radius_min_over_max",
+    "left_valid",
+    "right_valid"
+  ],
+  "seed": 31415,
+  "epochs": 20,
+  "batch_size": 4,
+  "lr_layer4": 0.0001,
+  "lr_heads": 0.001,
+  "loss": "weighted_cross_entropy",
+  "trainable": "ResNet50 layer4 + biometry/fusion heads; frozen BN statistics",
+  "input": "two label-independent detector/CNN-seeded eye ROIs letterboxed224x112 vertically into224x224",
+  "augmentation": "brightness/contrast +-10%; no geometry changes",
+  "counts": {
+    "normal": 54,
+    "esotropia": 39,
+    "exotropia": 19
+  },
+  "split": "all selected unique images TRAIN; subject overlap unresolved",
+  "independent_evaluation": false,
+  "checkpoint_selection": "final20 only; no tuning/best epoch",
+  "geometry_source": "direct-center approved pupil + predicted four-extrema iris + unchanged crop256 reflex; no GT coordinates",
+  "label_provenance": "doctor verification reported by owner on 2026-10-11; source folder labels authoritative",
+  "visibility_warning": "pupil visibility head unreliable; numeric validity is insufficient QC",
+  "localizer_checkpoint_sha256": "ff1c2f4fb132430989657d0a35ec443011cfa1e58b8ddf094cc49dd898e39c11",
+  "iris_checkpoint_sha256": "af713bb8b396a7be831b904206c96b12ca8258ada1c587edaead9f638fd8940c",
+  "reflex_checkpoint_sha256": "cbcd29ef7065dfc28be3f09cca399395db2087bb1f87a51413719128748a4f44",
+  "weights_sha256": "0676ba61b6795bbe1773cffd859882e5e297624d384b6993f7c9e683e722fb8a",
+  "calibrated_probabilities": false,
+  "pseudostrabismus_supported": false,
+  "runtime_promoted": false
+}

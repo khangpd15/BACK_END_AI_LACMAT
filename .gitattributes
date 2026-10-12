@@ -1,0 +1,2 @@
+# Preserve exact bytes of the hash-verified Hirschberg runtime on every platform.
+app/hirschberg_runtime/** -text whitespace=cr-at-eol

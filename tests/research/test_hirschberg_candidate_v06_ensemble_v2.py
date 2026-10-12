@@ -35,7 +35,7 @@ def test_candidate_v06_v2_artifact_contract():
 
 
 def test_predict_hirschberg_production_service():
-    from app.services.hirschberg_ai_service import predict_hirschberg, DEFAULT_MODEL_PATH
+    from app.services.hirschberg_ai_service import predict_legacy_hirschberg as predict_hirschberg, DEFAULT_MODEL_PATH
     import cv2
     assert str(DEFAULT_MODEL_PATH).endswith("hirschberg_candidate_v0.6_ensemble_v2.joblib")
 

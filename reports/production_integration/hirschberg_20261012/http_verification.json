@@ -1,0 +1,64 @@
+{
+  "health": {
+    "loaded": true,
+    "configuredModelId": "screening_eyelid_branch_20261011_v1",
+    "researchOnly": true,
+    "error": null,
+    "model": {
+      "classifier_name": "ResNet50 + Hirschberg + pupil\u2013khe mi",
+      "version": "screening_eyelid_branch_20261011_v1",
+      "classifier_sha256": "b5460f997a87f185399bb0dcc6f498b377fa85f36667149226e4894ad618fe15",
+      "localizers": {
+        "pupil_direct_center.pt": "b275bd844a5ad0638898b1d7e38fa497029de8776964504229019e4a2db312d7",
+        "reflex_crop256.pt": "cbcd29ef7065dfc28be3f09cca399395db2087bb1f87a51413719128748a4f44",
+        "iris_four.pt": "af713bb8b396a7be831b904206c96b12ca8258ada1c587edaead9f638fd8940c",
+        "eyelid_UNet.pt": "54cb7856f6b91506266b2792354155ee0fd0e3ec566855c4a0b8f7b6a0488423",
+        "roi_seed192.pt": "cc1e9558be005b809b0d5ee79644a56bfe6d8342d251e748d32230b6530d9941"
+      },
+      "pupil_version": "pupil_color_features_20261012_v1",
+      "pupil_checkpoint": "research\\hirschberg_localization\\runs\\pupil_color_features_20261012_v1\\control_final.pt",
+      "pupil_branch": "control",
+      "pupil_train_mean_px": 1.8678471754774668,
+      "classifier_training_pupil_sha256": "ff1c2f4fb132430989657d0a35ec443011cfa1e58b8ddf094cc49dd898e39c11",
+      "updated_pupil_classifier_pair_independently_evaluated": false,
+      "independent_evaluation": false,
+      "calibrated_probabilities": false
+    }
+  },
+  "cases": [
+    {
+      "source_sha256": "9e5884b3b82ac5baea56aa446c71a2c7cc89bf90eee5ff2d5d1b270328e77597",
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "pupil_max_coordinate_difference_px": {
+        "image_left": 0.00030291080474853516,
+        "image_right": 0.000972747802734375
+      },
+      "latencyMs": 884.86,
+      "modelId": "screening_eyelid_branch_20261011_v1"
+    },
+    {
+      "source_sha256": "d4e978ba6a4037988863e70b26b6a31e98f3848a991f37b07d8c3a49b9eefb24",
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "pupil_max_coordinate_difference_px": {
+        "image_left": 0.0013818442821502686,
+        "image_right": 0.0004578828811645508
+      },
+      "latencyMs": 470.945,
+      "modelId": "screening_eyelid_branch_20261011_v1"
+    },
+    {
+      "source_sha256": "ecac459b60659522adaa079d78f25b0cf00d893ca7de5afce48cbf08e7d0447b",
+      "status": "INCONCLUSIVE",
+      "reason": "fixation_not_confirmed",
+      "pupil_max_coordinate_difference_px": {
+        "image_left": 0.0001451267914944765,
+        "image_right": 9.083747863769531e-05
+      },
+      "latencyMs": 840.137,
+      "modelId": "screening_eyelid_branch_20261011_v1"
+    }
+  ],
+  "passed": true
+}

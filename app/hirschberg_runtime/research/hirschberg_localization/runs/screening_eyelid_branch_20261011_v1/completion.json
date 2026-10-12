@@ -1,0 +1,69 @@
+{
+  "complete": true,
+  "metrics": {
+    "control": {
+      "role": "TRAIN FIT ONLY",
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "confusion": [
+        [
+          54,
+          0,
+          0
+        ],
+        [
+          0,
+          39,
+          0
+        ],
+        [
+          0,
+          0,
+          19
+        ]
+      ],
+      "NLL": 2.300117557751946e-05
+    },
+    "candidate": {
+      "role": "TRAIN FIT ONLY",
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "confusion": [
+        [
+          54,
+          0,
+          0
+        ],
+        [
+          0,
+          39,
+          0
+        ],
+        [
+          0,
+          0,
+          19
+        ]
+      ],
+      "NLL": 9.600212797522545e-05
+    },
+    "class_disagreement_images": 0
+  },
+  "coverage": {
+    "valid_eyes": 218,
+    "complete_images": 107,
+    "missing_nonfinite_or_truncated_opening": 6
+  },
+  "checkpoint_sha256": "b5460f997a87f185399bb0dcc6f498b377fa85f36667149226e4894ad618fe15",
+  "initial_logits_match": "PASS",
+  "reload": "PASS",
+  "protected_files": 9677,
+  "protected_changed": [],
+  "runtime_integrated": false,
+  "tests": {
+    "feature_and_segmentation": "6 PASS",
+    "help": "PASS",
+    "initial_logits_exact_match": "PASS",
+    "checkpoint_reload": "PASS"
+  }
+}
