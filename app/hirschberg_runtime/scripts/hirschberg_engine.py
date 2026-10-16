@@ -3,6 +3,7 @@ import hashlib
 import io
 import json
 import math
+import os
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -14,16 +15,15 @@ from app.hirschberg_runtime.research.hirschberg_localization.eyelid_segmentation
 from app.hirschberg_runtime.scripts.hirschberg_crop256_review_pilot import padded_box
 from app.hirschberg_runtime.scripts.export_hirschberg_review163_steps import decode
 from app.hirschberg_runtime.scripts.hirschberg_iris_geometry_stable_pilot import stable_model
-from app.hirschberg_runtime.scripts.hirschberg_iris_geometry_pilot import tight_box
 from app.hirschberg_runtime.research.hirschberg_localization.iris_four_points import four_point_model
 from app.hirschberg_runtime.research.hirschberg_localization.iris_context import predict_with_context
 from app.hirschberg_runtime.research.hirschberg_localization.pupil_iris_prior import make_model
 from app.hirschberg_runtime.research.hirschberg_localization.direct_pupil_inference import predict as predict_direct_pupil
 from app.hirschberg_runtime.scripts.hirschberg_localizer import network
-from app.hirschberg_runtime.scripts.hirschberg_eye_localizer import predict_eyes
 from app.hirschberg_runtime.research.hirschberg_localization.automatic_upload import capture_assessment, mirror_preview, paired_eye_rois
 from app.hirschberg_runtime.research.hirschberg_localization.iris_radius_qc import compare_diameters
 from app.hirschberg_runtime.research.hirschberg_localization.binocular_guard import compare_eyes, capture_guard
+from app.hirschberg_runtime.research.hirschberg_localization.input_contract import validate_input, human_review_only
 from app.hirschberg_runtime.research.hirschberg_localization.reflex_roi_qc import diagnose as reflex_diagnose, guarded_infer, CONFIG as REFLEX_QC_CONFIG
 CLASS_RUN = ROOT / 'research/hirschberg_localization/runs/screening_eyelid_branch_20261011_v1'
 GEOMETRY_RUN = ROOT / 'research/hirschberg_localization/runs/screening_verified_clear_directpupil_iris4_20261011_v1'
@@ -37,12 +37,15 @@ PUPIL_BASE = ROOT / 'research/hirschberg_localization/runs/pupil_iris_reviewed_2
 LOCAL_RUN = ROOT / 'research/hirschberg_localization/runs/crop256_human_review_20261010_v1'
 
 def screen_with_guards(classifier, record, orientation, fixation):
+    contract = record.get('input_contract')
+    if contract is not None and (not contract['eligible']):
+        return {'status': 'INCONCLUSIVE', 'reason': 'invalid_input_contract', 'input_reasons': contract['reasons'], 'class_proposal': None, 'clinical_diagnosis': None, 'classifier_called': False, 'requires_human_review': True}
 
     def checked_classifier(*unused):
         captured = capture_guard({'status': 'READY'}, record['binocular_comparison'], fixation)
         if captured['status'] == 'INCONCLUSIVE':
             return {**captured, 'classifier_called': False}
-        return classifier()
+        return human_review_only(classifier())
     return guarded_infer(None, record, orientation, checked_classifier)
 
 class Engine:
@@ -50,7 +53,7 @@ class Engine:
     def __init__(self):
         import torch
         self.torch = torch
-        torch.set_num_threads(4)
+        torch.set_num_threads(max(1, min(4, int(os.getenv('HIRSCHBERG_CPU_THREADS', '1')))))
         self.device = 'cpu'
         completion = json.loads((CLASS_RUN / 'completion.json').read_text())
         self.classifier_sha256 = digest(CLASS_RUN / 'candidate_final.pt')
@@ -104,7 +107,7 @@ class Engine:
         result['classifier_called'] = result['status'] != 'INCONCLUSIVE'
         return result
 
-    def process(self, raw, name, orientation='auto', kind='auto', fixation='unknown'):
+    def process(self, raw, name, orientation='auto', kind='auto', fixation='unknown', fixation_source='api_request_capture_metadata'):
         from PIL import Image, ImageDraw
         automatic = kind == 'auto'
         if orientation not in ('auto', 'unmirrored', 'mirrored') or kind not in ('auto', 'fullface', 'bilateral'):
@@ -135,9 +138,7 @@ class Engine:
             count = len(result.multi_face_landmarks or [])
             record['detected_faces'] = count
             assessment = capture_assessment(image, result.multi_face_landmarks or [], [])
-            if automatic and count == 0 and (image.width / image.height >= 1.4):
-                kind = 'bilateral'
-            elif automatic and count == 1:
+            if automatic and count == 1:
                 kind = 'fullface'
             if count == 1:
                 eyes = mesh_eyes(result.multi_face_landmarks[0].landmark, image.width, image.height)
@@ -155,25 +156,21 @@ class Engine:
                     iris_boxes = dict(fallback)
                     kind = 'bilateral_detected'
                     assessment.update(input_type='bilateral_detected', eye_count=2, eye_detection=detector_info)
-                elif kind != 'bilateral':
+                else:
                     reason = 'Chưa tìm được khuôn mặt hoặc cặp hai mắt hợp lệ. Không tạo tọa độ giả.'
             else:
                 reason = 'Không xác định được đúng một khuôn mặt. Hãy dùng ảnh có một người, hai mắt nhìn rõ.'
         if kind == 'bilateral':
-            seed = predict_eyes(self.seed, image, 'unmirrored', 192, self.torch, self.device)
-            mid = image.width // 2
-            for side, eye in (('image_left', 'od'), ('image_right', 'os')):
-                box = [0, 0, mid, image.height] if side == 'image_left' else [mid, 0, image.width, image.height]
-                boxes[side] = box
-                p = seed[eye + '_pupil']
-                iris_boxes[side] = tight_box(box, p['peak_xy'] if p['in_image'] else None, image.width, image.height)
+            boxes, detector_info = paired_eye_rois(image)
+            iris_boxes = dict(boxes)
+            record['eye_roi_fallback'] = detector_info
+            if not boxes:
+                reason = 'Không xác định được cặp hai mắt. Cần review hoặc chụp lại.'
         record['automatic_capture'] = assessment or capture_assessment(image, [], [])
         record['input_kind'] = kind
-        if automatic:
-            record['orientation'] = 'unknown'
-            record['fixation_confirmation'] = 'unknown'
-            orientation = 'unmirrored'
-            fixation = 'unknown'
+        if orientation == 'auto':
+            orientation = 'unknown'
+        record['orientation'] = orientation
         frozen = self.frozen_rois.get(record['source_sha256'])
         if frozen:
             boxes = {side: e['bbox'] for side, e in frozen.items()}
@@ -185,6 +182,10 @@ class Engine:
         else:
             boxes = {side: padded_box(iris_boxes.get(side) or boxes.get(side), image.width, image.height) for side in ('image_left', 'image_right')}
             record['roi_source'] = 'paired_eye_cascade_plus10percent_padding' if kind == 'bilateral_detected' else 'online_detector_CNN_ROI_plus10percent_padding'
+        if record.get('detected_faces', 0) > 1 or exif_orientation != 1:
+            boxes = {}
+            iris_boxes = {}
+            contours = {}
         for row, side in enumerate(('image_left', 'image_right')):
             box = boxes.get(side)
             eye, maps = decode(self.pr, image, box, side, self.torch, self.device, size=256)
@@ -232,18 +233,26 @@ class Engine:
                 qc['eligible_for_score'] = False
                 qc['status'] = 'Invalid Landmark / Low Confidence'
         record['fixation_confirmation'] = fixation
+        record['fixation_source'] = fixation_source if fixation == 'confirmed' else None
+        record['input_contract'] = validate_input(record)
+        for side, anatomical in record['input_contract']['anatomical_sides'].items():
+            record['eyes'][side]['anatomical_side'] = anatomical
         record['binocular_comparison'] = compare_eyes(record, orientation)
-        if automatic:
+        if orientation == 'unknown':
             record['binocular_comparison'].update(frame='stored image axes; mirror history unknown', anatomical_sides_verified=False)
         record['reflex_qc_config'] = REFLEX_QC_CONFIG.copy()
         record['experimental_classifier_proposal'] = screen_with_guards(lambda: self.classify(image, record), record, orientation, fixation)
         record['screening'] = record['experimental_classifier_proposal']
         if automatic:
             proposal = {side: {**record['eyes'][side], 'iris_left': (record['eyes'][side].get('iris_edges') or [None, None])[0], 'iris_right': (record['eyes'][side].get('iris_edges') or [None, None])[1]} for side in ('image_left', 'image_right')}
-            record['model_preview'] = guarded_infer(None, record, orientation, lambda *unused: mirror_preview(self.infer_current, self.fusion, image, proposal, self.feature_mean, self.feature_std, self.device))
+            record['model_preview'] = guarded_infer(None, record, orientation, lambda *unused: human_review_only(mirror_preview(self.infer_current, self.fusion, image, proposal, self.feature_mean, self.feature_std, self.device))) if record['input_contract']['eligible'] else record['screening'].copy()
             record['automatic_capture']['common_direction_flag'] = record['binocular_comparison'].get('same_half_plane')
-            record['automatic_capture']['fixation_status'] = 'unverified_from_still_image'
+            record['automatic_capture']['fixation_status'] = fixation
+            record['automatic_capture']['fixation_verified'] = fixation == 'confirmed'
+            record['automatic_capture']['fixation_source'] = record['fixation_source']
+            record['automatic_capture']['fixation_note'] = 'Attested by the project capture protocol; not inferred from still-image pixels.' if fixation == 'confirmed' else 'Not confirmed by capture metadata.'
         messages = {'fixation_not_confirmed': 'Chưa xác nhận nhìn nguồn sáng gần camera, hoặc ảnh đang nhìn xéo. Không kết luận từ ảnh này.', 'common_direction_ambiguous': 'Hai vector phản xạ có thành phần cùng hướng. Có thể do điều kiện chụp/hướng nhìn hoặc sai điểm; vẫn có thể kèm lệch tương đối. Cần review hoặc ảnh nhìn nguồn sáng gần camera.', 'missing_binocular_geometry': 'Thiếu pupil/reflex nhìn thấy hoặc scale iris ở ít nhất một mắt.', 'invalid_reflex_landmark': 'Invalid Landmark / Low Confidence: reflex không đạt QC ROI hoặc vector, hoặc thiếu vùng mắt nhìn thấy. Không chạy classifier; cần sửa điểm/kiểm tra iris hoặc chụp lại. Đây là QC thử nghiệm, không phải kết luận bình thường.'}
+        messages['invalid_input_contract'] = 'Đầu vào chưa đủ điều kiện: ' + ', '.join(record['input_contract']['reasons'])
         record['reason_vi'] = reason or messages.get(record['screening'].get('reason'))
         failed = record['screening'].get('failed_eyes', {})
         if failed and any((e.get('bbox') for e in record['eyes'].values())):

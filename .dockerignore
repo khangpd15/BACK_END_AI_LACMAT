@@ -1,0 +1,14 @@
+**
+!Dockerfile
+!requirements.txt
+!requirements-render.txt
+!app/
+!app/**
+!migrations/
+!migrations/**
+!scripts/
+!scripts/verify_runtime_bundle.py
+**/__pycache__
+**/*.pyc
+**/.env
+**/.env.*

@@ -1,4 +1,5 @@
-"""Vendor the frozen October 12 Hirschberg runtime and verify copied artifacts."""
+"""Vendor the active training runtime with source hashes; exclude uploads and training data."""
+import argparse
 import ast
 import hashlib
 import json
@@ -11,7 +12,8 @@ DEST = Path(__file__).resolve().parents[1] / 'app/hirschberg_runtime'
 
 
 def sha(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    with path.open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
 def prune_runtime():
@@ -87,6 +89,11 @@ def prune_runtime():
 
 
 def main():
+    global SOURCE
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--source', type=Path, default=SOURCE)
+    args = parser.parse_args()
+    SOURCE = args.source.resolve()
     DEST.mkdir(parents=True, exist_ok=True)
     original = (SOURCE / 'scripts/hirschberg_real_screening_page.py').read_text(encoding='utf-8')
     engine = original[:original.index('\ndef result_file(')]
@@ -111,6 +118,11 @@ def main():
     start = engine.index("        snapshot=json.loads((LOCAL_RUN/'snapshot.json')")
     end = engine.index("        self.pr=network", start)
     engine = engine[:start] + "        self.frozen_rois=json.loads((ROOT/'frozen_rois.json').read_text(encoding='utf-8'))\n" + engine[end:]
+    engine = engine.replace("orientation='unmirrored'", "orientation='auto'")
+    engine = engine.replace("fixation='confirmed'", "fixation='unknown'")
+    engine = engine.replace("fixation_source='owner_attested_straight_gaze_upload_protocol_2026-10-15'", "fixation_source='api_request_capture_metadata'")
+    engine = engine.replace('import math\n', 'import math\nimport os\n')
+    engine = engine.replace('torch.set_num_threads(4)', 'torch.set_num_threads(max(1, min(4, int(os.getenv("HIRSCHBERG_CPU_THREADS", "1")))))')
     engine = engine.replace("self.device='cuda' if torch.cuda.is_available() else 'cpu'", "self.device='cpu'")
     queue = [('scripts/hirschberg_engine.py', engine)]
     visited = set()
@@ -161,7 +173,7 @@ def main():
         rois[row['sha256']] = {side: row['proposal'][side] for side in ('image_left', 'image_right')}
     rois = {key: {side: {k: eye[k] for k in ('bbox', 'iris_bbox', 'eyelid_contour') if k in eye} for side, eye in pair.items()} for key, pair in rois.items()}
     (DEST / 'frozen_rois.json').write_text(json.dumps(rois), encoding='utf-8')
-    (DEST / 'manifest.json').write_text(json.dumps({'source': str(SOURCE), 'modelId': 'screening_eyelid_branch_20261011_v1', 'pupilVersion': 'pupil_color_features_20261012_v1', 'researchOnly': True, 'files': inventory, 'modules': sorted(visited)}, indent=2), encoding='utf-8')
+    (DEST / 'manifest.json').write_text(json.dumps({'source': str(SOURCE), 'modelId': 'screening_eyelid_branch_20261011_v1', 'pupilVersion': 'pupil_color_features_20261012_v1', 'researchOnly': True, 'files': inventory, 'modules': sorted(visited), 'sourceRuntimeSha256': sha(SOURCE / 'scripts/hirschberg_real_screening_page.py'), 'excludedCandidate': {'run': 'pupil_iris_continued_20261015_v3', 'reason': 'Source completion marks recommended_for_runtime=false; keep active validated configuration.'}}, indent=2), encoding='utf-8')
     prune_runtime()
     manifest = json.loads((DEST / 'manifest.json').read_text(encoding='utf-8'))
     manifest['modules'] = [p.relative_to(DEST).as_posix() for p in sorted(DEST.rglob('*.py')) if p.name != '__init__.py']

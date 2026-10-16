@@ -1,19 +1,6 @@
 """Frozen inference subset imported from the training workspace."""
 from app.hirschberg_runtime.scripts.hirschberg_localizer import network
 
-def tight_box(box, seed, width, height):
-    if not seed:
-        return None
-    x0, y0, x1, y1 = box
-    x, y = seed
-    if not (x0 <= x < x1 and y0 <= y < y1):
-        return None
-    w = max(4, min(x1 - x0, round((x1 - x0) * 0.6)))
-    h = max(4, min(y1 - y0, round((y1 - y0) * 0.6)))
-    a = min(max(round(x - w / 2), x0), x1 - w)
-    b = min(max(round(y - h / 2), y0), y1 - h)
-    return [int(a), int(b), int(a + w), int(b + h)]
-
 def model_factory(torch, initializer):
     nn = torch.nn
 

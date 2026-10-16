@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "3468e84784604a5693e096ccf8d29db0",
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "pupilMaxDifferencePx": {
+        "image_left": 0.0003304481506347656,
+        "image_right": 0.0009119510650634766
+      },
+      "latencyMs": 7985.133,
+      "inputEligible": true
+    },
+    {
+      "case": "5f43cb07b3494ec4aa08af8cc87a2824",
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "pupilMaxDifferencePx": {
+        "image_left": 0.0013937056064605713,
+        "image_right": 0.000467836856842041
+      },
+      "latencyMs": 777.09,
+      "inputEligible": true
+    },
+    {
+      "case": "da6e7303520c40438bbb8efc21856ea1",
+      "status": "INCONCLUSIVE",
+      "reason": "common_direction_ambiguous",
+      "pupilMaxDifferencePx": {
+        "image_left": 0.0001451267914944765,
+        "image_right": 9.085385863727424e-05
+      },
+      "latencyMs": 1418.772,
+      "inputEligible": true
+    }
+  ],
+  "tests": {
+    "existingModelApi": 13,
+    "readinessConcurrencyInputContract": 3,
+    "passed": 16
+  },
+  "scope": "Local Windows CPU verification; not independent model accuracy evaluation or a live Render deployment.",
+  "sourceRuntime": "D:/REMICARE_TRAIN_AI/HIRSCHBERG_METHOD/scripts/hirschberg_real_screening_page.py",
+  "memory": {
+    "platform": "Windows CPU",
+    "modelsLoaded": [
+      "hirschberg",
+      "onnx"
+    ],
+    "residentMB": 562.2,
+    "startupPeakMB": 628.2,
+    "largeImagePeakMeasured": false
+  },
+  "linuxDependencies": {
+    "resolution": "PASS",
+    "python": "3.12",
+    "platform": "Linux x86_64 (manylinux)",
+    "packages": 82,
+    "opencv": "4.14.0.94",
+    "torch": "2.7.1+cpu",
+    "method": "pip --dry-run --ignore-installed --only-binary=:all:; not a container execution test"
+  },
+  "targetVerification": {
+    "testsPassed": 16,
+    "seconds": 10.74,
+    "artifactFilesVerified": 40,
+    "dockerBuild": "NOT_RUN: Docker daemon unavailable",
+    "liveRenderDeployment": "NOT_RUN"
+  }
+}

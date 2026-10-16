@@ -24,7 +24,9 @@ def load_trained_hirschberg():
             manifest = json.loads((ROOT / 'manifest.json').read_text(encoding='utf-8'))
             for item in manifest['files']:
                 path = ROOT / item['path']
-                if hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
+                with path.open('rb') as stream:
+                    actual_hash = hashlib.file_digest(stream, 'sha256').hexdigest()
+                if actual_hash != item['sha256']:
                     raise RuntimeError(f'Hirschberg artifact hash mismatch: {item["path"]}')
             from app.hirschberg_runtime.scripts.hirschberg_engine import Engine
             _engine = Engine()
@@ -70,6 +72,8 @@ def predict_trained_hirschberg(raw, filename='image.png', orientation='auto', ki
             'automatic_capture', 'binocular_iris_radius_qc', 'binocular_comparison', 'reflex_qc_config')},
         'orientation': record['orientation'], 'inputKind': record['input_kind'],
         'roiSource': record.get('roi_source'),
+        'inputContract': record.get('input_contract'),
+        'fixationSource': record.get('fixation_source'),
         'latencyMs': round((time.perf_counter() - started) * 1000, 3),
         'nonClinicalDeclaration': 'Sàng lọc nghiên cứu - Không thay thế chẩn đoán bác sĩ chuyên khoa.',
     }

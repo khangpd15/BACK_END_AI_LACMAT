@@ -1,0 +1,40 @@
+{
+  "/ping": {
+    "httpStatus": 503,
+    "body": ""
+  },
+  "/health": {
+    "httpStatus": 502,
+    "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-family: \"Roobert\";\n  font-weight: 500;\n  font-style: normal;\n  font-stretch: normal;\n  src: url(\"data:fo"
+  },
+  "/api/v1/hirschberg/health": {
+    "httpStatus": 502,
+    "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-family: \"Roobert\";\n  font-weight: 500;\n  font-style: normal;\n  font-stretch: normal;\n  src: url(\"data:fo"
+  },
+  "/openapi.json": {
+    "httpStatus": 502,
+    "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-family: \"Roobert\";\n  font-weight: 500;\n  font-style: normal;\n  font-stretch: normal;\n  src: url(\"data:fo"
+  },
+  "frontend": {
+    "httpStatus": 200,
+    "asset": "/assets/index-CzrKnMC8.js",
+    "backendUrlPresent": true,
+    "localhostFallbackPresent": false,
+    "retiredTransferRoutePresent": false,
+    "missingModelReasonHandled": true,
+    "hirschbergTimeout25Seconds": false,
+    "uncalibratedScoresHandled": false
+  },
+  "cors:/api/v1/research/measurements": {
+    "httpStatus": 502,
+    "allowOrigin": null
+  },
+  "cors:/api/v1/cover-test/sessions": {
+    "httpStatus": 502,
+    "allowOrigin": null
+  },
+  "cors:/api/v1/hirschberg/predict": {
+    "httpStatus": 502,
+    "allowOrigin": null
+  }
+}

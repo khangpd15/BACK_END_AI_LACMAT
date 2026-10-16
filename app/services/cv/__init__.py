@@ -1,21 +1,15 @@
-﻿"""Computer Vision services for RemiCare Strabismus AI.
+"""Computer Vision services for RemiCare Hirschberg & Strabismus AI.
 
 Includes:
-- Quality Gate data structures
-- Temporal Aggregation & Majority Voting (multi-frame consensus for stable inference)
+- Bilateral quality gate for ocular image screening and landmark validation
 """
 
-from app.services.cv.quality_gate import AdvancedQualityGate, QualityGateResult
-from app.services.cv.temporal_aggregator import (
-    FrameInferenceCandidate,
-    TemporalAggregationResult,
-    TemporalConsensusAggregator,
+from app.services.cv.bilateral_quality_gate import (
+    QualityResult,
+    evaluate_quality,
 )
 
 __all__ = [
-    "AdvancedQualityGate",
-    "QualityGateResult",
-    "TemporalConsensusAggregator",
-    "FrameInferenceCandidate",
-    "TemporalAggregationResult",
+    "QualityResult",
+    "evaluate_quality",
 ]

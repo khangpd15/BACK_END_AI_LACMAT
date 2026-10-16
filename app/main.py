@@ -1,40 +1,40 @@
-"""RemiCare Strabismus AI Backend - Main Application Entrypoint.
+"""RemiCare Hirschberg & Strabismus AI Backend - Main Application Entrypoint.
 
 Provides FastAPI application initialization, CORS configuration,
-health check endpoint, and API router registration.
+health check endpoints, and Hirschberg/Strabismus inference routers.
 """
 
 import asyncio
-from contextlib import suppress
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 import logging
 import math
 import os
+import time
 from typing import Any, Dict
+
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.gzip import GZipMiddleware
-import time
 from fastapi.responses import JSONResponse
+from starlette.middleware.gzip import GZipMiddleware
 
 from app import __version__
-from app.api.strabismus import router as strabismus_router
-from app.services.strabismus_inference_service import get_strabismus_inference_service
-from app.api.cover_test_session import router as cover_test_session_router
-from app.api.cover_test import router as cover_test_v1_router
-from app.api.research_measurement import router as research_measurement_router
 from app.api.hirschberg import router as hirschberg_router
+from app.api.research_measurement import router as research_measurement_router
+from app.api.strabismus import router as strabismus_router
 from app.config import get_allowed_origins
 from app.db.database import check_db_connection, init_db
+from app.services.hirschberg_ai_service import hirschberg_runtime_status
 from app.services.keep_alive import (
     get_keep_alive_service,
     start_keep_alive,
     stop_keep_alive,
 )
-from app.services.fps_model_service import get_fps_model_service
-from app.services.hirschberg_ai_service import hirschberg_runtime_status
-from app.services.trained_hirschberg_service import preload_trained_hirschberg
+from app.services.strabismus_inference_service import get_strabismus_inference_service
+from app.services.trained_hirschberg_service import (
+    preload_trained_hirschberg,
+    trained_hirschberg_status,
+)
 
 # Configure structured audit logging
 logging.basicConfig(
@@ -48,24 +48,12 @@ logger = logging.getLogger("remicare.main")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan: Preload machine learning models, init DB, and start keep-alive worker."""
-    logger.info("Initializing RemiCare Strabismus AI Backend - Phase 5...")
+    logger.info("Initializing RemiCare Hirschberg AI Backend...")
     try:
         # Initialize database tables
         await asyncio.wait_for(init_db(), timeout=10)
     except Exception as e:
         logger.warning("Database init check note: %s", e)
-
-    try:
-        fps_svc = get_fps_model_service()
-        logger.info(
-            "Cover Test FPS model state: model=%s, version=%s, loaded=%s, features=%d",
-            fps_svc.model_name,
-            fps_svc.model_version,
-            fps_svc.model is not None,
-            len(fps_svc.feature_names),
-        )
-    except Exception as e:
-        logger.error("Failed to initialize Cover Test FPS service at startup: %s", e, exc_info=True)
 
     try:
         strabismus_svc = await asyncio.to_thread(get_strabismus_inference_service)
@@ -100,21 +88,19 @@ async def lifespan(app: FastAPI):
     try:
         yield
     finally:
-        # Cancelling the await does not interrupt an in-progress loader thread.
         hirschberg_warmup.cancel()
         with suppress(asyncio.CancelledError):
             await hirschberg_warmup
-        logger.info("Shutting down RemiCare Strabismus AI Backend...")
+        logger.info("Shutting down RemiCare Hirschberg AI Backend...")
         await stop_keep_alive()
 
 
 # Initialize FastAPI application
 app = FastAPI(
-    title="RemiCare Strabismus AI Screening Backend",
+    title="RemiCare Hirschberg AI Screening Backend",
     description=(
-        "Specialized AI backend for webcam-based Cover Test screening. "
-        "Provides data integrity validation, time-series preprocessing, "
-        "cycle-based movement feature extraction, and ML inference. "
+        "Specialized AI backend for Hirschberg ocular alignment test, "
+        "bilateral eye screening, and corneal light reflex (Purkinje-I) analysis. "
         "Screening result only - not a clinical diagnosis."
     ),
     version=__version__,
@@ -123,8 +109,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS configuration: configurable via REMICARE_FRONTEND_ORIGINS env var
-# Never uses wildcard '*' in production
+# CORS configuration
 allowed_origins = get_allowed_origins()
 logger.info("Configured CORS Allowed Origins: %s", allowed_origins)
 
@@ -139,14 +124,14 @@ app.add_middleware(
 # Enable HTTP response compression for payloads >= 1KB
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
+
 @app.middleware("http")
 async def performance_measurement_middleware(request: Request, call_next):
-    """Development and production non-invasive performance measurement middleware."""
+    """Performance measurement middleware."""
     start_time = time.perf_counter()
     response = await call_next(request)
     duration_ms = (time.perf_counter() - start_time) * 1000.0
 
-    # Attach Server-Timing header for client-side DevTools and metrics inspection
     response.headers["Server-Timing"] = f"total;dur={duration_ms:.1f}"
 
     content_length = response.headers.get("content-length")
@@ -154,7 +139,7 @@ async def performance_measurement_middleware(request: Request, call_next):
 
     if not request.url.path.startswith("/docs") and not request.url.path.startswith("/redoc"):
         logger.info(
-            "[RemiCare API Perf] %s %s | status=%d | time=%.1fms | size=%s",
+            "[Hirschberg API Perf] %s %s | status=%d | time=%.1fms | size=%s",
             request.method,
             request.url.path,
             response.status_code,
@@ -186,31 +171,22 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 # Register API routes
-# Legacy endpoint maintained for compatibility
-app.include_router(cover_test_session_router, prefix="/api/cover-test")
-# New Phase 3 persistent cloud storage router
-app.include_router(cover_test_v1_router, prefix="/api/v1/cover-test")
-# Strabismus Bilateral Screening Router
 app.include_router(strabismus_router)
-# Research-only geometry measurement router
-app.include_router(research_measurement_router)
 app.include_router(hirschberg_router)
+app.include_router(research_measurement_router)
 
 
 @app.get(
     "/ping",
     tags=["System"],
     summary="Fast keep-alive ping endpoint",
-    description=(
-        "Ultra-lightweight endpoint for automated keep-alive services, Render self-ping, "
-        "and uptime monitoring. Returns immediately with minimal overhead to prevent spin-downs."
-    ),
+    description="Lightweight endpoint for keep-alive services, Render self-ping, and uptime monitoring.",
 )
 async def ping() -> Dict[str, Any]:
     """Fast keep-alive ping responding with alive status and timestamp."""
     return {
         "status": "alive",
-        "service": "remicare-strabismus-ai",
+        "service": "remicare-hirschberg-ai",
         "timestamp": time.time(),
     }
 
@@ -222,7 +198,7 @@ async def ping() -> Dict[str, Any]:
     description="Tests live connection to PostgreSQL / Supabase with SELECT 1 and returns connection diagnostics.",
 )
 async def db_health() -> Dict[str, Any]:
-    """Diagnostics endpoint testing database connection and checking for network/Errno 101 issues."""
+    """Diagnostics endpoint testing database connection."""
     return await check_db_connection()
 
 
@@ -230,30 +206,32 @@ async def db_health() -> Dict[str, Any]:
     "/health",
     tags=["System"],
     summary="Health check endpoint",
-    description="Returns backend service health status, model info, keep-alive metrics, and optional DB status.",
+    description="Returns backend service health status, Hirschberg CNN readiness, and Strabismus ONNX info.",
 )
 async def health_check(check_db: bool = False) -> Dict[str, Any]:
     """Health check endpoint responding with operational status, version, and active model info."""
+    hirschberg_info = trained_hirschberg_status()
     try:
-        svc = get_fps_model_service()
-        model_info = {
-            "name": svc.model_name,
-            "version": svc.model_version,
-            "featureCount": len(svc.feature_names),
-            "loaded": svc.model is not None,
-            "source": "fps_10_15_model",
+        strabismus_svc = get_strabismus_inference_service()
+        strabismus_info = {
+            "loaded": strabismus_svc.is_loaded,
+            "version": strabismus_svc.model_version,
+            "threshold": strabismus_svc.threshold,
         }
     except Exception:
-        model_info = {"status": "not_loaded"}
+        strabismus_info = {"loaded": False}
 
     keep_alive_info = get_keep_alive_service().get_status()
 
     result: Dict[str, Any] = {
         "status": "ok",
-        "service": "remicare-strabismus-ai",
+        "service": "remicare-hirschberg-ai",
         "version": __version__,
-        "model": model_info,
-        "models": {"coverTest": model_info, "hirschberg": hirschberg_runtime_status()},
+        "models": {
+            "hirschberg": hirschberg_info,
+            "strabismus_onnx": strabismus_info,
+            "research": hirschberg_runtime_status(),
+        },
         "deploymentCommit": os.getenv("RENDER_GIT_COMMIT"),
         "keepAlive": keep_alive_info,
     }
@@ -266,3 +244,9 @@ async def health_check(check_db: bool = False) -> Dict[str, Any]:
 
     return result
 
+
+@app.get("/ready", tags=["System"], summary="Model readiness for deployment")
+async def readiness():
+    model = trained_hirschberg_status()
+    return JSONResponse(status_code=200 if model["loaded"] else 503,
+                        content={"ready": model["loaded"], "hirschberg": model})

@@ -1,0 +1,2 @@
+# Render CPU inference dependencies.
+-r requirements.txt

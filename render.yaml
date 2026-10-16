@@ -1,7 +1,32 @@
 services:
   - type: web
-    name: remicare-strabismus-ai
-    runtime: python
-    buildCommand: python -m pip install -r requirements.txt
-    startCommand: python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
-    healthCheckPath: /ping
+    name: remicare-hirschberg-ai
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /ready
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.14
+      - key: APP_ENV
+        value: production
+      - key: HIRSCHBERG_CPU_THREADS
+        value: "1"
+      - key: ONNX_CPU_THREADS
+        value: "1"
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: OPENBLAS_NUM_THREADS
+        value: "1"
+      - key: MKL_NUM_THREADS
+        value: "1"
+      - key: MPLBACKEND
+        value: Agg
+      - key: MALLOC_ARENA_MAX
+        value: "2"
+      - key: KEEP_ALIVE_ENABLED
+        value: "false"
+      - key: DB_POOL_SIZE
+        value: "2"
+      - key: DB_MAX_OVERFLOW
+        value: "2"

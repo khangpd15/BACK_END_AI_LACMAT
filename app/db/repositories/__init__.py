@@ -1,4 +1,9 @@
-"""Database repositories package."""
-from app.db.repositories.cover_test_repository import CoverTestRepository
+"""Repositories package for Hirschberg & Strabismus AI Backend."""
 
-__all__ = ["CoverTestRepository"]
+from app.db.repositories.hirschberg_repository import HirschbergRepository
+from app.db.repositories.strabismus_repository import StrabismusRepository
+
+__all__ = [
+    "HirschbergRepository",
+    "StrabismusRepository",
+]

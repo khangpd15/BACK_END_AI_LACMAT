@@ -51,6 +51,6 @@ ai/
 /processed/
 /data/*
 !/data/README.md
-!/data/cover_test/
-/data/cover_test/sessions/*
-!/data/cover_test/sessions/.gitkeep
+!/data/hirschberg/
+/data/hirschberg/sessions/*
+!/data/hirschberg/sessions/.gitkeep

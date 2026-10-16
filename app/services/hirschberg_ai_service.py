@@ -63,8 +63,11 @@ def _get_model_and_onnx() -> Tuple[Optional[Dict[str, Any]], Optional[ort.Infere
 class EfficientNetFeatureExtractor:
     def __init__(self):
         try:
+            # pyrefly: ignore[missing-import]
             import timm
+            # pyrefly: ignore[missing-import]
             import torch
+            # pyrefly: ignore[missing-import]
             import torchvision.transforms as T
             from PIL import Image
         except ImportError as exc:

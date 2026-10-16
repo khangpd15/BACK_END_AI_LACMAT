@@ -1,0 +1,33 @@
+{
+  "/ping": {
+    "error": "ReadTimeout: The read operation timed out"
+  },
+  "/health": {
+    "error": "ReadTimeout: The read operation timed out"
+  },
+  "/api/v1/hirschberg/health": {
+    "error": "ReadTimeout: The read operation timed out"
+  },
+  "/openapi.json": {
+    "error": "ReadTimeout: The read operation timed out"
+  },
+  "frontend": {
+    "httpStatus": 200,
+    "asset": "/assets/index-CzrKnMC8.js",
+    "backendUrlPresent": true,
+    "localhostFallbackPresent": false,
+    "retiredTransferRoutePresent": false,
+    "missingModelReasonHandled": true,
+    "hirschbergTimeout25Seconds": false,
+    "uncalibratedScoresHandled": false
+  },
+  "cors:/api/v1/research/measurements": {
+    "error": "ReadTimeout: The read operation timed out"
+  },
+  "cors:/api/v1/cover-test/sessions": {
+    "error": "ReadTimeout: The read operation timed out"
+  },
+  "cors:/api/v1/hirschberg/predict": {
+    "error": "ReadTimeout: The read operation timed out"
+  }
+}

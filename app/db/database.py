@@ -103,10 +103,14 @@ def get_engine() -> AsyncEngine:
         db_url = format_async_db_url(raw_url)
         if "sqlite" in db_url:
             logger.info("DATABASE_URL using SQLite: %s", db_url)
+            engine_kwargs: Dict[str, Any] = {"echo": False, "future": True}
+            if ":memory:" in db_url:
+                from sqlalchemy.pool import StaticPool
+                engine_kwargs["poolclass"] = StaticPool
+                engine_kwargs["connect_args"] = {"check_same_thread": False}
             _engine = create_async_engine(
                 db_url,
-                echo=False,
-                future=True,
+                **engine_kwargs,
             )
         else:
             logger.info("Initializing async PostgreSQL engine...")
@@ -155,16 +159,14 @@ async def auto_migrate_schema(conn) -> None:
         dialect_name = conn.dialect.name
         if dialect_name == "postgresql":
             ddl_statements = [
-                "ALTER TABLE cover_test_results ADD COLUMN IF NOT EXISTS model_source VARCHAR(50) DEFAULT 'fps_10_15_model';",
-                "ALTER TABLE cover_test_results ADD COLUMN IF NOT EXISTS confidence REAL;",
-                "ALTER TABLE cover_test_results DROP COLUMN IF EXISTS image_url;",
-                "ALTER TABLE cover_test_results DROP COLUMN IF EXISTS cloudinary_public_id;",
-                "DROP TABLE IF EXISTS cover_test_images CASCADE;",
-                "CREATE INDEX IF NOT EXISTS idx_cover_test_results_model_source ON cover_test_results (model_source);",
-                "CREATE INDEX IF NOT EXISTS idx_cover_test_results_prediction ON cover_test_results (prediction);",
                 "CREATE TABLE IF NOT EXISTS strabismus_screenings (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL, status VARCHAR(50) NOT NULL, strabismus_probability REAL, confidence REAL, quality_score REAL, threshold REAL DEFAULT 0.20 NOT NULL, model_version VARCHAR(100) DEFAULT 'remicare-bilateral-resnet18-v1' NOT NULL, inference_latency_ms REAL, image_saved BOOLEAN DEFAULT FALSE NOT NULL, failure_reason VARCHAR(100));",
                 "CREATE INDEX IF NOT EXISTS idx_strabismus_screenings_created_at ON strabismus_screenings (created_at DESC);",
                 "CREATE INDEX IF NOT EXISTS idx_strabismus_screenings_status ON strabismus_screenings (status);",
+                "CREATE TABLE IF NOT EXISTS hirschberg_sessions (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), session_id VARCHAR(100) UNIQUE NOT NULL, created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL, status VARCHAR(50) NOT NULL, predicted_class VARCHAR(50) NOT NULL, confidence REAL, reason VARCHAR(255), message_vi VARCHAR(255), model_id VARCHAR(100), feature_contract VARCHAR(100), orientation VARCHAR(50), input_kind VARCHAR(50), measurements JSONB, quality JSONB, uncalibrated_scores JSONB, latency_ms REAL, session_path VARCHAR(255), metadata_json JSONB);",
+                "CREATE INDEX IF NOT EXISTS idx_hirschberg_sessions_session_id ON hirschberg_sessions (session_id);",
+                "CREATE INDEX IF NOT EXISTS idx_hirschberg_sessions_created_at ON hirschberg_sessions (created_at DESC);",
+                "CREATE INDEX IF NOT EXISTS idx_hirschberg_sessions_status ON hirschberg_sessions (status);",
+                "CREATE INDEX IF NOT EXISTS idx_hirschberg_sessions_predicted_class ON hirschberg_sessions (predicted_class);",
             ]
             for stmt in ddl_statements:
                 try:
@@ -178,6 +180,9 @@ async def auto_migrate_schema(conn) -> None:
 
 async def init_db() -> None:
     """Initializes tables in database if they do not exist and applies non-destructive auto-migrations."""
+    import app.db.models.hirschberg_session
+    import app.db.models.strabismus_model
+
     engine = get_engine()
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

@@ -6,7 +6,7 @@ from sqlalchemy import Boolean, DateTime, Float, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.database import Base
-from app.db.models.cover_test_session import GUID
+from app.db.guid import GUID
 
 
 class StrabismusScreeningModel(Base):

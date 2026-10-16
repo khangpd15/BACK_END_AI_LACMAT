@@ -17,8 +17,6 @@ def test_ping_available_while_hirschberg_is_still_loading(monkeypatch):
         assert release.wait(timeout=5)
 
     monkeypatch.setattr(main, "init_db", AsyncMock())
-    monkeypatch.setattr(main, "get_fps_model_service", lambda: SimpleNamespace(
-        model_name="test", model_version="test", model=None, feature_names=[]))
     monkeypatch.setattr(main, "get_strabismus_inference_service",
                         lambda: SimpleNamespace(is_loaded=False))
     monkeypatch.setattr(main, "preload_trained_hirschberg", slow_preload)
