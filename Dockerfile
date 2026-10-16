@@ -4,7 +4,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     HIRSCHBERG_CPU_THREADS=1 \
-    ONNX_CPU_THREADS=1 \
     OMP_NUM_THREADS=1 \
     OPENBLAS_NUM_THREADS=1 \
     MKL_NUM_THREADS=1 \
@@ -20,7 +19,7 @@ WORKDIR /srv/remicare
 COPY requirements.txt requirements-render.txt ./
 RUN python -m pip install --no-cache-dir -r requirements-render.txt \
     && python -m pip check \
-    && python -c "import cv2, mediapipe, torch, onnxruntime; assert hasattr(mediapipe, 'solutions')"
+    && python -c "import cv2, mediapipe, torch; assert hasattr(mediapipe, 'solutions')"
 
 COPY app ./app
 COPY migrations ./migrations

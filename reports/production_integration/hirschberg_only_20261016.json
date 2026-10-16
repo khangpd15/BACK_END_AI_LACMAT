@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "pipeline": "hirschberg_only",
+  "onnxImported": false,
+  "checkpointChanged": false,
+  "memoryAfterLoad": {
+    "residentMB": 468.8,
+    "peakMB": 468.8
+  },
+  "memoryAfterThreeReferenceImages": {
+    "residentMB": 633.4,
+    "peakMB": 711.3
+  },
+  "memoryPlatform": "Windows CPU, fresh process; not a Linux/Render memory-limit test",
+  "cases": [
+    {
+      "case": "3468e84784604a5693e096ccf8d29db0",
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "pupilMaxDifferencePx": {
+        "image_left": 0.0003304481506347656,
+        "image_right": 0.0009119510650634766
+      },
+      "latencyMs": 3163.708
+    },
+    {
+      "case": "5f43cb07b3494ec4aa08af8cc87a2824",
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "pupilMaxDifferencePx": {
+        "image_left": 0.0013937056064605713,
+        "image_right": 0.000467836856842041
+      },
+      "latencyMs": 922.594
+    },
+    {
+      "case": "da6e7303520c40438bbb8efc21856ea1",
+      "status": "INCONCLUSIVE",
+      "reason": "common_direction_ambiguous",
+      "pupilMaxDifferencePx": {
+        "image_left": 0.0001451267914944765,
+        "image_right": 9.085385863727424e-05
+      },
+      "latencyMs": 1451.862
+    }
+  ],
+  "testsPassed": 16,
+  "removedEndpointsReturn": 404,
+  "legacyCodeExcludedFromDocker": true,
+  "modelApiTests": {
+    "passed": 16,
+    "seconds": 10.24
+  },
+  "runtimeManifestVerified": {
+    "files": 40,
+    "bytes": 101078686
+  },
+  "deployment": "Local changes only; not pushed or deployed"
+}

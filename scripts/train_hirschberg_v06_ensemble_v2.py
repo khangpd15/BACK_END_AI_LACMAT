@@ -44,7 +44,7 @@ from app.services.eye_crop_geometry_service import (
     GEOMETRIC_FEATURE_NAMES,
     extract_eye_crop_geometric_features,
 )
-from app.services.hirschberg_ai_service import ONNX_PATH, extract_features_from_crop
+from research.legacy_onnx.hirschberg_ai_service import ONNX_PATH, extract_features_from_crop
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("remicare.v06_ensemble_v2")

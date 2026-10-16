@@ -37,7 +37,7 @@ from sklearn.model_selection import StratifiedKFold, cross_val_predict
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from app.services.hirschberg_ai_service import (
+from research.legacy_onnx.hirschberg_ai_service import (
     ONNX_PATH,
     extract_features_from_crop,
     predict_hirschberg,
@@ -319,7 +319,7 @@ and must not be presented as a clinical diagnosis or clinical probability.
 ## Feature Contract
 
 - Feature count: `73`
-- Extractor: `app.services.hirschberg_ai_service.extract_features_from_crop`
+- Extractor: `research.legacy_onnx.hirschberg_ai_service.extract_features_from_crop`
 - Aggregation: mean of left/right heuristic crops for full-face images.
 
 ## Selected Model

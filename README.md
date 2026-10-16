@@ -1,6 +1,6 @@
-# RemiCare Hirschberg & Strabismus AI Backend
+# RemiCare Hirschberg AI Backend
 
-FastAPI backend chuyên biệt cho Hirschberg Test, sàng lọc ảnh hai mắt bằng ONNX và Hirschberg CNN.
+FastAPI backend chuyên biệt cho Hirschberg Test, định vị và sàng lọc bằng Hirschberg CNN.
 Kết quả chỉ phục vụ nghiên cứu/sàng lọc sơ bộ, không phải chẩn đoán y khoa.
 
 > Cấu hình deploy và phiên bản model: [DEPLOY_RENDER.md](DEPLOY_RENDER.md).
@@ -11,9 +11,8 @@ Kết quả chỉ phục vụ nghiên cứu/sàng lọc sơ bộ, không phải 
 ├── app/
 │   ├── main.py                 # FastAPI, lifespan, middleware, health
 │   ├── config.py               # Cấu hình môi trường Hirschberg
-│   ├── api/                    # Hirschberg, ONNX bilateral, research measurement
+│   ├── api/                    # Hirschberg và research measurement
 │   │   ├── hirschberg.py       # POST /api/v1/hirschberg/predict, GET sessions
-│   │   ├── strabismus.py       # POST /api/v1/strabismus/predict
 │   │   └── research_measurement.py # POST /api/v1/research/measurements
 │   ├── schemas/                # Pydantic request/response
 │   │   ├── hirschberg.py
@@ -21,23 +20,22 @@ Kết quả chỉ phục vụ nghiên cứu/sàng lọc sơ bộ, không phải 
 │   ├── services/
 │   │   ├── hirschberg_session_service.py # Lưu session Hirschberg (local & DB)
 │   │   ├── trained_hirschberg_service.py # Hirschberg CNN runtime
-│   │   ├── hirschberg_ai_service.py      # AI service candidate
-│   │   ├── strabismus_inference_service.py # ONNX bilateral inference
+│   │   ├── hirschberg_ai_service.py      # Adapter cho Hirschberg CNN
 │   │   ├── eye_crop_geometry_service.py  # Trích xuất hình học mắt
 │   │   ├── cv/bilateral_quality_gate.py  # Quality gate ảnh hai mắt
 │   │   └── keep_alive.py       # Tự ping giữ kết nối Render & DB
 │   ├── db/
 │   │   ├── database.py         # SQLAlchemy engine, session & auto migrations
 │   │   ├── guid.py             # Type decorator UUID platform-independent
-│   │   ├── models/             # hirschberg_session, strabismus_model
-│   │   └── repositories/       # hirschberg_repository, strabismus_repository
-│   ├── models/                 # Model ONNX (best_model.onnx) & artifact
+│   │   ├── models/             # hirschberg_session
+│   │   └── repositories/       # hirschberg_repository
+│   ├── models/                 # Artifact nghiên cứu lịch sử
 │   └── hirschberg_runtime/     # Bundle CNN được kiểm tra SHA-256
 ├── data/hirschberg/sessions/   # Session local của Hirschberg (metadata.json, result.json)
 ├── migrations/                 # SQL schema
 ├── scripts/                    # Scripts chuẩn bị dữ liệu, import, verification
 ├── research/                   # Experiment source
-├── tests/                      # Kiểm thử Hirschberg, ONNX và nghiên cứu
+├── tests/                      # Kiểm thử Hirschberg và nghiên cứu
 └── render.yaml                 # Cấu hình deploy Render cho Hirschberg
 ```
 
@@ -67,14 +65,12 @@ Kiểm tra artifact bằng `python scripts/verify_runtime_bundle.py` trước kh
 | --- | --- |
 | `GET /ready` | Readiness: 503 khi CNN chưa nạp, 200 khi sẵn sàng |
 | `GET /ping` | Keep-alive fast ping |
-| `GET /health` | Trạng thái backend, Hirschberg CNN và ONNX |
+| `GET /health` | Trạng thái backend và Hirschberg CNN |
 | `GET /health/db` | Kiểm tra kết nối database |
 | `GET /api/v1/hirschberg/health` | Trạng thái CNN và checkpoint |
 | `POST /api/v1/hirschberg/predict` | Hirschberg CNN với landmark/QC + lưu session |
 | `GET /api/v1/hirschberg/sessions/{session_id}` | Xem chi tiết session Hirschberg đã lưu |
 | `GET /api/v1/hirschberg/sessions` | Danh sách session Hirschberg đã lưu |
-| `GET /api/v1/strabismus/health` | Trạng thái ONNX bilateral screening |
-| `POST /api/v1/strabismus/predict` | Sàng lọc ảnh ROI hai mắt bằng ONNX |
 | `POST /api/v1/research/measurements` | Đo hình học phục vụ nghiên cứu |
 
 ## Lưu trữ Session phân tách
@@ -89,3 +85,11 @@ Kiểm tra artifact bằng `python scripts/verify_runtime_bundle.py` trước kh
 .\.venv312\Scripts\python.exe -m pytest tests/model/
 
 ```
+
+## Pipeline Hirschberg duy nhất
+
+Đã gỡ API Strabismus/ONNX và việc nạp ONNX khỏi backend. Frontend cần gọi
+`POST /api/v1/hirschberg/predict`; các endpoint `/api/v1/strabismus/*` trả 404.
+Trọng số và mã suy luận Hirschberg được giữ nguyên. Công cụ ONNX lịch sử ở
+`research/legacy_onnx/`, được loại khỏi Docker image; dependency riêng nằm trong
+`requirements-research.txt`. Bảng database cũ được giữ dữ liệu, không tự xóa.

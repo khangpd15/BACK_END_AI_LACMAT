@@ -12,7 +12,7 @@ import pytest
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CANDIDATE_PATH = PROJECT_ROOT / "app" / "models" / "research" / "hirschberg_candidate_v0.1.joblib"
 EVAL_REPORT_PATH = Path("D:/AI_Check_Lac/manifests/hirschberg_candidate_eval.json")
-PRODUCTION_ONNX_PATH = PROJECT_ROOT / "app" / "models" / "best_model.onnx"
+PRODUCTION_ONNX_PATH = PROJECT_ROOT / "research" / "legacy_onnx" / "best_model.onnx"
 
 
 def test_research_candidate_artifact_contract():

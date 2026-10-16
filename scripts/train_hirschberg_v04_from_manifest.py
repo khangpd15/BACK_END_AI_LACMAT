@@ -40,7 +40,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 os.environ.setdefault("MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "remicare_matplotlib_cache"))
 
-from app.services.hirschberg_ai_service import ONNX_PATH, extract_features_from_crop
+from research.legacy_onnx.hirschberg_ai_service import ONNX_PATH, extract_features_from_crop
 from scripts.evaluate_and_train_pedseye_hirschberg import crops_for_service_contract, read_bgr
 
 SEED = 20261004

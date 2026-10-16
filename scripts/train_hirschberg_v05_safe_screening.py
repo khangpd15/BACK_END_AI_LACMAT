@@ -24,7 +24,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from app.services.hirschberg_ai_service import ONNX_PATH, extract_features_from_crop  # noqa: E402
+from research.legacy_onnx.hirschberg_ai_service import ONNX_PATH, extract_features_from_crop  # noqa: E402
 
 SEED = 20261004
 MODEL_ID = "hirschberg-candidate-v0.5-safe"
@@ -536,7 +536,7 @@ confidence/margin abstention policy so weak cases return `INCONCLUSIVE`.
 ## Feature Contract
 
 - Feature count: `{training['feature_count']}`
-- Extractor: `app.services.hirschberg_ai_service.extract_features_from_crop`
+- Extractor: `research.legacy_onnx.hirschberg_ai_service.extract_features_from_crop`
 - Crop aggregation: mean feature vector across service-compatible eye crops.
 - Classes: `{CLASSES}`
 

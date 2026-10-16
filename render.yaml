@@ -12,8 +12,6 @@ services:
         value: production
       - key: HIRSCHBERG_CPU_THREADS
         value: "1"
-      - key: ONNX_CPU_THREADS
-        value: "1"
       - key: OMP_NUM_THREADS
         value: "1"
       - key: OPENBLAS_NUM_THREADS

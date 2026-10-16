@@ -1,7 +1,7 @@
-"""RemiCare Hirschberg & Strabismus AI Backend - Main Application Entrypoint.
+"""RemiCare Hirschberg AI Backend - Main Application Entrypoint.
 
 Provides FastAPI application initialization, CORS configuration,
-health check endpoints, and Hirschberg/Strabismus inference routers.
+health check endpoints, and Hirschberg inference routers.
 """
 
 import asyncio
@@ -21,16 +21,13 @@ from starlette.middleware.gzip import GZipMiddleware
 from app import __version__
 from app.api.hirschberg import router as hirschberg_router
 from app.api.research_measurement import router as research_measurement_router
-from app.api.strabismus import router as strabismus_router
 from app.config import get_allowed_origins
 from app.db.database import check_db_connection, init_db
-from app.services.hirschberg_ai_service import hirschberg_runtime_status
 from app.services.keep_alive import (
     get_keep_alive_service,
     start_keep_alive,
     stop_keep_alive,
 )
-from app.services.strabismus_inference_service import get_strabismus_inference_service
 from app.services.trained_hirschberg_service import (
     preload_trained_hirschberg,
     trained_hirschberg_status,
@@ -54,20 +51,6 @@ async def lifespan(app: FastAPI):
         await asyncio.wait_for(init_db(), timeout=10)
     except Exception as e:
         logger.warning("Database init check note: %s", e)
-
-    try:
-        strabismus_svc = await asyncio.to_thread(get_strabismus_inference_service)
-        if strabismus_svc.is_loaded:
-            logger.info(
-                "Strabismus bilateral ONNX model preloaded: version=%s, path=%s, input=%s",
-                strabismus_svc.model_version,
-                strabismus_svc.resolved_model_path,
-                strabismus_svc.input_name,
-            )
-        else:
-            logger.warning("Strabismus bilateral ONNX model is not loaded yet.")
-    except Exception as e:
-        logger.error("Failed to preload strabismus ONNX model at startup: %s", e, exc_info=True)
 
     # Uvicorn binds its HTTP socket only after lifespan reaches yield. The CNN
     # bundle can take minutes to verify/load on a small Render instance.
@@ -171,7 +154,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 # Register API routes
-app.include_router(strabismus_router)
 app.include_router(hirschberg_router)
 app.include_router(research_measurement_router)
 
@@ -206,21 +188,11 @@ async def db_health() -> Dict[str, Any]:
     "/health",
     tags=["System"],
     summary="Health check endpoint",
-    description="Returns backend service health status, Hirschberg CNN readiness, and Strabismus ONNX info.",
+    description="Returns backend service health status, Hirschberg CNN readiness.",
 )
 async def health_check(check_db: bool = False) -> Dict[str, Any]:
     """Health check endpoint responding with operational status, version, and active model info."""
     hirschberg_info = trained_hirschberg_status()
-    try:
-        strabismus_svc = get_strabismus_inference_service()
-        strabismus_info = {
-            "loaded": strabismus_svc.is_loaded,
-            "version": strabismus_svc.model_version,
-            "threshold": strabismus_svc.threshold,
-        }
-    except Exception:
-        strabismus_info = {"loaded": False}
-
     keep_alive_info = get_keep_alive_service().get_status()
 
     result: Dict[str, Any] = {
@@ -229,8 +201,6 @@ async def health_check(check_db: bool = False) -> Dict[str, Any]:
         "version": __version__,
         "models": {
             "hirschberg": hirschberg_info,
-            "strabismus_onnx": strabismus_info,
-            "research": hirschberg_runtime_status(),
         },
         "deploymentCommit": os.getenv("RENDER_GIT_COMMIT"),
         "keepAlive": keep_alive_info,

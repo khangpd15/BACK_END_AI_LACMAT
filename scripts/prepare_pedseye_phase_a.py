@@ -29,7 +29,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 os.environ.setdefault("MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "remicare_matplotlib_cache"))
 
-from app.services.hirschberg_ai_service import estimate_iris_center_in_crop
+from research.legacy_onnx.hirschberg_ai_service import estimate_iris_center_in_crop
 from app.services.research_measurement_service import detect_pupil_in_roi, detect_reflexes_in_roi
 
 DATASET_DIR = PROJECT_ROOT / "dataset_by_pedseye_manifest"

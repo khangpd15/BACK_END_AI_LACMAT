@@ -39,10 +39,12 @@ thread là 1 mặc định; có thể đặt `HIRSCHBERG_CPU_THREADS` từ 1 đ�
 Cài PyTorch CPU để tránh tải các package CUDA. Chỉ cài một OpenCV distribution
 (contrib, theo dependency MediaPipe); requirements-dev chứa pytest riêng.
 
-Đo local Windows khi CNN + ONNX đã nạp: RAM khoảng 562 MB, peak khởi tạo 628 MB
-(chưa gồm peak của ảnh lớn). Nên chuẩn bị instance từ 2 GB RAM để có dư địa;
-đo peak RAM trên Render thực tế trước khi chốt cấu hình máy. Bundle ~100 MB
-trên đĩa không phản ánh tổng RAM của PyTorch, MediaPipe, ONNX và ảnh giải mã.
+Pipeline ONNX đã gỡ khỏi backend và Docker image. Hirschberg giữ nguyên checkpoint,
+preprocessing và giới hạn ảnh. Số đo 562 MB / peak 628 MB trước đây thuộc bản có cả
+CNN + ONNX, không dùng làm số đo của bản hiện tại. Số đo mới trên Windows CPU: khoảng 469 MB sau khi nạp model; peak khoảng 711 MB
+khi xử lý ba ảnh tham chiếu (không phải phép đo ảnh lớn nhất). Chi tiết trong
+`reports/production_integration/hirschberg_only_20261016.json`.
+Nên chuẩn bị instance từ 2 GB RAM và đo trên Linux thực tế; chưa xác nhận chạy ổn 512 MB.
 Nếu gặp OOM, tăng RAM và kiểm tra ảnh kích thước lớn; không tăng worker để khắc phục.
 File session trong `data/` dùng filesystem tạm của Render, có thể mất sau redeploy;
 DATABASE_URL cần được cấu hình nếu muốn giữ dữ liệu. Ảnh upload không được lưu bởi runtime.

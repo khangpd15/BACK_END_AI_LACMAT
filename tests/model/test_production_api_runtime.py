@@ -84,22 +84,3 @@ def test_failed_measurement_releases_slot(monkeypatch):
         assert not lock.locked()
 
     asyncio.run(run())
-
-
-def test_shared_onnx_session_uses_bounded_threads(monkeypatch, tmp_path):
-    from app.services import onnx_runtime as runtime
-    sessions = []
-
-    def fake_session(path, sess_options, providers):
-        sessions.append((sess_options, providers))
-        return object()
-
-    monkeypatch.setattr(runtime, "_sessions", {})
-    monkeypatch.setattr(runtime.ort, "InferenceSession", fake_session)
-    monkeypatch.setenv("ONNX_CPU_THREADS", "200")
-    first = runtime.get_cpu_session(tmp_path / "test.onnx")
-    assert first is runtime.get_cpu_session(tmp_path / "test.onnx")
-    assert len(sessions) == 1
-    assert sessions[0][0].intra_op_num_threads == 4
-    assert sessions[0][0].inter_op_num_threads == 1
-    assert sessions[0][1] == ["CPUExecutionProvider"]

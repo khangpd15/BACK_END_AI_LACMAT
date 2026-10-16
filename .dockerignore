@@ -12,3 +12,6 @@
 **/*.pyc
 **/.env
 **/.env.*
+
+# Historical classifier bundles are not used by the trained Hirschberg runtime.
+app/models/**

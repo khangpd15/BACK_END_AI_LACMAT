@@ -35,7 +35,7 @@ def test_candidate_v06_v2_artifact_contract():
 
 
 def test_predict_hirschberg_production_service():
-    from app.services.hirschberg_ai_service import predict_legacy_hirschberg as predict_hirschberg, DEFAULT_MODEL_PATH
+    from research.legacy_onnx.hirschberg_ai_service import predict_legacy_hirschberg as predict_hirschberg, DEFAULT_MODEL_PATH
     import cv2
     assert str(DEFAULT_MODEL_PATH).endswith("hirschberg_candidate_v0.6_ensemble_v2.joblib")
 
@@ -105,7 +105,7 @@ def test_geometry_uses_explicit_measured_scale_only():
 def test_effnet_refuses_random_initialized_fallback(monkeypatch):
     import sys
     import types
-    from app.services.hirschberg_ai_service import EfficientNetFeatureExtractor
+    from research.legacy_onnx.hirschberg_ai_service import EfficientNetFeatureExtractor
 
     calls = []
     fake_timm = types.SimpleNamespace(

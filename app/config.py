@@ -18,10 +18,6 @@ APP_ENV = os.getenv("APP_ENV", "development").lower()
 APP_NAME = "remicare-hirschberg-ai"
 API_VERSION = "v1"
 
-# Model Configuration
-DEFAULT_MODEL_PATH = str(PROJECT_ROOT / "app" / "models" / "best_model.onnx")
-MODEL_PATH = os.getenv("MODEL_PATH", DEFAULT_MODEL_PATH)
-
 # CORS Configuration
 # Comma-separated list of allowed frontend origins
 DEFAULT_DEV_ORIGINS = (

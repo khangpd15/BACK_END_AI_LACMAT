@@ -1,0 +1,5 @@
+-r requirements-dev.txt
+onnxruntime==1.30.0
+pandas==3.0.6
+scikit-learn==1.9.1
+joblib==1.6.0

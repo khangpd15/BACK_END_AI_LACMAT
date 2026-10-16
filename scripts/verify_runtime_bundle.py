@@ -19,12 +19,9 @@ def verify_runtime(root=ROOT):
         if digest != entry['sha256'] or path.stat().st_size != entry['bytes']:
             raise RuntimeError(f'Invalid runtime artifact: {entry["path"]}')
         total += entry['bytes']
-    onnx = root / 'app/models/best_model.onnx'
-    if not onnx.is_file() or onnx.stat().st_size < 1024:
-        raise RuntimeError('Missing ONNX model or Git LFS pointer in place of model')
     return {'verified': True, 'modelId': manifest['modelId'],
             'pupilVersion': manifest['pupilVersion'], 'files': len(manifest['files']),
-            'runtimeBytes': total, 'onnxBytes': onnx.stat().st_size}
+            'runtimeBytes': total}
 
 
 if __name__ == '__main__':
