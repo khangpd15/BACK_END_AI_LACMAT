@@ -8,7 +8,7 @@ CONFIG = {'version': 'reflex_roi_qc_v2_glint_candidates', 'search_radius_over_ir
 def point(value):
     return isinstance(value, (list, tuple)) and len(value) == 2 and all((isinstance(v, (float, int)) and (not isinstance(v, bool)) and math.isfinite(v) for v in value))
 
-def diagnose(image, eye):
+def diagnose(image, eye, *, visualize=True):
     """Search source pixels, retain all raw landmarks, return mask and explicit QC."""
     q = {'status': 'Invalid Landmark / Low Confidence', 'reasons': [], 'eligible_for_score': False, 'config': CONFIG.copy(), 'local_intensity_candidate': None, 'candidate_requires_primary_light_review': True}
     pupil, reflex, center, diameter = (eye.get(k) for k in ('pupil', 'reflex', 'iris_center', 'iris_diameter_px'))
@@ -33,7 +33,7 @@ def diagnose(image, eye):
     ImageDraw.Draw(visible).polygon([(x - x0, y - y0) for x, y in contour], fill=255)
     yy, xx = np.mgrid[y0:y1, x0:x1]
     mask = (np.asarray(visible) > 0) & ((xx - center[0]) ** 2 + (yy - center[1]) ** 2 <= radius ** 2) & ((xx - pupil[0]) ** 2 + (yy - pupil[1]) ** 2 <= (CONFIG['search_radius_over_iris'] * radius) ** 2)
-    mask_image = Image.fromarray(mask.astype('uint8') * 255)
+    mask_image = Image.fromarray(mask.astype('uint8') * 255) if visualize else None
     q['roi_pixel_count'] = int(mask.sum())
     if not q['roi_pixel_count']:
         q['reasons'].append('empty_search_mask')

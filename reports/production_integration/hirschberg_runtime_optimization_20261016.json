@@ -1,0 +1,254 @@
+{
+  "date": "2026-10-16",
+  "changes": [
+    "Remove API-unused mirror preview classifier forwards",
+    "Skip visualization-only heatmap/mask PIL images",
+    "Remove unused seed model instance"
+  ],
+  "checkpointWeightsChanged": false,
+  "unchangedCheckpointSha256Count": 8,
+  "preprocessingResolutionsAndQualityThresholdsChanged": false,
+  "importerReproducible": true,
+  "comparison": {
+    "images": 15,
+    "identicalApiResultsExcludingLatency": 15,
+    "humanReviewWithScores": 1,
+    "inconclusive": 14,
+    "syntheticClassifierLogitsExactlyEqual": true
+  },
+  "before": {
+    "afterLoadMemoryMiB": {
+      "residentMB": 448.1,
+      "peakMB": 448.1
+    },
+    "afterImagesMemoryMiB": {
+      "residentMB": 615.1,
+      "peakMB": 694.7
+    },
+    "totalLatencyMs": 16149.744,
+    "medianLatencyMs": 1026.749,
+    "fusionForwards": 13
+  },
+  "after": {
+    "afterLoadMemoryMiB": {
+      "residentMB": 447.9,
+      "peakMB": 447.9
+    },
+    "afterImagesMemoryMiB": {
+      "residentMB": 602.3,
+      "peakMB": 685.4
+    },
+    "totalLatencyMs": 9114.293,
+    "medianLatencyMs": 482.372,
+    "fusionForwards": 1
+  },
+  "tests": {
+    "passed": 27,
+    "warnings": 1,
+    "warning": "Starlette TestClient httpx deprecation"
+  },
+  "bundleVerifiedFiles": 40,
+  "limitations": [
+    "Sequential fresh Windows CPU processes, one run per version; not a controlled repeated performance benchmark",
+    "Existing local images; not an independent clinical accuracy validation",
+    "Memory unit is MiB; no Linux/Render memory-limit validation or worst-case 25MP/concurrent request measurement",
+    "Peak still exceeds 512 MiB"
+  ],
+  "cases": [
+    {
+      "id": "9e5884b3b82ac5ba",
+      "size": [
+        1280,
+        1110
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 2777.466,
+      "afterLatencyMs": 2471.234,
+      "beforeFusionForwards": 0,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "d4e978ba6a403798",
+      "size": [
+        615,
+        248
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 678.728,
+      "afterLatencyMs": 432.065,
+      "beforeFusionForwards": 0,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "ecac459b60659522",
+      "size": [
+        1920,
+        2560
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 1044.219,
+      "afterLatencyMs": 456.456,
+      "beforeFusionForwards": 2,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "c7244edc20224c21",
+      "size": [
+        472,
+        175
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 679.033,
+      "afterLatencyMs": 434.499,
+      "beforeFusionForwards": 0,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "43ceb2938ce4eadd",
+      "size": [
+        472,
+        175
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 778.954,
+      "afterLatencyMs": 430.557,
+      "beforeFusionForwards": 0,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "73ea4b3e5129e76c",
+      "size": [
+        473,
+        177
+      ],
+      "status": "HUMAN_REVIEW",
+      "identicalResult": true,
+      "beforeLatencyMs": 1292.351,
+      "afterLatencyMs": 537.325,
+      "beforeFusionForwards": 3,
+      "afterFusionForwards": 1
+    },
+    {
+      "id": "87b756291aff019f",
+      "size": [
+        471,
+        180
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 669.087,
+      "afterLatencyMs": 432.162,
+      "beforeFusionForwards": 0,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "19a77e5bd828fb83",
+      "size": [
+        1207,
+        301
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 770.575,
+      "afterLatencyMs": 459.416,
+      "beforeFusionForwards": 0,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "b22c5f49dada1e61",
+      "size": [
+        862,
+        195
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 733.907,
+      "afterLatencyMs": 482.372,
+      "beforeFusionForwards": 0,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "539c0577df25dd69",
+      "size": [
+        1147,
+        244
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 1268.544,
+      "afterLatencyMs": 527.307,
+      "beforeFusionForwards": 2,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "edbc2f344222ed0f",
+      "size": [
+        1153,
+        228
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 906.135,
+      "afterLatencyMs": 511.489,
+      "beforeFusionForwards": 0,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "023e6caea47f18ee",
+      "size": [
+        1536,
+        2048
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 1091.706,
+      "afterLatencyMs": 446.942,
+      "beforeFusionForwards": 2,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "1252cd5f9b27dcd8",
+      "size": [
+        1920,
+        2560
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 1088.828,
+      "afterLatencyMs": 497.114,
+      "beforeFusionForwards": 2,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "17c7f42414e202de",
+      "size": [
+        1920,
+        2560
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 1026.749,
+      "afterLatencyMs": 484.148,
+      "beforeFusionForwards": 0,
+      "afterFusionForwards": 0
+    },
+    {
+      "id": "1aa1601ed4ab3b2b",
+      "size": [
+        1920,
+        2560
+      ],
+      "status": "INCONCLUSIVE",
+      "identicalResult": true,
+      "beforeLatencyMs": 1343.462,
+      "afterLatencyMs": 511.207,
+      "beforeFusionForwards": 2,
+      "afterFusionForwards": 0
+    }
+  ]
+}

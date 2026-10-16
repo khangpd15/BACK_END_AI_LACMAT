@@ -12,12 +12,14 @@ from app.config import PROJECT_ROOT
 
 
 @pytest.fixture
-def client():
+def client(monkeypatch, tmp_path):
+    from app.services import hirschberg_session_service as storage
+    monkeypatch.setattr(storage, "SESSIONS_DIR", tmp_path)
     with TestClient(app) as test_client:
         yield test_client
 
 
-def test_hirschberg_predict_saves_session(client):
+def test_hirschberg_predict_saves_session(client, tmp_path):
     image_io = io.BytesIO()
     Image.new("RGB", (320, 160), (128, 128, 128)).save(image_io, format="PNG")
     raw_bytes = image_io.getvalue()
@@ -41,7 +43,7 @@ def test_hirschberg_predict_saves_session(client):
     assert "sessionPath" in data
 
     # Verify local files on filesystem
-    session_dir = os.path.join(str(PROJECT_ROOT), "data", "hirschberg", "sessions", custom_session_id)
+    session_dir = os.path.join(str(tmp_path), custom_session_id)
     assert os.path.exists(session_dir)
     assert os.path.exists(os.path.join(session_dir, "metadata.json"))
     assert os.path.exists(os.path.join(session_dir, "result.json"))

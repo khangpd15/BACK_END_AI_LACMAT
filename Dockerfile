@@ -22,7 +22,6 @@ RUN python -m pip install --no-cache-dir -r requirements-render.txt \
     && python -c "import cv2, mediapipe, torch; assert hasattr(mediapipe, 'solutions')"
 
 COPY app ./app
-COPY migrations ./migrations
 COPY scripts/verify_runtime_bundle.py ./scripts/verify_runtime_bundle.py
 RUN python scripts/verify_runtime_bundle.py \
     && useradd --create-home remicare \

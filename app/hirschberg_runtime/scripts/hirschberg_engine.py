@@ -20,7 +20,7 @@ from app.hirschberg_runtime.research.hirschberg_localization.iris_context import
 from app.hirschberg_runtime.research.hirschberg_localization.pupil_iris_prior import make_model
 from app.hirschberg_runtime.research.hirschberg_localization.direct_pupil_inference import predict as predict_direct_pupil
 from app.hirschberg_runtime.scripts.hirschberg_localizer import network
-from app.hirschberg_runtime.research.hirschberg_localization.automatic_upload import capture_assessment, mirror_preview, paired_eye_rois
+from app.hirschberg_runtime.research.hirschberg_localization.automatic_upload import capture_assessment, paired_eye_rois
 from app.hirschberg_runtime.research.hirschberg_localization.iris_radius_qc import compare_diameters
 from app.hirschberg_runtime.research.hirschberg_localization.binocular_guard import compare_eyes, capture_guard
 from app.hirschberg_runtime.research.hirschberg_localization.input_contract import validate_input, human_review_only
@@ -90,9 +90,6 @@ class Engine:
         self.iris = four_point_model(torch, stable_model(torch, torch.load(INITIAL, map_location='cpu', weights_only=True))).to(self.device)
         self.iris.load_state_dict(torch.load(IRIS_PATH, map_location=self.device, weights_only=True)['state_dict'])
         self.iris.eval()
-        self.seed = network(torch, spatial_logits=True, targets=2).to(self.device)
-        self.seed.load_state_dict(torch.load(INITIAL, map_location=self.device, weights_only=True)['state_dict'])
-        self.seed.eval()
 
     def infer_current(self, model, image, proposal, mean, std, device):
         return opening_infer(model, image, proposal, mean, std, self.opening_mean, self.opening_std, device)
@@ -188,13 +185,12 @@ class Engine:
             contours = {}
         for row, side in enumerate(('image_left', 'image_right')):
             box = boxes.get(side)
-            eye, maps = decode(self.pr, image, box, side, self.torch, self.device, size=256)
+            eye, _ = decode(self.pr, image, box, side, self.torch, self.device, size=256, visualize=False)
             iris_box = iris_boxes.get(side)
             four, iris_context = predict_with_context(self.iris, image, iris_box, side, self.torch, self.device)
             edges = [four['iris_left'], four['iris_right']] if four else None
-            pupil, pupil_maps, pupil_raw = predict_direct_pupil(self.pupil, image, box, side, four, self.torch, self.device)
+            pupil, _, pupil_raw = predict_direct_pupil(self.pupil, image, box, side, four, self.torch, self.device, visualize=False)
             eye['pupil'] = pupil
-            maps.update(pupil_maps)
             eye['raw_predictions']['pupil'] = pupil_raw
             eye.update(iris_edges=edges, iris_four=four, iris_bbox=iris_context['used_bbox'], iris_context_metadata=iris_context, iris_scale_valid=False, eyelid_contour=contours.get(side, []))
             if four:
@@ -217,7 +213,7 @@ class Engine:
                     eye['eyelid_qc_source'] = 'detector_contour' if eye['eyelid_contour'] else 'unavailable'
                 _, opening_details = opening_features({side: {**eye, 'eyelid_contour': pts}})
                 eye['opening_geometry'] = opening_details[side]
-            eye['reflex_qc'], search_mask = reflex_diagnose(image, eye)
+            eye['reflex_qc'], _ = reflex_diagnose(image, eye, visualize=False)
             axis_ratio = (eye.get('mediapipe_iris_geometry') or {}).get('landmark_bbox_axis_ratio')
             if axis_ratio is not None and (not 0.85 <= axis_ratio <= 1.0):
                 eye['reflex_qc']['reasons'].append('mediapipe_iris_axis_ratio_outside_0_85_1_0')
@@ -244,8 +240,6 @@ class Engine:
         record['experimental_classifier_proposal'] = screen_with_guards(lambda: self.classify(image, record), record, orientation, fixation)
         record['screening'] = record['experimental_classifier_proposal']
         if automatic:
-            proposal = {side: {**record['eyes'][side], 'iris_left': (record['eyes'][side].get('iris_edges') or [None, None])[0], 'iris_right': (record['eyes'][side].get('iris_edges') or [None, None])[1]} for side in ('image_left', 'image_right')}
-            record['model_preview'] = guarded_infer(None, record, orientation, lambda *unused: human_review_only(mirror_preview(self.infer_current, self.fusion, image, proposal, self.feature_mean, self.feature_std, self.device))) if record['input_contract']['eligible'] else record['screening'].copy()
             record['automatic_capture']['common_direction_flag'] = record['binocular_comparison'].get('same_half_plane')
             record['automatic_capture']['fixation_status'] = fixation
             record['automatic_capture']['fixation_verified'] = fixation == 'confirmed'

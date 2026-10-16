@@ -35,7 +35,7 @@ def test_busy_upload_retries_and_closes_file(monkeypatch):
         upload = SimpleNamespace(filename='eye.jpg', read=read, close=close)
         try:
             with pytest.raises(HTTPException) as error:
-                await api.predict(image=upload, save_session=False, db=None)
+                await api.predict(image=upload, save_session=False)
             assert error.value.status_code == 503
             assert error.value.headers['Retry-After'] == '2'
             assert closed

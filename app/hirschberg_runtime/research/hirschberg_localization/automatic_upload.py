@@ -1,5 +1,4 @@
 """Frozen inference subset imported from the training workspace."""
-import copy
 import math
 
 def paired_eye_rois(image):
@@ -45,46 +44,3 @@ def capture_assessment(image, faces, eyes):
         out['eye_line_roll_deg'] = math.degrees(math.atan2(b[1] - a[1], b[0] - a[0]))
         out['roll_note'] = '2D eye-line inclination only; not a measurement of gaze.'
     return out
-
-def mirrored_proposal(proposal, width):
-    out = {}
-    for target, source in [('image_left', 'image_right'), ('image_right', 'image_left')]:
-        e = copy.deepcopy(proposal[source])
-        box = e.get('bbox')
-        if box:
-            e['bbox'] = [width - box[2], box[1], width - box[0], box[3]]
-        iris_box = e.get('iris_bbox')
-        if iris_box:
-            e['iris_bbox'] = [width - iris_box[2], iris_box[1], width - iris_box[0], iris_box[3]]
-        for key in ('pupil', 'reflex', 'iris_center', 'iris_left', 'iris_right', 'iris_top', 'iris_bottom'):
-            p = e.get(key)
-            if p is not None:
-                e[key] = [width - 1 - p[0], p[1]]
-        for key in ('eyelid_contour', 'eyelid_branch_contour'):
-            if key in e:
-                e[key] = [[width - 1 - p[0], p[1]] for p in e[key]]
-        e['iris_left'], e['iris_right'] = (e.get('iris_right'), e.get('iris_left'))
-        if e.get('iris_edges'):
-            e['iris_edges'] = [[width - 1 - p[0], p[1]] for p in reversed(e['iris_edges'])]
-        if e.get('iris_four'):
-            four = {k: [width - 1 - p[0], p[1]] for k, p in e['iris_four'].items()}
-            four['iris_left'], four['iris_right'] = (four['iris_right'], four['iris_left'])
-            e['iris_four'] = four
-        out[target] = e
-    return out
-
-def mirror_preview(infer, model, image, proposal, mean, std, device):
-    from PIL import Image
-    first = infer(model, image, proposal, mean, std, device)
-    if first['status'] == 'INCONCLUSIVE':
-        return first
-    flipped = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-    second = infer(model, flipped, mirrored_proposal(proposal, image.width), mean, std, device)
-    diagnostics = {'class_original': first.get('class_proposal'), 'class_mirrored': second.get('class_proposal'), 'scope': 'classifier TTA on reflected fixed landmarks; not a full detector equivariance test'}
-    if second['status'] != 'INCONCLUSIVE' and first['uncalibrated_model_scores'].keys() == second['uncalibrated_model_scores'].keys():
-        diagnostics['maximum_score_gap'] = max((abs(v - second['uncalibrated_model_scores'][k]) for k, v in first['uncalibrated_model_scores'].items()))
-    if second['status'] == 'INCONCLUSIVE' or first.get('class_proposal') != second.get('class_proposal'):
-        return {'status': 'INCONCLUSIVE', 'reason': 'mirror_sensitive_prediction', 'scores': None, 'mirror_diagnostics': diagnostics, 'warning': 'Model class changes under horizontal reflection; mirror history remains unknown.'}
-    labels = first['uncalibrated_model_scores']
-    averaged = {k: (labels[k] + second['uncalibrated_model_scores'][k]) / 2 for k in labels}
-    return {**first, 'uncalibrated_model_scores': averaged, 'mirror_consistency': 'same class in two orientations', 'mirror_diagnostics': diagnostics, 'role': 'RESEARCH_PREVIEW_ONLY', 'capture_verified': False, 'warning': 'Uncalibrated mirror-averaged model preview; consistency does not verify fixation or clinical accuracy.'}

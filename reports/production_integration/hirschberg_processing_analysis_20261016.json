@@ -1,0 +1,123 @@
+{
+  "modelState": {
+    "fusion": {
+      "parameters": 23775622,
+      "stateMiB": 90.9
+    },
+    "eyelid": {
+      "parameters": 118913,
+      "stateMiB": 0.454
+    },
+    "pr": {
+      "parameters": 118968,
+      "stateMiB": 0.454
+    },
+    "pupil": {
+      "parameters": 119112,
+      "stateMiB": 0.454
+    },
+    "iris": {
+      "parameters": 368568,
+      "stateMiB": 1.406
+    },
+    "seed": {
+      "parameters": 118968,
+      "stateMiB": 0.454
+    }
+  },
+  "cases": [
+    {
+      "caseId": "3468e84784604a5693e096ccf8d29db0",
+      "size": [
+        1280,
+        1110
+      ],
+      "totalMs": 3727.09,
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "mainClassifierCalled": false,
+      "previewStatus": "INCONCLUSIVE",
+      "forwardCounts": {
+        "pr": 2,
+        "iris": 2,
+        "pupil": 2,
+        "eyelid": 2
+      },
+      "stageTimesMs": {
+        "paired_eye_rois": 1913.45,
+        "pr_forward": 281.95,
+        "decode": 302.6,
+        "iris_forward": 64.78,
+        "predict_with_context": 69.33,
+        "pupil_forward": 256.91,
+        "predict_direct_pupil": 278.67,
+        "eyelid_forward": 168.35,
+        "predict_mask": 174.45,
+        "reflex_diagnose": 21.42
+      }
+    },
+    {
+      "caseId": "5f43cb07b3494ec4aa08af8cc87a2824",
+      "size": [
+        615,
+        248
+      ],
+      "totalMs": 758.51,
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "mainClassifierCalled": false,
+      "previewStatus": "INCONCLUSIVE",
+      "forwardCounts": {
+        "pr": 2,
+        "iris": 2,
+        "pupil": 2,
+        "eyelid": 2
+      },
+      "stageTimesMs": {
+        "paired_eye_rois": 44.83,
+        "pr_forward": 232.41,
+        "decode": 243.18,
+        "iris_forward": 40.73,
+        "predict_with_context": 42.56,
+        "pupil_forward": 236.58,
+        "predict_direct_pupil": 250.05,
+        "eyelid_forward": 133.32,
+        "predict_mask": 135.71,
+        "reflex_diagnose": 2.73
+      }
+    },
+    {
+      "caseId": "da6e7303520c40438bbb8efc21856ea1",
+      "size": [
+        1920,
+        2560
+      ],
+      "totalMs": 1276.65,
+      "status": "INCONCLUSIVE",
+      "reason": "common_direction_ambiguous",
+      "mainClassifierCalled": false,
+      "previewStatus": "HUMAN_REVIEW",
+      "forwardCounts": {
+        "pr": 2,
+        "iris": 2,
+        "pupil": 2,
+        "eyelid": 2,
+        "fusion": 2
+      },
+      "stageTimesMs": {
+        "pr_forward": 260.72,
+        "decode": 276.86,
+        "iris_forward": 51.5,
+        "predict_with_context": 54.29,
+        "pupil_forward": 208.93,
+        "predict_direct_pupil": 225.51,
+        "eyelid_forward": 167.83,
+        "predict_mask": 172.49,
+        "reflex_diagnose": 7.23,
+        "fusion_forward": 432.82,
+        "mirror_preview": 452.72
+      }
+    }
+  ],
+  "scope": "Diagnostic instrumentation on 3 existing reference images; timings are local and include overlapping nested stages, not an accuracy evaluation. No model code or weights changed."
+}

@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "pipeline": "hirschberg_local_storage_only",
+  "databaseLibrariesImported": false,
+  "onnxImported": false,
+  "checkpointChanged": false,
+  "memoryAfterLoad": {
+    "residentMB": 448.3,
+    "peakMB": 448.3
+  },
+  "memoryAfterThreeReferenceImages": {
+    "residentMB": 610.5,
+    "peakMB": 689.2
+  },
+  "memoryPlatform": "Windows CPU, fresh process; not a Linux/Render memory-limit test",
+  "cases": [
+    {
+      "case": "3468e84784604a5693e096ccf8d29db0",
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "pupilMaxDifferencePx": {
+        "image_left": 0.0003304481506347656,
+        "image_right": 0.0009119510650634766
+      },
+      "latencyMs": 2908.77
+    },
+    {
+      "case": "5f43cb07b3494ec4aa08af8cc87a2824",
+      "status": "INCONCLUSIVE",
+      "reason": "invalid_reflex_landmark",
+      "pupilMaxDifferencePx": {
+        "image_left": 0.0013937056064605713,
+        "image_right": 0.000467836856842041
+      },
+      "latencyMs": 707.152
+    },
+    {
+      "case": "da6e7303520c40438bbb8efc21856ea1",
+      "status": "INCONCLUSIVE",
+      "reason": "common_direction_ambiguous",
+      "pupilMaxDifferencePx": {
+        "image_left": 0.0001451267914944765,
+        "image_right": 9.085385863727424e-05
+      },
+      "latencyMs": 1151.662
+    }
+  ],
+  "testsPassed": 24,
+  "removedEndpointsReturn": 404,
+  "legacyCodeExcludedFromDocker": true,
+  "comparisonWithPreviousLocalRun": {
+    "afterLoadReductionMB": 20.5,
+    "imagePeakReductionMB": 22.1,
+    "notControlledLinuxBenchmark": true
+  },
+  "verification": {
+    "modelApiTestsPassed": 24,
+    "testsSeconds": 11.73,
+    "artifactHashesVerified": 40,
+    "sessionStorage": "filesystem",
+    "remoteDataModified": false,
+    "modelWeightsChanged": false
+  }
+}

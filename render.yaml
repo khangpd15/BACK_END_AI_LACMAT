@@ -24,7 +24,3 @@ services:
         value: "2"
       - key: KEEP_ALIVE_ENABLED
         value: "false"
-      - key: DB_POOL_SIZE
-        value: "2"
-      - key: DB_MAX_OVERFLOW
-        value: "2"

@@ -1,9 +1,4 @@
-"""Keep-Alive and Self-Ping background service for RemiCare backend on Render.
-
-Prevents Render Free Tier services from spinning down after 15 minutes of inactivity,
-and periodically exercises the Supabase database connection pool to avoid idle drops
-and inactive project pausing.
-"""
+"""Optional HTTP-only self-ping worker. Disabled by default."""
 
 import asyncio
 from datetime import datetime, timezone
@@ -15,30 +10,26 @@ import httpx
 from app.config import (
     KEEP_ALIVE_ENABLED,
     KEEP_ALIVE_INTERVAL_SECONDS,
-    KEEP_ALIVE_PING_DB,
     RENDER_EXTERNAL_URL,
     SELF_PING_URL,
 )
-from app.db.database import check_db_connection
 
 logger = logging.getLogger("remicare.keep_alive")
 
 
 class KeepAliveService:
-    """Orchestrates periodic background self-pings and database connection warming."""
+    """Orchestrates periodic background HTTP self-pings."""
 
     def __init__(
         self,
         enabled: Optional[bool] = None,
         interval_seconds: Optional[int] = None,
-        ping_db: Optional[bool] = None,
         custom_url: Optional[str] = None,
     ):
         self.enabled = KEEP_ALIVE_ENABLED if enabled is None else enabled
         self.interval_seconds = (
             KEEP_ALIVE_INTERVAL_SECONDS if interval_seconds is None else interval_seconds
         )
-        self.ping_db = KEEP_ALIVE_PING_DB if ping_db is None else ping_db
         self.custom_url = custom_url or SELF_PING_URL or RENDER_EXTERNAL_URL or ""
 
         self._task: Optional[asyncio.Task] = None
@@ -53,14 +44,6 @@ class KeepAliveService:
         self.last_http_status_code: Optional[int] = None
         self.last_http_latency_ms: Optional[float] = None
         self.last_http_error: Optional[str] = None
-
-        self.total_db_pings = 0
-        self.successful_db_pings = 0
-        self.failed_db_pings = 0
-        self.last_db_ping_at: Optional[str] = None
-        self.last_db_ping_status: str = "none"
-        self.last_db_ping_latency_ms: Optional[float] = None
-        self.last_db_ping_error: Optional[str] = None
 
     def resolve_target_url(self) -> Optional[str]:
         """Resolves target base URL from custom URL, SELF_PING_URL, or RENDER_EXTERNAL_URL."""
@@ -132,52 +115,24 @@ class KeepAliveService:
                 "latency_ms": self.last_http_latency_ms,
             }
 
-    async def ping_database(self) -> Dict[str, Any]:
-        """Performs a lightweight SELECT 1 DB ping to warm pool and prevent Supabase timeout."""
-        self.total_db_pings += 1
-        now_iso = datetime.now(timezone.utc).isoformat()
-        self.last_db_ping_at = now_iso
-
-        res = await check_db_connection()
-        self.last_db_ping_latency_ms = res.get("latency_ms")
-
-        if res.get("connected"):
-            self.successful_db_pings += 1
-            self.last_db_ping_status = "healthy"
-            self.last_db_ping_error = None
-            logger.debug("[KeepAlive] Database ping SUCCESS in %.1fms", res.get("latency_ms", 0))
-        else:
-            self.failed_db_pings += 1
-            self.last_db_ping_status = "unhealthy"
-            self.last_db_ping_error = res.get("error")
-            logger.warning("[KeepAlive] Database ping WARNING: %s", res.get("error"))
-
-        return res
-
     async def ping_cycle(self) -> Dict[str, Any]:
-        """Executes one complete cycle: HTTP self-ping and optional DB pool warm."""
+        """Executes one complete cycle: HTTP self-ping."""
         target_url = self.resolve_target_url()
         http_result = None
         if target_url:
             http_result = await self.ping_http(target_url)
 
-        db_result = None
-        if self.ping_db:
-            db_result = await self.ping_database()
-
         return {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "http": http_result,
-            "database": db_result,
         }
 
     async def _run_loop(self) -> None:
         """Internal background loop running every interval_seconds."""
         logger.info(
-            "[KeepAlive] Worker started. Interval=%ds, target_url=%s, ping_db=%s",
+            "[KeepAlive] Worker started. Interval=%ds, target_url=%s",
             self.interval_seconds,
             self.resolve_target_url() or "(none)",
-            self.ping_db,
         )
         # Initial boot delay (15 seconds) so application startup completes cleanly
         try:
@@ -242,15 +197,6 @@ class KeepAliveService:
                 "lastStatusCode": self.last_http_status_code,
                 "lastLatencyMs": self.last_http_latency_ms,
                 "lastError": self.last_http_error,
-            },
-            "databasePings": {
-                "total": self.total_db_pings,
-                "successful": self.successful_db_pings,
-                "failed": self.failed_db_pings,
-                "lastAt": self.last_db_ping_at,
-                "lastStatus": self.last_db_ping_status,
-                "lastLatencyMs": self.last_db_ping_latency_ms,
-                "lastError": self.last_db_ping_error,
             },
         }
 

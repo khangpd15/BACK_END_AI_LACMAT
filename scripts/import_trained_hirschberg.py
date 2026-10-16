@@ -88,6 +88,65 @@ def prune_runtime():
             path.unlink()
 
 
+
+def optimize_runtime():
+    """Remove API-unused preview/visualization work without changing numeric inference."""
+    import textwrap
+
+    def rewrite(relative, transform):
+        path = DEST / relative
+        path.write_text(transform(path.read_text(encoding='utf-8')), encoding='utf-8')
+
+    def replace_once(code, old, new):
+        if code.count(old) != 1:
+            raise RuntimeError(f'Unexpected source structure for production optimization: {old[:90]}')
+        return code.replace(old, new, 1)
+
+    def engine(code):
+        start = code.index('        self.seed = network(')
+        end = code.index('\n    def infer_current', start)
+        code = code[:start] + code[end:]
+        start = code.index('            proposal = {side:', code.index('        if automatic:', code.index('def process(')))
+        end = code.index("            record['automatic_capture']['common_direction_flag']", start)
+        code = code[:start] + code[end:]
+        code = replace_once(code, 'eye, maps = decode(self.pr, image, box, side, self.torch, self.device, size=256)',
+                            'eye, _ = decode(self.pr, image, box, side, self.torch, self.device, size=256, visualize=False)')
+        code = replace_once(code, 'pupil, pupil_maps, pupil_raw = predict_direct_pupil(self.pupil, image, box, side, four, self.torch, self.device)',
+                            'pupil, _, pupil_raw = predict_direct_pupil(self.pupil, image, box, side, four, self.torch, self.device, visualize=False)')
+        code = replace_once(code, '            maps.update(pupil_maps)\n', '')
+        code = replace_once(code, "eye['reflex_qc'], search_mask = reflex_diagnose(image, eye)",
+                            "eye['reflex_qc'], _ = reflex_diagnose(image, eye, visualize=False)")
+        return code
+
+    def decoder(code):
+        code = replace_once(code, 'def decode(pr_model, image, box, side, torch, device, size=192):',
+                            'def decode(pr_model, image, box, side, torch, device, size=192, *, visualize=True):')
+        start = code.index('        values = prob[0, j].cpu().numpy()')
+        end = code.index("        result['heatmap_transforms'][kind]", start)
+        return code[:start] + '        if visualize:\n' + textwrap.indent(code[start:end], '    ') + code[end:]
+
+    def pupil(code):
+        code = replace_once(code, 'def predict(model, image, box, side, iris_four, torch, device):',
+                            'def predict(model, image, box, side, iris_four, torch, device, *, visualize=True):')
+        start = code.index('        values = heat[0, 0].masked_fill(')
+        end = code.index('        visibility = flags', start)
+        code = code[:start] + '        if visualize:\n' + textwrap.indent(code[start:end], '    ') + code[end:]
+        start = code.index('    gray = Image.fromarray(')
+        end = code.index('    metadata = ', start)
+        code = code[:start] + '    maps = {}\n    if visualize:\n' + textwrap.indent(code[start:end], '    ') + "        maps = {'pupil': mapped, 'pupil_model256': gray}\n" + code[end:]
+        return replace_once(code, "{'pupil': mapped, 'pupil_model256': gray}, metadata)", 'maps, metadata)')
+
+    def reflex(code):
+        code = replace_once(code, 'def diagnose(image, eye):', 'def diagnose(image, eye, *, visualize=True):')
+        return replace_once(code, "    mask_image = Image.fromarray(mask.astype('uint8') * 255)",
+                            "    mask_image = Image.fromarray(mask.astype('uint8') * 255) if visualize else None")
+
+    rewrite('scripts/hirschberg_engine.py', engine)
+    rewrite('scripts/export_hirschberg_review163_steps.py', decoder)
+    rewrite('research/hirschberg_localization/direct_pupil_inference.py', pupil)
+    rewrite('research/hirschberg_localization/reflex_roi_qc.py', reflex)
+
+
 def main():
     global SOURCE
     parser = argparse.ArgumentParser(description=__doc__)
@@ -175,7 +234,10 @@ def main():
     (DEST / 'frozen_rois.json').write_text(json.dumps(rois), encoding='utf-8')
     (DEST / 'manifest.json').write_text(json.dumps({'source': str(SOURCE), 'modelId': 'screening_eyelid_branch_20261011_v1', 'pupilVersion': 'pupil_color_features_20261012_v1', 'researchOnly': True, 'files': inventory, 'modules': sorted(visited), 'sourceRuntimeSha256': sha(SOURCE / 'scripts/hirschberg_real_screening_page.py'), 'excludedCandidate': {'run': 'pupil_iris_continued_20261015_v3', 'reason': 'Source completion marks recommended_for_runtime=false; keep active validated configuration.'}}, indent=2), encoding='utf-8')
     prune_runtime()
+    optimize_runtime()
+    prune_runtime()
     manifest = json.loads((DEST / 'manifest.json').read_text(encoding='utf-8'))
+    manifest['runtimeOptimizations'] = {'version': 'production_inference_v1', 'mirrorPreview': False, 'visualizationImages': False, 'unusedSeedInstance': False, 'checkpointWeightsChanged': False}
     manifest['modules'] = [p.relative_to(DEST).as_posix() for p in sorted(DEST.rglob('*.py')) if p.name != '__init__.py']
     for path in [DEST / 'frozen_rois.json', *sorted(DEST.rglob('*.py'))]:
         manifest['files'].append({'path': path.relative_to(DEST).as_posix(), 'sha256': sha(path), 'bytes': path.stat().st_size})

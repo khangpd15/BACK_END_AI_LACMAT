@@ -81,8 +81,8 @@
     },
     {
       "path": "research/hirschberg_localization/automatic_upload.py",
-      "sha256": "e4102da4632f79bbb6ea6d37d47389a79e40f29e5d7d221423a7803d8d3187cc",
-      "bytes": 6023
+      "sha256": "8380b5ca7f403cdf01208cf8e9ad17fc798b90a4a0dd31393f4c6e515b66ad39",
+      "bytes": 2963
     },
     {
       "path": "research/hirschberg_localization/binocular_guard.py",
@@ -91,8 +91,8 @@
     },
     {
       "path": "research/hirschberg_localization/direct_pupil_inference.py",
-      "sha256": "4f2e48bfa64728f6a568137f5759b42d1eefc2dd4da28995aee670441a8347ed",
-      "bytes": 2563
+      "sha256": "c4edaf7ca9960a3a8dbf17ce6c60bf91644f61d71a8edcdd1128aa279de97a29",
+      "bytes": 2680
     },
     {
       "path": "research/hirschberg_localization/eye_crops.py",
@@ -136,8 +136,8 @@
     },
     {
       "path": "research/hirschberg_localization/reflex_roi_qc.py",
-      "sha256": "f3d7a7df8f1d93c0e44f987fd853f4775049a994bfc180861e6f470d0057795e",
-      "bytes": 6407
+      "sha256": "05ce1b4d162cd051e38ed99b6e4e9db51c36b79461a47bd7d47c2490a49fce87",
+      "bytes": 6449
     },
     {
       "path": "research/hirschberg_localization/resnet_reference.py",
@@ -161,8 +161,8 @@
     },
     {
       "path": "scripts/export_hirschberg_review163_steps.py",
-      "sha256": "4802c0eba2cd702e28c177407a0ec3dd401f288f4288af2f3290b31198e2ff97",
-      "bytes": 2334
+      "sha256": "5e2a50640876f5b5ddf3e1d1023a9eb340db2930174d87c192821fff940ff63f",
+      "bytes": 2412
     },
     {
       "path": "scripts/hirschberg_all_image_review.py",
@@ -176,8 +176,8 @@
     },
     {
       "path": "scripts/hirschberg_engine.py",
-      "sha256": "30ce98b3e5ae62f67b366984ca2e37aa2c3611ef021c1254991f11668d23fc55",
-      "bytes": 21431
+      "sha256": "944b1dfd9025aa0f40bd5d0361064ef9ab562040a7dd621e4336ff027a0a7508",
+      "bytes": 20631
     },
     {
       "path": "scripts/hirschberg_iris_geometry_pilot.py",
@@ -235,5 +235,12 @@
   "excludedCandidate": {
     "run": "pupil_iris_continued_20261015_v3",
     "reason": "Source completion marks recommended_for_runtime=false; keep active validated configuration."
+  },
+  "runtimeOptimizations": {
+    "version": "production_inference_v1",
+    "mirrorPreview": false,
+    "visualizationImages": false,
+    "unusedSeedInstance": false,
+    "checkpointWeightsChanged": false
   }
 }

@@ -22,7 +22,6 @@ from app import __version__
 from app.api.hirschberg import router as hirschberg_router
 from app.api.research_measurement import router as research_measurement_router
 from app.config import get_allowed_origins
-from app.db.database import check_db_connection, init_db
 from app.services.keep_alive import (
     get_keep_alive_service,
     start_keep_alive,
@@ -44,14 +43,8 @@ logger = logging.getLogger("remicare.main")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan: Preload machine learning models, init DB, and start keep-alive worker."""
+    """Application lifespan: Preload the Hirschberg model and start the optional HTTP keep-alive worker."""
     logger.info("Initializing RemiCare Hirschberg AI Backend...")
-    try:
-        # Initialize database tables
-        await asyncio.wait_for(init_db(), timeout=10)
-    except Exception as e:
-        logger.warning("Database init check note: %s", e)
-
     # Uvicorn binds its HTTP socket only after lifespan reaches yield. The CNN
     # bundle can take minutes to verify/load on a small Render instance.
     # Its service lock already serializes warmup with incoming predictions.
@@ -65,7 +58,7 @@ async def lifespan(app: FastAPI):
 
     hirschberg_warmup = asyncio.create_task(warm_hirschberg(), name="hirschberg-warmup")
 
-    # Start automated keep-alive self-ping and DB pool warming worker
+    # Start automated keep-alive HTTP self-ping worker
     start_keep_alive()
 
     try:
@@ -174,23 +167,12 @@ async def ping() -> Dict[str, Any]:
 
 
 @app.get(
-    "/health/db",
-    tags=["System"],
-    summary="Database connectivity diagnostics",
-    description="Tests live connection to PostgreSQL / Supabase with SELECT 1 and returns connection diagnostics.",
-)
-async def db_health() -> Dict[str, Any]:
-    """Diagnostics endpoint testing database connection."""
-    return await check_db_connection()
-
-
-@app.get(
     "/health",
     tags=["System"],
     summary="Health check endpoint",
     description="Returns backend service health status, Hirschberg CNN readiness.",
 )
-async def health_check(check_db: bool = False) -> Dict[str, Any]:
+async def health_check() -> Dict[str, Any]:
     """Health check endpoint responding with operational status, version, and active model info."""
     hirschberg_info = trained_hirschberg_status()
     keep_alive_info = get_keep_alive_service().get_status()
@@ -204,13 +186,8 @@ async def health_check(check_db: bool = False) -> Dict[str, Any]:
         },
         "deploymentCommit": os.getenv("RENDER_GIT_COMMIT"),
         "keepAlive": keep_alive_info,
+        "sessionStorage": "local",
     }
-
-    if check_db:
-        db_res = await check_db_connection()
-        result["database"] = db_res
-        if not db_res.get("connected", False):
-            result["status"] = "degraded"
 
     return result
 

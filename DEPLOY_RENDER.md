@@ -28,8 +28,8 @@ Server không cần truy cập `D:\REMICARE_TRAIN_AI` hoặc tải pretrained we
 6. Health Check Path: `/ready`; Python đã cố định `3.12.14` trong image.
    Các biến CPU nằm trong `render.yaml`.
 7. Điền `REMICARE_FRONTEND_ORIGINS` bằng origin frontend thật, cách nhau bởi dấu phẩy.
-   Điền `DATABASE_URL` nếu cần lưu session bền vững (PostgreSQL/Supabase pooler).
-   Không dán secrets vào `render.yaml`. SQLite memory mặc định chỉ phù hợp thử nghiệm.
+   Backend không còn kết nối database/Supabase, không cần DATABASE_URL hoặc key Supabase.
+   Các biến cũ nếu còn đặt trên Render không kích hoạt kết nối database.
 
 ## Bộ nhớ và vận hành
 
@@ -39,15 +39,22 @@ thread là 1 mặc định; có thể đặt `HIRSCHBERG_CPU_THREADS` từ 1 đ�
 Cài PyTorch CPU để tránh tải các package CUDA. Chỉ cài một OpenCV distribution
 (contrib, theo dependency MediaPipe); requirements-dev chứa pytest riêng.
 
-Pipeline ONNX đã gỡ khỏi backend và Docker image. Hirschberg giữ nguyên checkpoint,
-preprocessing và giới hạn ảnh. Số đo 562 MB / peak 628 MB trước đây thuộc bản có cả
-CNN + ONNX, không dùng làm số đo của bản hiện tại. Số đo mới trên Windows CPU: khoảng 469 MB sau khi nạp model; peak khoảng 711 MB
-khi xử lý ba ảnh tham chiếu (không phải phép đo ảnh lớn nhất). Chi tiết trong
-`reports/production_integration/hirschberg_only_20261016.json`.
-Nên chuẩn bị instance từ 2 GB RAM và đo trên Linux thực tế; chưa xác nhận chạy ổn 512 MB.
+Pipeline ONNX và tích hợp database/Supabase đã gỡ khỏi backend và Docker image.
+Hirschberg giữ nguyên checkpoint, preprocessing và giới hạn ảnh.
+Đã bỏ preview không được API sử dụng, ngừng tạo ảnh heatmap/mask trực quan và
+bỏ instance seed thừa. Script import giữ các tối ưu khi tái tạo bundle; 8 checkpoint
+không đổi SHA-256. 15/15 kết quả API giống hoàn toàn trước/sau (trừ latency).
+Số đo Windows CPU trên 15 ảnh: sau nạp ~448 MiB; peak 694,7 → 685,4 MiB;
+tổng thời gian 16,15 → 9,11 giây. Chỉ là một lượt đo; chưa kiểm chứng Linux/Render,
+ảnh lớn nhất hay độ chính xác lâm sàng. 27 test pass và 40 file runtime được xác minh.
+Chi tiết: `reports/production_integration/hirschberg_runtime_optimization_20261016.md`.
+Nên chuẩn bị instance từ 2 GB RAM và đo trên Render thực tế; chưa xác nhận ổn định 512 MB.
 Nếu gặp OOM, tăng RAM và kiểm tra ảnh kích thước lớn; không tăng worker để khắc phục.
-File session trong `data/` dùng filesystem tạm của Render, có thể mất sau redeploy;
-DATABASE_URL cần được cấu hình nếu muốn giữ dữ liệu. Ảnh upload không được lưu bởi runtime.
+
+Session chỉ lưu metadata/result local nếu `save_session=true`; frontend hiện gửi false.
+Filesystem mặc định của Render là tạm, file có thể mất sau restart/redeploy. Muốn giữ
+lâu dài cần persistent disk phù hợp hoặc cơ chế sao lưu. Ảnh upload không được lưu.
+Backend không còn `/health/db`, không có ping hoặc tác vụ đọc/ghi database.
 
 `/ping` xác nhận HTTP đang chạy. `/ready` trả 503 khi CNN chưa sẵn sàng và 200 sau
 khi nạp thành công; Render chỉ chuyển traffic khi readiness thành công.
