@@ -108,7 +108,6 @@ jobs:
             mkdir -p ~/app/hirschberg && cd ~/app/hirschberg
 
             NEW_TAG="${{ needs.build-and-push.outputs.image_tag }}"
-            # Chuyển tên repo sang chữ thường cho chuẩn Docker image
             LOWER_REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
             FULL_IMAGE="ghcr.io/${LOWER_REPO}:${NEW_TAG}"
 
@@ -117,58 +116,21 @@ jobs:
             echo "Image: ${FULL_IMAGE}"
             echo "=========================================="
 
-            # 1. Kéo image mới về VPS
+            # 1. Kéo image mới từ GHCR về VPS
             docker pull "${FULL_IMAGE}"
 
-            # 2. Tạo hoặc cập nhật docker-compose.prod.yml độc lập cho Hirschberg
-            cat << 'EOF' > docker-compose.prod.yml
-name: remicare-hirschberg
-services:
-  hirschberg:
-    image: IMAGE_PLACEHOLDER
-    container_name: remicare-hirschberg-backend
-    platform: linux/amd64
-    restart: unless-stopped
-    init: true
-    environment:
-      APP_ENV: production
-      PORT: "10000"
-      KEEP_ALIVE_ENABLED: "false"
-      REMICARE_FRONTEND_ORIGINS: "https://hirschberg.remicare.id.vn,http://localhost:5173,http://localhost:3000"
-      HIRSCHBERG_CPU_THREADS: "1"
-      OMP_NUM_THREADS: "1"
-      OPENBLAS_NUM_THREADS: "1"
-      MKL_NUM_THREADS: "1"
-      MALLOC_ARENA_MAX: "2"
-    ports:
-      - "127.0.0.1:8001:10000"
-    volumes:
-      - hirschberg-sessions:/srv/remicare/data/hirschberg/sessions
-    security_opt: ["no-new-privileges:true"]
-    cap_drop: [ALL]
-    healthcheck:
-      test:
-        - CMD
-        - python
-        - -c
-        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:10000/ready', timeout=5)"
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 45s
-    logging:
-      driver: json-file
-      options: {max-size: "10m", max-file: "3"}
-volumes:
-  hirschberg-sessions:
-EOF
+            # 2. Khởi tạo docker-compose.prod.yml nếu chưa có
+            if [ ! -f docker-compose.prod.yml ]; then
+              echo "bmFtZTogcmVtaWNhcmUtaGlyc2NoYmVyZwpzZXJ2aWNlczoKICBoaXJzY2hiZXJnOgogICAgaW1hZ2U6IGdoY3IuaW8va2hhbmdwZDE1L2JhY2tfZW5kX2FpX2xhY21hdDpsYXRlc3QKICAgIGNvbnRhaW5lcl9uYW1lOiByZW1pY2FyZS1oaXJzY2hiZXJnLWJhY2tlbmQKICAgIHBsYXRmb3JtOiBsaW51eC9hbWQ2NAogICAgcmVzdGFydDogdW5sZXNzLXN0b3BwZWQKICAgIGluaXQ6IHRydWUKICAgIGVudmlyb25tZW50OgogICAgICBBUFBfRU5WOiBwcm9kdWN0aW9uCiAgICAgIFBPUlQ6ICIxMDAwMCIKICAgICAgS0VFUF9BTElWRV9FTkFCTEVEOiAiZmFsc2UiCiAgICAgIFJFTUlDQVJFX0ZST05URU5EX09SSUdJTlM6ICJodHRwczovL2hpcnNjaGJlcmcucmVtaWNhcmUuaWQudm4saHR0cDovL2xvY2FsaG9zdDo1MTczLGh0dHA6Ly9sb2NhbGhvc3Q6MzAwMCIKICAgICAgSElSU0NIQkVSR19DUFVfVEhSRUFEUzogIjEiCiAgICAgIE9NUF9OVU1fVEhSRUFEUzogIjEiCiAgICAgIE9QRU5CTEFTX05VTV9USFJFQURTOiAiMSIKICAgICAgTUtMX05VTV9USFJFQURTOiAiMSIKICAgICAgTUFMTE9DX0FSRU5BX01BWDogIjIiCiAgICBwb3J0czoKICAgICAgLSAiMTI3LjAuMC4xOjgwMDE6MTAwMDAiCiAgICB2b2x1bWVzOgogICAgICAtIGhpcnNjaGJlcmctc2Vzc2lvbnM6L3Nydi9yZW1pY2FyZS9kYXRhL2hpcnNjaGJlcmcvc2Vzc2lvbnMKICAgIHNlY3VyaXR5X29wdDogWyJuby1uZXctcHJpdmlsZWdlczp0cnVlIl0KICAgIGNhcF9kcm9wOiBbQUxMXQogICAgaGVhbHRoY2hlY2s6CiAgICAgIHRlc3Q6CiAgICAgICAgLSBDTUQKICAgICAgICAtIHB5dGhvbgogICAgICAgIC0gLWMKICAgICAgICAtICJpbXBvcnQgdXJsbGliLnJlcXVlc3Q7IHVybGxpYi5yZXF1ZXN0LnVybG9wZW4oJ2h0dHA6Ly8xMjcuMC4wLjE6MTAwMDAvcmVhZHknLCB0aW1lb3V0PTUpIgogICAgICBpbnRlcnZhbDogMzBzCiAgICAgIHRpbWVvdXQ6IDVzCiAgICAgIHJldHJpZXM6IDMKICAgICAgc3RhcnRfcGVyaW9kOiA0NXMKICAgIGxvZ2dpbmc6CiAgICAgIGRyaXZlcjoganNvbi1maWxlCiAgICAgIG9wdGlvbnM6IHttYXgtc2l6ZTogIjEwbSIsIG1heC1maWxlOiAiMyJ9CnZvbHVtZXM6CiAgaGlyc2NoYmVyZy1zZXNzaW9uczoK" | base64 -d > docker-compose.prod.yml
+            fi
 
-            sed -i "s|IMAGE_PLACEHOLDER|${FULL_IMAGE}|g" docker-compose.prod.yml
+            # 3. Cập nhật tag mới
+            sed -i -E "s|image: ghcr.io/${LOWER_REPO}:.*|image: ${FULL_IMAGE}|g" docker-compose.prod.yml
 
-            # 3. Khởi động lại container với image mới
+            # 4. Khởi động lại container
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
-            # 4. Kiểm tra sức khỏe (Healthcheck loop)
+            # 5. Kiểm tra sức khỏe (Healthcheck loop)
             echo "Waiting for Hirschberg model warmup & health..."
             HEALTHY=0
             for i in $(seq 1 15); do
@@ -187,7 +149,7 @@ EOF
               exit 1
             fi
 
-            # 5. Dọn dẹp image cũ
+            # 6. Dọn dẹp image cũ
             docker image prune -f
 
             echo "=========================================="
