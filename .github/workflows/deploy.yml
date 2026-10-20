@@ -1,0 +1,197 @@
+name: RemiCare Hirschberg Strabismus AI CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: hirschberg-production-deployment
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ==========================================
+  # JOB 1: VERIFY RUNTIME BUNDLE & INTEGRITY
+  # ==========================================
+  verify:
+    name: Verify Runtime Model Checkpoints
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Verify runtime model bundle SHA256 integrity
+        run: |
+          python scripts/verify_runtime_bundle.py
+
+  # ==========================================
+  # JOB 2: BUILD & PUSH DOCKER IMAGE TO GHCR
+  # ==========================================
+  build-and-push:
+    name: Build & Push Image to GHCR
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_tag: ${{ steps.vars.outputs.image_tag }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Compute Tag SHA
+        id: vars
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          echo "image_tag=sha-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata (Tags & Labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,format=short,prefix=sha-
+            type=raw,value=latest,enable=true
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ==========================================
+  # JOB 3: DEPLOY VIA SSH TO PRODUCTION VPS
+  # ==========================================
+  deploy:
+    name: Deploy to Production VPS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script_stop: true
+          script: |
+            set -e
+            mkdir -p ~/app/hirschberg && cd ~/app/hirschberg
+
+            NEW_TAG="${{ needs.build-and-push.outputs.image_tag }}"
+            # Chuyển tên repo sang chữ thường cho chuẩn Docker image
+            LOWER_REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+            FULL_IMAGE="ghcr.io/${LOWER_REPO}:${NEW_TAG}"
+
+            echo "=========================================="
+            echo "Starting deployment for Hirschberg AI: ${NEW_TAG}"
+            echo "Image: ${FULL_IMAGE}"
+            echo "=========================================="
+
+            # 1. Kéo image mới về VPS
+            docker pull "${FULL_IMAGE}"
+
+            # 2. Tạo hoặc cập nhật docker-compose.prod.yml độc lập cho Hirschberg
+            cat << 'EOF' > docker-compose.prod.yml
+            name: remicare-hirschberg
+            services:
+              hirschberg:
+                image: IMAGE_PLACEHOLDER
+                container_name: remicare-hirschberg-backend
+                platform: linux/amd64
+                restart: unless-stopped
+                init: true
+                environment:
+                  APP_ENV: production
+                  PORT: "10000"
+                  KEEP_ALIVE_ENABLED: "false"
+                  REMICARE_FRONTEND_ORIGINS: "https://hirschberg.remicare.id.vn,http://localhost:5173,http://localhost:3000"
+                  HIRSCHBERG_CPU_THREADS: "1"
+                  OMP_NUM_THREADS: "1"
+                  OPENBLAS_NUM_THREADS: "1"
+                  MKL_NUM_THREADS: "1"
+                  MALLOC_ARENA_MAX: "2"
+                ports:
+                  - "127.0.0.1:8001:10000"
+                volumes:
+                  - hirschberg-sessions:/srv/remicare/data/hirschberg/sessions
+                security_opt: ["no-new-privileges:true"]
+                cap_drop: [ALL]
+                healthcheck:
+                  test:
+                    - CMD
+                    - python
+                    - -c
+                    - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:10000/ready', timeout=5)"
+                  interval: 30s
+                  timeout: 5s
+                  retries: 3
+                  start_period: 45s
+                logging:
+                  driver: json-file
+                  options: {max-size: "10m", max-file: "3"}
+            volumes:
+              hirschberg-sessions:
+            EOF
+
+            sed -i "s|IMAGE_PLACEHOLDER|${FULL_IMAGE}|g" docker-compose.prod.yml
+
+            # 3. Khởi động lại container với image mới
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            # 4. Kiểm tra sức khỏe (Healthcheck loop)
+            echo "Waiting for Hirschberg model warmup & health..."
+            HEALTHY=0
+            for i in $(seq 1 15); do
+              sleep 5
+              STATUS=$(docker inspect --format='{{.State.Health.Status}}' remicare-hirschberg-backend 2>/dev/null || echo "starting")
+              echo "Check $i/15: Health status is '$STATUS'"
+              if [ "$STATUS" = "healthy" ]; then
+                HEALTHY=1
+                break
+              fi
+            done
+
+            if [ "$HEALTHY" -ne 1 ]; then
+              echo "ERROR: Hirschberg Healthcheck failed!"
+              docker logs --tail 50 remicare-hirschberg-backend
+              exit 1
+            fi
+
+            # 5. Dọn dẹp image cũ
+            docker image prune -f
+
+            echo "=========================================="
+            echo "HIRSCHBERG DEPLOYMENT SUCCESSFUL!"
+            echo "Live version is now: ${NEW_TAG}"
+            echo "=========================================="
