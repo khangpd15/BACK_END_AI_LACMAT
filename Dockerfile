@@ -29,4 +29,6 @@ RUN python scripts/verify_runtime_bundle.py \
     && chown -R remicare:remicare /srv/remicare
 USER remicare
 EXPOSE 10000
+HEALTHCHECK --interval=30s --timeout=10s --start-period=180s --retries=5 \
+    CMD python -c "import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:'+os.getenv('PORT','10000')+'/ready',timeout=8)"
 CMD ["sh", "-c", "exec python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-10000} --workers 1 --limit-concurrency 16 --timeout-keep-alive 5"]

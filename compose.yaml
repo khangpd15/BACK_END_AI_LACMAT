@@ -1,0 +1,23 @@
+name: remicare-hirschberg
+services:
+  hirschberg:
+    build: .
+    platform: linux/amd64
+    restart: unless-stopped
+    init: true
+    env_file: .env.docker
+    environment:
+      APP_ENV: production
+      PORT: "10000"
+      KEEP_ALIVE_ENABLED: "false"
+    ports:
+      - "127.0.0.1:8001:10000"
+    volumes:
+      - hirschberg-sessions:/srv/remicare/data/hirschberg/sessions
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+volumes:
+  hirschberg-sessions:

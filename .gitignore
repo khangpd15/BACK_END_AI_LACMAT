@@ -54,3 +54,7 @@ ai/
 !/data/hirschberg/
 /data/hirschberg/sessions/*
 !/data/hirschberg/sessions/.gitkeep
+
+# VPS deployment secrets
+.env.docker
+.env.vps
