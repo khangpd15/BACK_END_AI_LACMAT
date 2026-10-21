@@ -25,7 +25,9 @@ DEFAULT_DEV_ORIGINS = (
     "http://127.0.0.1:5173,"
     "http://localhost:3000,"
     "http://127.0.0.1:3000,"
-    "https://remicare.id.vn"
+    "https://remicare.id.vn,"
+    "https://www.remicare.id.vn,"
+    "https://hirschberg.remicare.id.vn"
 )
 FRONTEND_ORIGINS_RAW = os.getenv("REMICARE_FRONTEND_ORIGINS", DEFAULT_DEV_ORIGINS)
 
