@@ -8,6 +8,12 @@ với kết quả import, không phát sinh thay đổi checkpoint hoặc mã su
 40 file theo manifest đạt; bộ test `tests/model` đạt 27/27 trên Windows CPU.
 Chi tiết: `reports/production_integration/hirschberg_sync_20261022.md`.
 
+Cập nhật sau xác minh cùng ngày: capture policy `research_capture_v2` giữ cờ
+hai vector cùng nửa mặt phẳng để đối chiếu, nhưng không dùng riêng cờ này để
+chặn classifier hoặc kết luận bình thường. Ảnh vẫn phải đạt input contract,
+QC hai mắt và xác nhận hướng nhìn. Nội dung `message` đã được rút gọn để hiển thị.
+Khi triển khai thay đổi này, cập nhật cả frontend trong `D:\AI_Check_Lac`.
+
 ## Phiên bản được chọn
 
 - Classifier: `screening_eyelid_branch_20261011_v1` (ResNet50 + geometry + khe mi).

@@ -141,10 +141,19 @@ def optimize_runtime():
         return replace_once(code, "    mask_image = Image.fromarray(mask.astype('uint8') * 255)",
                             "    mask_image = Image.fromarray(mask.astype('uint8') * 255) if visualize else None")
 
+    def binocular(code):
+        # Direction alone is not an alignment verdict. Keep the measured flag
+        # for audit; let the trained classifier assess eligible binocular input.
+        code = replace_once(code,
+                            "    elif comparison.get('available') and comparison['same_half_plane']:\n        reason = 'common_direction_ambiguous'\n",
+                            '')
+        return code.replace('research_common_direction_v1', 'research_capture_v2')
+
     rewrite('scripts/hirschberg_engine.py', engine)
     rewrite('scripts/export_hirschberg_review163_steps.py', decoder)
     rewrite('research/hirschberg_localization/direct_pupil_inference.py', pupil)
     rewrite('research/hirschberg_localization/reflex_roi_qc.py', reflex)
+    rewrite('research/hirschberg_localization/binocular_guard.py', binocular)
 
 
 def main():
@@ -238,6 +247,7 @@ def main():
     prune_runtime()
     manifest = json.loads((DEST / 'manifest.json').read_text(encoding='utf-8'))
     manifest['runtimeOptimizations'] = {'version': 'production_inference_v1', 'mirrorPreview': False, 'visualizationImages': False, 'unusedSeedInstance': False, 'checkpointWeightsChanged': False}
+    manifest['capturePolicy'] = {'version': 'research_capture_v2', 'sameHalfPlaneIsDiagnostic': False, 'sameHalfPlaneBlocksClassifier': False, 'requiresFixationAndLandmarkQC': True}
     manifest['modules'] = [p.relative_to(DEST).as_posix() for p in sorted(DEST.rglob('*.py')) if p.name != '__init__.py']
     for path in [DEST / 'frozen_rois.json', *sorted(DEST.rglob('*.py'))]:
         manifest['files'].append({'path': path.relative_to(DEST).as_posix(), 'sha256': sha(path), 'bytes': path.stat().st_size})

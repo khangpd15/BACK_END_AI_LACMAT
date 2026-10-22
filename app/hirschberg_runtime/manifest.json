@@ -86,8 +86,8 @@
     },
     {
       "path": "research/hirschberg_localization/binocular_guard.py",
-      "sha256": "b0113859773ecdc9e55be65be4ec0871de9990f81d014cc28dd101f8d586a75f",
-      "bytes": 2810
+      "sha256": "2d90163849deaa36346d94d82d950838afc861c11ac20740f6ef7f8452be859a",
+      "bytes": 2672
     },
     {
       "path": "research/hirschberg_localization/direct_pupil_inference.py",
@@ -242,5 +242,11 @@
     "visualizationImages": false,
     "unusedSeedInstance": false,
     "checkpointWeightsChanged": false
+  },
+  "capturePolicy": {
+    "version": "research_capture_v2",
+    "sameHalfPlaneIsDiagnostic": false,
+    "sameHalfPlaneBlocksClassifier": false,
+    "requiresFixationAndLandmarkQC": true
   }
 }

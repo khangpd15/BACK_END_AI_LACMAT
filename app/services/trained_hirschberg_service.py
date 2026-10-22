@@ -15,6 +15,18 @@ _load_error = None
 logger = logging.getLogger(__name__)
 
 
+def screening_message(screening):
+    """Public copy stays simple; technical reasons remain in screening/quality."""
+    if screening.get('status') == 'INCONCLUSIVE':
+        return 'Chưa thể đánh giá từ ảnh này. Bạn hãy chụp lại, nhìn thẳng vào nguồn sáng gần camera và để rõ cả hai mắt.'
+    proposal = str(screening.get('class_proposal') or '').upper()
+    if proposal == 'NORMAL':
+        return 'Chưa ghi nhận dấu hiệu lác rõ trong ảnh này.'
+    if proposal in ('ESOTROPIA', 'EXOTROPIA'):
+        return 'Có dấu hiệu cần kiểm tra thêm. Bạn nên khám chuyên khoa mắt để được đánh giá.'
+    return 'Chưa thể đánh giá từ ảnh này. Bạn hãy chụp lại theo hướng dẫn.'
+
+
 def load_trained_hirschberg():
     global _engine, _load_error
     with _lock:
@@ -61,7 +73,7 @@ def predict_trained_hirschberg(raw, filename='image.png', orientation='auto', ki
     return {
         'status': screening['status'],
         'predictedClass': (screening.get('class_proposal') or 'INCONCLUSIVE').upper(),
-        'reason': screening.get('reason'), 'message': record.get('reason_vi'),
+        'reason': screening.get('reason'), 'message': screening_message(screening),
         'modelId': MODEL_ID, 'modelVersion': MODEL_ID, 'featureContract': FEATURE_CONTRACT,
         'researchOnly': True, 'clinicalDiagnosis': None,
         'probabilities': None, 'uncalibratedModelScores': scores,

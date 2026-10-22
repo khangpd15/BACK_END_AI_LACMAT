@@ -28,10 +28,8 @@ def capture_guard(proposal, comparison, fixation):
     reason = None
     if fixation != 'confirmed':
         reason = 'fixation_not_confirmed'
-    elif comparison.get('available') and comparison['same_half_plane']:
-        reason = 'common_direction_ambiguous'
     if not comparison.get('available'):
         reason = 'missing_binocular_geometry'
     if reason:
-        return {'status': 'INCONCLUSIVE', 'reason': reason, 'class_proposal': None, 'clinical_diagnosis': None, 'capture_guard_version': 'research_common_direction_v1', 'warning': 'Conservative unvalidated capture guard; abstention is not a normal or disease label.'}
-    return {**proposal, 'capture_guard_version': 'research_common_direction_v1'}
+        return {'status': 'INCONCLUSIVE', 'reason': reason, 'class_proposal': None, 'clinical_diagnosis': None, 'capture_guard_version': 'research_capture_v2', 'warning': 'Conservative unvalidated capture guard; abstention is not a normal or disease label.'}
+    return {**proposal, 'capture_guard_version': 'research_capture_v2'}
