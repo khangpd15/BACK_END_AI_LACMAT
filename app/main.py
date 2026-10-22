@@ -85,22 +85,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS configuration
-allowed_origins = get_allowed_origins()
-logger.info("Configured CORS Allowed Origins: %s", allowed_origins)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["*"],
-)
 
 # Enable HTTP response compression for payloads >= 1KB
-app.add_middleware(GZipMiddleware, minimum_size=1000)
-
-
 @app.middleware("http")
 async def performance_measurement_middleware(request: Request, call_next):
     """Performance measurement middleware."""
@@ -123,6 +110,20 @@ async def performance_measurement_middleware(request: Request, call_next):
             size_str,
         )
     return response
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+
+# CORS configuration
+allowed_origins = get_allowed_origins()
+logger.info("Configured CORS Allowed Origins: %s", allowed_origins)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+)
 
 
 def _sanitize_validation_errors(obj: Any) -> Any:

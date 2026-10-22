@@ -1,0 +1,39 @@
+name: remicare-hirschberg
+services:
+  hirschberg:
+    image: ghcr.io/khangpd15/back_end_ai_lacmat:latest
+    container_name: remicare-hirschberg-backend
+    platform: linux/amd64
+    restart: unless-stopped
+    init: true
+    environment:
+      APP_ENV: production
+      PORT: "10000"
+      KEEP_ALIVE_ENABLED: "false"
+      REMICARE_FRONTEND_ORIGINS: "https://remicare.id.vn,http://localhost:5173,http://localhost:3000"
+      HIRSCHBERG_CPU_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      MALLOC_ARENA_MAX: "2"
+    ports:
+      - "127.0.0.1:8001:10000"
+    volumes:
+      - hirschberg-sessions:/srv/remicare/data/hirschberg/sessions
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:10000/ready', timeout=5)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+volumes:
+  hirschberg-sessions:
