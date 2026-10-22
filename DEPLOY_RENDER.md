@@ -3,6 +3,11 @@
 Bundle đã tự chứa checkpoint và mã suy luận trong `app/hirschberg_runtime/`.
 Server không cần truy cập `D:\REMICARE_TRAIN_AI` hoặc tải pretrained weights khi chạy.
 
+Đã đồng bộ lại từ workspace train ngày 22/10/2026: bundle đang có trong Git trùng
+với kết quả import, không phát sinh thay đổi checkpoint hoặc mã suy luận. Kiểm tra
+40 file theo manifest đạt; bộ test `tests/model` đạt 27/27 trên Windows CPU.
+Chi tiết: `reports/production_integration/hirschberg_sync_20261022.md`.
+
 ## Phiên bản được chọn
 
 - Classifier: `screening_eyelid_branch_20261011_v1` (ResNet50 + geometry + khe mi).
