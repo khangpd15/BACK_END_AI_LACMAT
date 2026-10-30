@@ -1,63 +1,13 @@
 {
   "source": "D:\\REMICARE_TRAIN_AI\\HIRSCHBERG_METHOD",
-  "modelId": "screening_eyelid_branch_20261011_v1",
-  "pupilVersion": "pupil_color_features_20261012_v1",
+  "modelId": "classifier_retrain_20261030_v2",
+  "pupilVersion": "successful_500_target15_refine_v2/block_03",
   "researchOnly": true,
   "files": [
     {
-      "path": "research/hirschberg_localization/runs/screening_eyelid_branch_20261011_v1/candidate_final.pt",
-      "sha256": "b5460f997a87f185399bb0dcc6f498b377fa85f36667149226e4894ad618fe15",
-      "bytes": 95421087
-    },
-    {
-      "path": "research/hirschberg_localization/runs/screening_eyelid_branch_20261011_v1/completion.json",
-      "sha256": "b38f4f22b4511dc2c8c7ba7239daed9240280d96b13477e64d550ea72ee6e398",
-      "bytes": 1343
-    },
-    {
-      "path": "research/hirschberg_localization/runs/screening_verified_clear_directpupil_iris4_20261011_v1/config.json",
-      "sha256": "df0b95a2c9c3f35e1a9e22df1111f512a11a4298fc135cd04c5c0063c0226a0f",
-      "bytes": 1826
-    },
-    {
-      "path": "research/hirschberg_localization/runs/eyelid_reviewed_20261011_v1/candidate_final.pt",
-      "sha256": "54cb7856f6b91506266b2792354155ee0fd0e3ec566855c4a0b8f7b6a0488423",
-      "bytes": 489445
-    },
-    {
-      "path": "research/hirschberg_localization/runs/pupil_direct_center_20261011_v1/candidate_final.pt",
-      "sha256": "ff1c2f4fb132430989657d0a35ec443011cfa1e58b8ddf094cc49dd898e39c11",
-      "bytes": 486731
-    },
-    {
-      "path": "research/hirschberg_localization/runs/pupil_color_features_20261012_v1/control_final.pt",
-      "sha256": "b275bd844a5ad0638898b1d7e38fa497029de8776964504229019e4a2db312d7",
-      "bytes": 1460519
-    },
-    {
-      "path": "research/hirschberg_localization/runs/pupil_color_features_20261012_v1/completion.json",
-      "sha256": "4c4b985aa573fdb00ac76bb6a9f7c214e9d20b3ae94710bcb7a2fe71afbb3ae9",
-      "bytes": 1300
-    },
-    {
-      "path": "research/hirschberg_localization/runs/iris_four_reviewed_20261011_v1/iris_four_final.pt",
-      "sha256": "af713bb8b396a7be831b904206c96b12ca8258ada1c587edaead9f638fd8940c",
-      "bytes": 1482093
-    },
-    {
-      "path": "research/hirschberg_localization/runs/pupil_iris_reviewed_20261011_v1/pupil_final.pt",
-      "sha256": "131859fd8ea3efd8d4e5f4559c70fb5e9c2972d52ac904d213a97e245b0eaaa0",
-      "bytes": 484755
-    },
-    {
-      "path": "research/hirschberg_localization/runs/crop256_human_review_20261010_v1/final.pt",
-      "sha256": "cbcd29ef7065dfc28be3f09cca399395db2087bb1f87a51413719128748a4f44",
-      "bytes": 483103
-    },
-    {
-      "path": "research/hirschberg_localization/runs/eye_crop_192_v1/best.pt",
-      "sha256": "cc1e9558be005b809b0d5ee79644a56bfe6d8342d251e748d32230b6530d9941",
-      "bytes": 496513
+      "path": "__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
     },
     {
       "path": "frozen_rois.json",
@@ -65,9 +15,29 @@
       "bytes": 196840
     },
     {
-      "path": "__init__.py",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "bytes": 0
+      "path": "model_bundle.json",
+      "sha256": "4751292e2dc30b81e5c986a7f7210f6a6860259def076b894311c686340b5f05",
+      "bytes": 2758
+    },
+    {
+      "path": "models/classifier_retrain_20261030_v2/classifier.pt",
+      "sha256": "79391ce62f2ca898cf84a269ffc4e4811da9f32b4cccdbe04d4412f7ec187020",
+      "bytes": 95421186
+    },
+    {
+      "path": "models/classifier_retrain_20261030_v2/iris.pt",
+      "sha256": "f042cfdd50b50486b915b59eb8694f9e7bf72d4b4644e4b9ab97d2257b3d54ca",
+      "bytes": 4303206
+    },
+    {
+      "path": "models/classifier_retrain_20261030_v2/pupil.pt",
+      "sha256": "f5e854ff0d38b77a006e19a35bd774f0be968524a07379bd07f0cfbc27f9b93c",
+      "bytes": 1459526
+    },
+    {
+      "path": "models/classifier_retrain_20261030_v2/reflex.pt",
+      "sha256": "39320ee1ebefda21cad556f82985f59be4cb4805587c4cae8b4d58eafc7bc1cc",
+      "bytes": 484826
     },
     {
       "path": "research/__init__.py",
@@ -145,6 +115,61 @@
       "bytes": 3498
     },
     {
+      "path": "research/hirschberg_localization/runs/crop256_human_review_20261010_v1/final.pt",
+      "sha256": "cbcd29ef7065dfc28be3f09cca399395db2087bb1f87a51413719128748a4f44",
+      "bytes": 483103
+    },
+    {
+      "path": "research/hirschberg_localization/runs/eye_crop_192_v1/best.pt",
+      "sha256": "cc1e9558be005b809b0d5ee79644a56bfe6d8342d251e748d32230b6530d9941",
+      "bytes": 496513
+    },
+    {
+      "path": "research/hirschberg_localization/runs/eyelid_reviewed_20261011_v1/candidate_final.pt",
+      "sha256": "54cb7856f6b91506266b2792354155ee0fd0e3ec566855c4a0b8f7b6a0488423",
+      "bytes": 489445
+    },
+    {
+      "path": "research/hirschberg_localization/runs/iris_four_reviewed_20261011_v1/iris_four_final.pt",
+      "sha256": "af713bb8b396a7be831b904206c96b12ca8258ada1c587edaead9f638fd8940c",
+      "bytes": 1482093
+    },
+    {
+      "path": "research/hirschberg_localization/runs/pupil_color_features_20261012_v1/completion.json",
+      "sha256": "4c4b985aa573fdb00ac76bb6a9f7c214e9d20b3ae94710bcb7a2fe71afbb3ae9",
+      "bytes": 1300
+    },
+    {
+      "path": "research/hirschberg_localization/runs/pupil_color_features_20261012_v1/control_final.pt",
+      "sha256": "b275bd844a5ad0638898b1d7e38fa497029de8776964504229019e4a2db312d7",
+      "bytes": 1460519
+    },
+    {
+      "path": "research/hirschberg_localization/runs/pupil_direct_center_20261011_v1/candidate_final.pt",
+      "sha256": "ff1c2f4fb132430989657d0a35ec443011cfa1e58b8ddf094cc49dd898e39c11",
+      "bytes": 486731
+    },
+    {
+      "path": "research/hirschberg_localization/runs/pupil_iris_reviewed_20261011_v1/pupil_final.pt",
+      "sha256": "131859fd8ea3efd8d4e5f4559c70fb5e9c2972d52ac904d213a97e245b0eaaa0",
+      "bytes": 484755
+    },
+    {
+      "path": "research/hirschberg_localization/runs/screening_eyelid_branch_20261011_v1/candidate_final.pt",
+      "sha256": "b5460f997a87f185399bb0dcc6f498b377fa85f36667149226e4894ad618fe15",
+      "bytes": 95421087
+    },
+    {
+      "path": "research/hirschberg_localization/runs/screening_eyelid_branch_20261011_v1/completion.json",
+      "sha256": "b38f4f22b4511dc2c8c7ba7239daed9240280d96b13477e64d550ea72ee6e398",
+      "bytes": 1343
+    },
+    {
+      "path": "research/hirschberg_localization/runs/screening_verified_clear_directpupil_iris4_20261011_v1/config.json",
+      "sha256": "df0b95a2c9c3f35e1a9e22df1111f512a11a4298fc135cd04c5c0063c0226a0f",
+      "bytes": 1826
+    },
+    {
       "path": "research/hirschberg_localization/screening_eyelid_branch.py",
       "sha256": "54f30c2112f7fe711bfc43589e686460e2a1253e898cc420ef19cd05ee4b67aa",
       "bytes": 4922
@@ -176,8 +201,8 @@
     },
     {
       "path": "scripts/hirschberg_engine.py",
-      "sha256": "944b1dfd9025aa0f40bd5d0361064ef9ab562040a7dd621e4336ff027a0a7508",
-      "bytes": 20631
+      "sha256": "097311271d52076c3f6ae3c73dae10b0a555b8d2812c14fea2b97f1db783ec93",
+      "bytes": 22046
     },
     {
       "path": "scripts/hirschberg_iris_geometry_pilot.py",
@@ -231,11 +256,7 @@
     "scripts/hirschberg_review100_finetune.py",
     "scripts/hirschberg_reviewed_incremental_train.py"
   ],
-  "sourceRuntimeSha256": "7bbb1f29efb3ff543780d4743713a84913ee65f8a38a7051d4f61365625baae8",
-  "excludedCandidate": {
-    "run": "pupil_iris_continued_20261015_v3",
-    "reason": "Source completion marks recommended_for_runtime=false; keep active validated configuration."
-  },
+  "sourceRuntimeSha256": "f4013c6741f2e7c1f1418cb8e47f4ad595c92cc25ae700a908d525c62c9ff1fa",
   "runtimeOptimizations": {
     "version": "production_inference_v1",
     "mirrorPreview": false,
@@ -248,5 +269,9 @@
     "sameHalfPlaneIsDiagnostic": false,
     "sameHalfPlaneBlocksClassifier": false,
     "requiresFixationAndLandmarkQC": true
-  }
+  },
+  "bundle": "model_bundle.json",
+  "roiPolicy": "online_only",
+  "independentValidation": false,
+  "integrationScope": "latest completed classifier/iris/pupil/reflex; no datasets or uploads"
 }

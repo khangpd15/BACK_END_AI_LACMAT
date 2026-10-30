@@ -36,7 +36,28 @@ IRIS_PATH = ROOT / 'research/hirschberg_localization/runs/iris_four_reviewed_202
 PUPIL_BASE = ROOT / 'research/hirschberg_localization/runs/pupil_iris_reviewed_20261011_v1/pupil_final.pt'
 LOCAL_RUN = ROOT / 'research/hirschberg_localization/runs/crop256_human_review_20261010_v1'
 
-def screen_with_guards(classifier, record, orientation, fixation):
+def screen_with_guards(classifier, record, orientation, fixation, policy='strict'):
+    if policy not in ('strict', 'review_warnings'):
+        raise ValueError('Unknown screening policy')
+    if policy == 'review_warnings':
+        import copy
+        record = copy.deepcopy(record)
+        warnings = []
+        soft = {'mediapipe_iris_axis_ratio_outside_0_85_1_0', 'bilateral_iris_radius_difference_over_0_15'}
+        for side, eye in record.get('eyes', {}).items():
+            qc = eye.get('reflex_qc', {})
+            reasons = qc.get('reasons', [])
+            warnings.extend((side + ':' + r for r in reasons if r in soft))
+            if reasons and all((r in soft for r in reasons)):
+                qc['eligible_for_score'] = True
+            qc['reasons'] = [r for r in reasons if r not in soft]
+        comparison = record.get('binocular_comparison', {})
+        if comparison.get('same_half_plane'):
+            warnings.append('common_direction_ambiguous')
+            comparison['same_half_plane'] = False
+        result = screen_with_guards(classifier, record, orientation, fixation, policy='strict')
+        result.update(screening_policy=policy, quality_warnings=warnings)
+        return result
     contract = record.get('input_contract')
     if contract is not None and (not contract['eligible']):
         return {'status': 'INCONCLUSIVE', 'reason': 'invalid_input_contract', 'input_reasons': contract['reasons'], 'class_proposal': None, 'clinical_diagnosis': None, 'classifier_called': False, 'requires_human_review': True}
@@ -55,10 +76,24 @@ class Engine:
         self.torch = torch
         torch.set_num_threads(max(1, min(4, int(os.getenv('HIRSCHBERG_CPU_THREADS', '1')))))
         self.device = 'cpu'
-        completion = json.loads((CLASS_RUN / 'completion.json').read_text())
-        self.classifier_sha256 = digest(CLASS_RUN / 'candidate_final.pt')
-        assert self.classifier_sha256 == completion['checkpoint_sha256']
-        classifier = torch.load(CLASS_RUN / 'candidate_final.pt', map_location=self.device, weights_only=True)
+        bundle = json.loads((ROOT / 'model_bundle.json').read_text(encoding='utf-8'))
+        paths = {}
+        for role, artifact in bundle['artifacts'].items():
+            path = (ROOT / artifact['path']).resolve()
+            if not path.is_relative_to(ROOT.resolve()) or digest(path) != artifact['sha256']:
+                raise RuntimeError('Invalid Hirschberg bundle artifact: ' + role)
+            paths[role] = path
+        def load(role):
+            return torch.load(paths[role], map_location=self.device, weights_only=True)
+        classifier = load('classifier')
+        if classifier['classes'] != ['normal', 'esotropia', 'exotropia']:
+            raise RuntimeError('Classifier class order mismatch')
+        for role in ('pupil', 'reflex', 'iris'):
+            if classifier['config']['localizers'][role]['sha256'] != bundle['artifacts'][role]['sha256']:
+                raise RuntimeError('Classifier/localizer provenance mismatch: ' + role)
+        if classifier['config']['eyelid_checkpoint_sha256'] != bundle['artifacts']['eyelid']['sha256']:
+            raise RuntimeError('Classifier/eyelid provenance mismatch')
+        self.classifier_sha256 = bundle['artifacts']['classifier']['sha256']
         self.fusion = ScreeningEyelidBranch().to(self.device)
         self.fusion.load_state_dict(classifier['state_dict'])
         self.fusion.eval()
@@ -66,30 +101,36 @@ class Engine:
         self.feature_std = classifier['geometry_std']
         self.opening_mean = classifier['opening_mean']
         self.opening_std = classifier['opening_std']
-        assert digest(EYELID_RUN / 'candidate_final.pt') == classifier['config']['eyelid_checkpoint_sha256']
         self.eyelid = EyelidUNet().to(self.device)
-        self.eyelid.load_state_dict(torch.load(EYELID_RUN / 'candidate_final.pt', map_location=self.device, weights_only=True)['state_dict'])
+        self.eyelid.load_state_dict(load('eyelid')['state_dict'])
         self.eyelid.eval()
-        geometry_config = json.loads((GEOMETRY_RUN / 'config.json').read_text(encoding='utf-8'))
-        assert digest(PUPIL_RUN / 'candidate_final.pt') == geometry_config['localizer_checkpoint_sha256']
-        pupil_completion = json.loads((PUPIL_DEPLOY_RUN / 'completion.json').read_text(encoding='utf-8'))
-        pupil_sha256 = digest(PUPIL_DEPLOY_PATH)
-        assert pupil_sha256 == pupil_completion['checkpoint_sha256'][PUPIL_DEPLOY_BRANCH]
-        assert pupil_completion['complete'] and PUPIL_DEPLOY_BRANCH in pupil_completion['branches']
-        assert digest(LOCAL_RUN / 'final.pt') == geometry_config['reflex_checkpoint_sha256']
-        assert digest(IRIS_PATH) == geometry_config['iris_checkpoint_sha256']
-        self.checkpoints = {'pupil_direct_center.pt': pupil_sha256, 'reflex_crop256.pt': digest(LOCAL_RUN / 'final.pt'), 'iris_four.pt': digest(IRIS_PATH), 'eyelid_UNet.pt': digest(EYELID_RUN / 'candidate_final.pt'), 'roi_seed192.pt': digest(INITIAL)}
-        self.model_info = {'classifier_name': 'ResNet50 + Hirschberg + pupil–khe mi', 'version': 'screening_eyelid_branch_20261011_v1', 'classifier_sha256': self.classifier_sha256, 'localizers': self.checkpoints, 'pupil_version': PUPIL_DEPLOY_RUN.name, 'pupil_checkpoint': str(PUPIL_DEPLOY_PATH.relative_to(ROOT)), 'pupil_branch': PUPIL_DEPLOY_BRANCH, 'pupil_train_mean_px': pupil_completion['comparison'][PUPIL_DEPLOY_BRANCH]['mean_px'], 'classifier_training_pupil_sha256': geometry_config['localizer_checkpoint_sha256'], 'updated_pupil_classifier_pair_independently_evaluated': False, 'independent_evaluation': False, 'calibrated_probabilities': False}
-        self.frozen_rois = json.loads((ROOT / 'frozen_rois.json').read_text(encoding='utf-8'))
         self.pr = network(torch, spatial_logits=True, targets=2).to(self.device)
-        self.pr.load_state_dict(torch.load(LOCAL_RUN / 'final.pt', map_location=self.device, weights_only=True)['state_dict'])
+        self.pr.load_state_dict(load('reflex')['state_dict'])
         self.pr.eval()
-        self.pupil = make_model(torch, torch.load(PUPIL_BASE, map_location='cpu', weights_only=True)['state_dict']).to(self.device)
-        self.pupil.load_state_dict(torch.load(PUPIL_DEPLOY_PATH, map_location=self.device, weights_only=True)['state_dict'])
+        self.pupil = make_model(torch, load('pupil_base')['state_dict']).to(self.device)
+        self.pupil.load_state_dict(load('pupil')['state_dict'])
         self.pupil.eval()
-        self.iris = four_point_model(torch, stable_model(torch, torch.load(INITIAL, map_location='cpu', weights_only=True))).to(self.device)
-        self.iris.load_state_dict(torch.load(IRIS_PATH, map_location=self.device, weights_only=True)['state_dict'])
+        self.iris = four_point_model(torch, stable_model(torch, load('iris_seed'))).to(self.device)
+        self.iris.load_state_dict(load('iris')['state_dict'])
         self.iris.eval()
+        self.checkpoints = {'pupil_direct_center.pt': bundle['artifacts']['pupil']['sha256'],
+                            'reflex_crop256.pt': bundle['artifacts']['reflex']['sha256'],
+                            'iris_four.pt': bundle['artifacts']['iris']['sha256'],
+                            'eyelid_UNet.pt': bundle['artifacts']['eyelid']['sha256'],
+                            'roi_seed192.pt': bundle['artifacts']['iris_seed']['sha256']}
+        self.model_info = {'classifier_name': 'ResNet50 + Hirschberg + pupil–khe mi',
+                           'version': bundle['model_id'], 'classifier_sha256': self.classifier_sha256,
+                           'localizers': self.checkpoints, 'pupil_version': bundle['pupil_version'],
+                           'pupil_checkpoint': bundle['artifacts']['pupil']['path'],
+                           'pupil_branch': 'source_pixel_refinement',
+                           'pupil_train_mean_px': bundle['pupil_train_mean_px'],
+                           'classifier_training_pupil_sha256': bundle['artifacts']['pupil']['sha256'],
+                           'updated_pupil_classifier_pair_independently_evaluated': False,
+                           'independent_evaluation': False, 'calibrated_probabilities': False,
+                           'training_scope': 'TRAIN ONLY; patient identities unresolved',
+                           'visibility_validated': False}
+        # Match the latest image_new experiment: use online ROI on every input.
+        self.frozen_rois = {}
 
     def infer_current(self, model, image, proposal, mean, std, device):
         return opening_infer(model, image, proposal, mean, std, self.opening_mean, self.opening_std, device)

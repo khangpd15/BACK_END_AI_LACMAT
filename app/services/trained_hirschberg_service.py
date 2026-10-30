@@ -7,7 +7,7 @@ from threading import RLock
 import time
 
 ROOT = Path(__file__).resolve().parents[1] / 'hirschberg_runtime'
-MODEL_ID = 'screening_eyelid_branch_20261011_v1'
+MODEL_ID = 'classifier_retrain_20261030_v2'
 FEATURE_CONTRACT = 'resnet50_hirschberg_geometry_eyelid_v1'
 _lock = RLock()
 _engine = None

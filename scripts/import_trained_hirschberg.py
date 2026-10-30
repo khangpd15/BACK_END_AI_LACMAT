@@ -253,6 +253,9 @@ def main():
         manifest['files'].append({'path': path.relative_to(DEST).as_posix(), 'sha256': sha(path), 'bytes': path.stat().st_size})
     (DEST / 'manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
     print(f'Imported {len(visited)} modules and {len(files)} verified artifacts into {DEST}')
+    # Default import selects the current completed bundle, not historical weights.
+    from update_trained_hirschberg_bundle import install_bundle
+    install_bundle(SOURCE, DEST)
 
 
 if __name__ == '__main__':

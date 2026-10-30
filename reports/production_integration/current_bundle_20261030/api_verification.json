@@ -1,0 +1,286 @@
+{
+  "images": 18,
+  "modelId": "classifier_retrain_20261030_v2",
+  "counts": {
+    "EXOTROPIA": 1,
+    "INCONCLUSIVE": 5,
+    "NORMAL": 12
+  },
+  "api_policy": "existing production research_capture_v2, strict landmark QC",
+  "reference_policy_difference": "Source strict rejects common-direction; production intentionally does not. Do not compare policy counts as accuracy.",
+  "coverage_changes": [
+    {
+      "case_index": 3,
+      "side": "image_left",
+      "landmark": "pupil",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_left",
+      "landmark": "reflex",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_left",
+      "landmark": "iris_left",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_left",
+      "landmark": "iris_right",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_left",
+      "landmark": "iris_top",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_left",
+      "landmark": "iris_bottom",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_right",
+      "landmark": "pupil",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_right",
+      "landmark": "reflex",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_right",
+      "landmark": "iris_left",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_right",
+      "landmark": "iris_right",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_right",
+      "landmark": "iris_top",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 3,
+      "side": "image_right",
+      "landmark": "iris_bottom",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_left",
+      "landmark": "pupil",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_left",
+      "landmark": "reflex",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_left",
+      "landmark": "iris_left",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_left",
+      "landmark": "iris_right",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_left",
+      "landmark": "iris_top",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_left",
+      "landmark": "iris_bottom",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_right",
+      "landmark": "pupil",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_right",
+      "landmark": "reflex",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_right",
+      "landmark": "iris_left",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_right",
+      "landmark": "iris_right",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_right",
+      "landmark": "iris_top",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 4,
+      "side": "image_right",
+      "landmark": "iris_bottom",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_left",
+      "landmark": "pupil",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_left",
+      "landmark": "reflex",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_left",
+      "landmark": "iris_left",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_left",
+      "landmark": "iris_right",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_left",
+      "landmark": "iris_top",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_left",
+      "landmark": "iris_bottom",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_right",
+      "landmark": "pupil",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_right",
+      "landmark": "reflex",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_right",
+      "landmark": "iris_left",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_right",
+      "landmark": "iris_right",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_right",
+      "landmark": "iris_top",
+      "reference_present": false,
+      "api_present": true
+    },
+    {
+      "case_index": 5,
+      "side": "image_right",
+      "landmark": "iris_bottom",
+      "reference_present": false,
+      "api_present": true
+    }
+  ],
+  "max_coordinate_difference_px": {
+    "pupil": 0.0008122554858986107,
+    "reflex": 0.0,
+    "iris_left": 0.0075440162533362935,
+    "iris_right": 0.006561371367641225,
+    "iris_top": 0.003371867724831667,
+    "iris_bottom": 0.006644308447567023
+  },
+  "coordinate_pairs": {
+    "pupil": 28,
+    "reflex": 28,
+    "iris_left": 28,
+    "iris_right": 28,
+    "iris_top": 28,
+    "iris_bottom": 28
+  },
+  "source_pixel_parity_tolerance": 0.25,
+  "image_uploads_saved": false,
+  "clinical_accuracy": null,
+  "numerical_parity_passed": false,
+  "api_checks_passed": true
+}

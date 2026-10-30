@@ -26,8 +26,8 @@ def test_real_checkpoints_load_and_reject_blank_image_without_persistence():
     assert result['screening']['classifier_called'] is False
     assert result['probabilities'] is None
     assert result['uncalibratedModelScores'] is None
-    assert result['model']['pupil_version'] == 'pupil_color_features_20261012_v1'
-    assert result['model']['pupil_branch'] == 'control'
+    assert result['model']['pupil_version'] == 'successful_500_target15_refine_v2/block_03'
+    assert result['model']['pupil_branch'] == 'source_pixel_refinement'
     assert result['clinicalDiagnosis'] is None
     assert client.get('/api/v1/hirschberg/health').json()['loaded'] is True
     # Python imports may create cache files; uploads and output assets must not be saved.
@@ -73,3 +73,19 @@ def test_upload_validation(raw, code):
     app.include_router(router)
     response = TestClient(app).post('/api/v1/hirschberg/predict', files={'image': ('bad.jpg', raw, 'image/jpeg')})
     assert response.status_code == code
+
+
+def test_current_bundle_matches_classifier_feature_provenance():
+    engine = service.load_trained_hirschberg()
+    manifest = json.loads((service.ROOT / 'manifest.json').read_text(encoding='utf-8'))
+    bundle = json.loads((service.ROOT / 'model_bundle.json').read_text(encoding='utf-8'))
+    assert service.MODEL_ID == manifest['modelId'] == bundle['model_id'] == engine.model_info['version']
+    classifier = engine.torch.load(service.ROOT / bundle['artifacts']['classifier']['path'], map_location='cpu', weights_only=True)
+    assert classifier['classes'] == ['normal', 'esotropia', 'exotropia']
+    for role in ('pupil', 'reflex', 'iris'):
+        assert classifier['config']['localizers'][role]['sha256'] == bundle['artifacts'][role]['sha256']
+    assert engine.feature_mean == classifier['geometry_mean']
+    assert engine.opening_mean == classifier['opening_mean']
+    assert engine.frozen_rois == {}
+    assert engine.model_info['independent_evaluation'] is False
+    assert engine.model_info['visibility_validated'] is False
