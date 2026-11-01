@@ -16,15 +16,27 @@ def predict(model,image,box,side,iris_four,torch,device,visualize=True):
  x0,y0,x1,y1=box
  a=np.array(image.convert('RGB').crop(box).resize((192,192),Image.Resampling.BILINEAR))
  with torch.no_grad():logits,flags=model(torch.from_numpy(a).permute(2,0,1)[None].float().to(device)/255)
- mask=(logits.sigmoid()[0,0].cpu().numpy()>=.5).astype('uint8');scores=flags.softmax(1)[0].cpu().tolist();status=['visible','partial','hidden'][int(np.argmax(scores))]
+ probability=logits.sigmoid()[0,0].cpu().numpy()
+ mask=(probability>=.5).astype('uint8');scores=flags.softmax(1)[0].cpu().tolist();status=['visible','partial','hidden'][int(np.argmax(scores))]
  raw={'branch':'pupil_boundary','visibility':status,'visibility_probabilities':scores,'visibility_reliable':False,'ellipse_boundary_source':None,'peak_xy':None,'in_crop_and_source':False}
  cs,_=cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
- if status!='visible' or not cs:return None,{},raw
+ raw.update(mask_threshold=.5,mask_positive_pixels=int(mask.sum()),mask_max_probability=float(probability.max()),contour_count=len(cs))
+ if status!='visible':
+  raw['reason']='pupil_not_visible';return None,{},raw
+ if not cs:
+  raw['reason']='empty_pupil_mask';return None,{},raw
  c=max(cs,key=cv2.contourArea)
- if len(c)<5 or cv2.contourArea(c)<3:return None,{},raw
- (cx,cy),(w,h),ang=cv2.fitEllipse(c);p=[x0+cx*(x1-x0)/192,y0+cy*(y1-y0)/192]
+ raw.update(contour_points=len(c),contour_area_px=float(cv2.contourArea(c)))
+ if len(c)<5 or cv2.contourArea(c)<3:
+  raw['reason']='insufficient_pupil_contour';return None,{},raw
+ try:(cx,cy),(w,h),ang=cv2.fitEllipse(c)
+ except cv2.error:
+  raw['reason']='pupil_ellipse_fit_failed';return None,{},raw
+ if not np.isfinite([cx,cy,w,h,ang]).all() or min(w,h)<=0:
+  raw['reason']='invalid_pupil_ellipse';return None,{},raw
+ p=[x0+cx*(x1-x0)/192,y0+cy*(y1-y0)/192]
  valid=all(np.isfinite(p)) and x0<=p[0]<x1 and y0<=p[1]<y1
  t=np.linspace(0,2*np.pi,100);u=w/2*np.cos(t);v=h/2*np.sin(t);ang=np.deg2rad(ang)
  boundary=np.stack((x0+(cx+u*np.cos(ang)-v*np.sin(ang))*(x1-x0)/192,y0+(cy+u*np.sin(ang)+v*np.cos(ang))*(y1-y0)/192),1).tolist()
- raw.update(peak_xy=p,in_crop_and_source=bool(valid),ellipse_boundary_source=boundary)
+ raw.update(peak_xy=p,in_crop_and_source=bool(valid),ellipse_boundary_source=boundary,reason='accepted' if valid else 'pupil_center_outside_roi',ellipse_model_xy=[cx,cy],ellipse_model_axes=[w,h],ellipse_angle_deg=float(np.rad2deg(ang)))
  return p if valid else None,{},raw

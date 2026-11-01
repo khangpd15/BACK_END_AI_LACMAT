@@ -1,3 +1,5 @@
+from app.hirschberg_runtime.research.hirschberg_localization.learned_eye_roi import LearnedEyeROIs
+from app.hirschberg_runtime.research.hirschberg_localization.screening_feedback import screening_feedback
 """Frozen inference subset imported from the training workspace."""
 import hashlib
 import io
@@ -130,6 +132,11 @@ class Engine:
                            'training_scope': 'TRAIN ONLY; patient identities unresolved',
                            'visibility_validated': False}
         # Match the latest image_new experiment: use online ROI on every input.
+        self.model_info['roi_policy'] = 'bilateral_cascade_consensus_v1'
+        self.roi_detector = LearnedEyeROIs(paths['eye_roi'], self.device) if 'eye_roi' in paths else None
+        if self.roi_detector is not None:
+            self.model_info['roi_policy'] = 'learned_eye_roi_eso_exo_v1'
+            self.checkpoints['eye_roi.pt'] = digest(paths['eye_roi'])
         self.frozen_rois = {}
 
     def infer_current(self, model, image, proposal, mean, std, device):
@@ -187,7 +194,7 @@ class Engine:
                     mesh_geometry[side] = e
                 assessment = capture_assessment(image, result.multi_face_landmarks, eyes)
             elif count == 0 and automatic:
-                fallback, detector_info = paired_eye_rois(image)
+                fallback, detector_info = paired_eye_rois(image, self.roi_detector)
                 record['eye_roi_fallback'] = detector_info
                 if fallback:
                     boxes = dict(fallback)
@@ -199,7 +206,7 @@ class Engine:
             else:
                 reason = 'Không xác định được đúng một khuôn mặt. Hãy dùng ảnh có một người, hai mắt nhìn rõ.'
         if kind == 'bilateral':
-            boxes, detector_info = paired_eye_rois(image)
+            boxes, detector_info = paired_eye_rois(image, self.roi_detector)
             iris_boxes = dict(boxes)
             record['eye_roi_fallback'] = detector_info
             if not boxes:
@@ -218,8 +225,8 @@ class Engine:
                     contours[side] = e['eyelid_contour']
             record['roi_source'] = 'exact_SHA_matched_frozen_detector_CNN_ROIs'
         else:
-            boxes = {side: padded_box(iris_boxes.get(side) or boxes.get(side), image.width, image.height) for side in ('image_left', 'image_right')}
-            record['roi_source'] = 'paired_eye_cascade_plus10percent_padding' if kind == 'bilateral_detected' else 'online_detector_CNN_ROI_plus10percent_padding'
+            boxes = {side: boxes.get(side) if record.get('eye_roi_fallback', {}).get('roi_padding_applied') else padded_box(iris_boxes.get(side) or boxes.get(side), image.width, image.height) for side in ('image_left', 'image_right')}
+            record['roi_source'] = record.get('eye_roi_fallback', {}).get('method', 'paired_eye_cascade') + '+10percent_padding' if kind == 'bilateral_detected' else 'online_detector_CNN_ROI_plus10percent_padding'
         if record.get('detected_faces', 0) > 1 or exif_orientation != 1:
             boxes = {}
             iris_boxes = {}
@@ -291,4 +298,8 @@ class Engine:
         if failed and any((e.get('bbox') for e in record['eyes'].values())):
             names = {'missing_or_nonfinite_geometry': 'Thiếu pupil/reflex hoặc iris hợp lệ; chưa tính được vector', 'missing_visible_eye_boundary': 'Chưa xác định được đường viền mí mắt', 'reflex_pupil_vector_exceeds_0_4R': 'Khoảng cách pupil–reflex vượt gate nghiên cứu 0,4R', 'bilateral_iris_radius_difference_over_0_15': 'Kích thước iris hai mắt chênh quá gate nghiên cứu 15%'}
             record['reason_vi'] = '; '.join((('Mắt trái ảnh: ' if side == 'image_left' else 'Mắt phải ảnh: ') + ', '.join((names.get(r, r) for r in reasons)) for side, reasons in failed.items()))
+        record['feedback'] = screening_feedback(record['screening'])
+        record['reason_vi_diagnostic'] = record['reason_vi']
+        if record['screening']['status'] == 'INCONCLUSIVE':
+            record['reason_vi'] = record['feedback']['message']
         return record

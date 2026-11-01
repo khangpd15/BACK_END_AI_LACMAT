@@ -16,8 +16,18 @@
     },
     {
       "path": "model_bundle.json",
-      "sha256": "343585c193e879ea78c7ab70e4ed7dfb46668ae9197d09f4dc023359c0756cdf",
-      "bytes": 2841
+      "sha256": "841873684c2524b4d06cb8c0e725719b9171f908f145e08b89ab4e96e819d3a8",
+      "bytes": 3326
+    },
+    {
+      "path": "models/boundary_classifier_20261031_v1/classifier.pt",
+      "sha256": "5b31062b27e0f0d81b02032d8edfc591b390133fe0716b8f776793c9a57e5597",
+      "bytes": 95421599
+    },
+    {
+      "path": "models/boundary_classifier_20261031_v1/pupil.pt",
+      "sha256": "ee4d8c3b77ca3c669022d89d6ad96e0f7f2ae8cadb304482adddbcf916293148",
+      "bytes": 493025
     },
     {
       "path": "models/classifier_retrain_20261030_v2/classifier.pt",
@@ -40,6 +50,31 @@
       "bytes": 484826
     },
     {
+      "path": "models/learned_eye_roi_eso_exo_v1/eye_roi.pt",
+      "sha256": "185dc28d6ca89d85e6822e2875040e5573c1484fb904ea3aefb408b888ca7599",
+      "bytes": 35666273
+    },
+    {
+      "path": "models/matched_bundle_20261101_v1/classifier.pt",
+      "sha256": "bcb0e726e0aff8465d797d41c497f6ce374b3bbb34ecb1e1ebdc32a26242603e",
+      "bytes": 95421599
+    },
+    {
+      "path": "models/matched_bundle_20261101_v1/eyelid.pt",
+      "sha256": "b4d3f0182c84e07ba3a21db9acaa8a815214597e13b82c6a598e31f6f8114863",
+      "bytes": 488469
+    },
+    {
+      "path": "models/matched_bundle_20261101_v1/iris.pt",
+      "sha256": "c2a8086bd6b11eb5b6b0288a67c65290c0386fe5b47c2c56dcd79b6e9fe91f4b",
+      "bytes": 1480557
+    },
+    {
+      "path": "models/matched_bundle_20261101_v1/pupil.pt",
+      "sha256": "4136349b7099a8f4d1678ed9f89559d233d3adb7c78f04bfdde542e613759f53",
+      "bytes": 492791
+    },
+    {
       "path": "research/__init__.py",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "bytes": 0
@@ -51,13 +86,23 @@
     },
     {
       "path": "research/hirschberg_localization/automatic_upload.py",
-      "sha256": "8380b5ca7f403cdf01208cf8e9ad17fc798b90a4a0dd31393f4c6e515b66ad39",
-      "bytes": 2963
+      "sha256": "514449601d7ee83b30580b2e638042712d0a1f0a8fd3b3f343f594e1c263804d",
+      "bytes": 6371
+    },
+    {
+      "path": "research/hirschberg_localization/bilateral_roi.py",
+      "sha256": "313537fc156d442a620d47fb211019db292396d1532b889709e72792db426dad",
+      "bytes": 5012
     },
     {
       "path": "research/hirschberg_localization/binocular_guard.py",
       "sha256": "2d90163849deaa36346d94d82d950838afc861c11ac20740f6ef7f8452be859a",
       "bytes": 2672
+    },
+    {
+      "path": "research/hirschberg_localization/boundary_pupil.py",
+      "sha256": "68a722484d8f3d915e1d5eb9fea3ec42e0c3deb2b9a6e872a5295c2bcf3f50e1",
+      "bytes": 2852
     },
     {
       "path": "research/hirschberg_localization/direct_pupil_inference.py",
@@ -93,6 +138,11 @@
       "path": "research/hirschberg_localization/iris_radius_qc.py",
       "sha256": "41a8679e0cd010261a6370c3ad2c166f4dde8d4e0b01647aae8fa87d034be2e8",
       "bytes": 692
+    },
+    {
+      "path": "research/hirschberg_localization/learned_eye_roi.py",
+      "sha256": "61a9b01f04fce073ba6fe49d872eb3ba28756eeb500552d9bddb3309bcda914b",
+      "bytes": 6140
     },
     {
       "path": "research/hirschberg_localization/pupil_center_decoder.py",
@@ -175,6 +225,11 @@
       "bytes": 4922
     },
     {
+      "path": "research/hirschberg_localization/screening_feedback.py",
+      "sha256": "deb7a6f58460ccc7ec9d989781d4e7914ec1744b73b4e907fe629526de32beb7",
+      "bytes": 3212
+    },
+    {
       "path": "research/hirschberg_localization/screening_fusion.py",
       "sha256": "c84c56438429f6347eeaa55964386b5e143a747f5c27c873170288cf692e0553",
       "bytes": 3283
@@ -201,8 +256,8 @@
     },
     {
       "path": "scripts/hirschberg_engine.py",
-      "sha256": "810807ff7dee54864ea6383740ebaf7f4202a52d776f9edd1f8b2a7c685e96ae",
-      "bytes": 22083
+      "sha256": "9d79462eec60b1ac9f06af79510b24f3bbce1bfd23f431f772d5958018bfe7c8",
+      "bytes": 23092
     },
     {
       "path": "scripts/hirschberg_iris_geometry_pilot.py",
@@ -228,41 +283,6 @@
       "path": "scripts/hirschberg_reviewed_incremental_train.py",
       "sha256": "517fd71641a4e2327e3c5c75ca87ea3e21afd3ad5522eda07dff57265f7a92e9",
       "bytes": 431
-    },
-    {
-      "path": "research/hirschberg_localization/boundary_pupil.py",
-      "sha256": "ac7068c865e4adc174cab8fc82b69ab3a047051c984360a7ca2ab6279528a564",
-      "bytes": 2109
-    },
-    {
-      "path": "models/boundary_classifier_20261031_v1/pupil.pt",
-      "sha256": "ee4d8c3b77ca3c669022d89d6ad96e0f7f2ae8cadb304482adddbcf916293148",
-      "bytes": 493025
-    },
-    {
-      "path": "models/boundary_classifier_20261031_v1/classifier.pt",
-      "sha256": "5b31062b27e0f0d81b02032d8edfc591b390133fe0716b8f776793c9a57e5597",
-      "bytes": 95421599
-    },
-    {
-      "path": "models/matched_bundle_20261101_v1/classifier.pt",
-      "sha256": "bcb0e726e0aff8465d797d41c497f6ce374b3bbb34ecb1e1ebdc32a26242603e",
-      "bytes": 95421599
-    },
-    {
-      "path": "models/matched_bundle_20261101_v1/eyelid.pt",
-      "sha256": "b4d3f0182c84e07ba3a21db9acaa8a815214597e13b82c6a598e31f6f8114863",
-      "bytes": 488469
-    },
-    {
-      "path": "models/matched_bundle_20261101_v1/iris.pt",
-      "sha256": "c2a8086bd6b11eb5b6b0288a67c65290c0386fe5b47c2c56dcd79b6e9fe91f4b",
-      "bytes": 1480557
-    },
-    {
-      "path": "models/matched_bundle_20261101_v1/pupil.pt",
-      "sha256": "4136349b7099a8f4d1678ed9f89559d233d3adb7c78f04bfdde542e613759f53",
-      "bytes": 492791
     }
   ],
   "modules": [
@@ -308,5 +328,6 @@
   "bundle": "model_bundle.json",
   "roiPolicy": "online_only",
   "independentValidation": false,
-  "integrationScope": "latest completed classifier/iris/pupil/reflex; no datasets or uploads"
+  "integrationScope": "latest completed classifier/iris/pupil/reflex; no datasets or uploads",
+  "roiDetectorPolicy": "learned_eye_roi_eso_exo_v1"
 }

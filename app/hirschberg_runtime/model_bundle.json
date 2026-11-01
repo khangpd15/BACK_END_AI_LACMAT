@@ -48,7 +48,15 @@
       "sha256": "cc1e9558be005b809b0d5ee79644a56bfe6d8342d251e748d32230b6530d9941",
       "source_relative_path": "research/hirschberg_localization/runs/eye_crop_192_v1/best.pt",
       "bytes": 496513
+    },
+    "eye_roi": {
+      "path": "models/learned_eye_roi_eso_exo_v1/eye_roi.pt",
+      "sha256": "185dc28d6ca89d85e6822e2875040e5573c1484fb904ea3aefb408b888ca7599",
+      "bytes": 35666273,
+      "source_relative_path": "research/hirschberg_localization/runs/learned_eye_roi_eso_exo_20261101_v1/candidate_best.pt"
     }
   },
-  "quality_policy": "geometry_warnings_with_hard_visibility_and_coordinate_checks_v1"
+  "quality_policy": "geometry_warnings_with_hard_visibility_and_coordinate_checks_v1",
+  "roi_detector_policy": "learned_eye_roi_eso_exo_v1",
+  "roi_detector_supervision": "Weak boxes from prior TRAIN snapshot; patient independence unresolved"
 }

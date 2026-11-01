@@ -16,15 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 def screening_message(screening):
-    """Public copy stays simple; technical reasons remain in screening/quality."""
-    if screening.get('status') == 'INCONCLUSIVE':
-        return 'Chưa đủ thông tin về hướng ảnh hoặc hướng nhìn; hãy xác nhận điều kiện chụp.' if screening.get('reason') == 'invalid_input_contract' and any(x in screening.get('input_reasons', []) for x in ('orientation_unverified',)) else 'Chưa thể đánh giá: điểm mắt hoặc vùng mắt chưa đạt kiểm tra; cần xem lại ảnh đánh dấu.'
-    proposal = str(screening.get('class_proposal') or '').upper()
-    if proposal == 'NORMAL':
-        return 'Chưa ghi nhận dấu hiệu lác rõ trong ảnh này.'
-    if proposal in ('ESOTROPIA', 'EXOTROPIA'):
-        return 'Có dấu hiệu cần kiểm tra thêm. Bạn nên khám chuyên khoa mắt để được đánh giá.'
-    return 'Chưa thể đánh giá từ ảnh này. Bạn hãy chụp lại theo hướng dẫn.'
+    from app.hirschberg_runtime.research.hirschberg_localization.screening_feedback import screening_feedback
+    return screening_feedback(screening)['message']
 
 
 def load_trained_hirschberg():
@@ -69,11 +62,13 @@ def predict_trained_hirschberg(raw, filename='image.png', orientation='auto', ki
         engine = load_trained_hirschberg()
         record = engine.process(raw, filename, orientation, kind, fixation)
     screening = record['screening']
+    feedback = record['feedback']
     scores = screening.get('uncalibrated_model_scores')
     return {
         'status': screening['status'],
         'predictedClass': (screening.get('class_proposal') or 'INCONCLUSIVE').upper(),
-        'reason': screening.get('reason'), 'message': screening_message(screening),
+        'reason': screening.get('reason'), 'message': feedback['message'],
+        'failureCategory': feedback['category'], 'nextAction': feedback['next_action'], 'feedback': feedback,
         'modelId': MODEL_ID, 'modelVersion': MODEL_ID, 'featureContract': FEATURE_CONTRACT,
         'researchOnly': True, 'clinicalDiagnosis': None,
         'probabilities': None, 'uncalibratedModelScores': scores,

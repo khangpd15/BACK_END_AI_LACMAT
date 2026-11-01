@@ -129,6 +129,10 @@ def install_bundle(source, dest):
     policy = source / (CV + 'matched_bundle_retrain_20261101_v1/runtime_policy')
     shutil.copy2(policy / 'hirschberg_engine.py', engine_path)
     shutil.copy2(policy / 'reflex_roi_qc.py', dest / 'research/hirschberg_localization/reflex_roi_qc.py')
+    import runpy
+    runpy.run_path(str(source / 'scripts/install_hirschberg_roi_policy.py'))['apply_runtime_policy'](source, dest)
+    runpy.run_path(str(source / 'scripts/install_learned_eye_roi.py'))['apply_runtime_policy'](source, dest)
+    manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
     inventory = {item['path']: item for item in manifest['files']}
     for item in artifacts.values():
         inventory[item['path']] = {k: item[k] for k in ('path', 'sha256', 'bytes')}
