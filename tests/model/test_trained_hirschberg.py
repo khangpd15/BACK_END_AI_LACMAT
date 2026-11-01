@@ -26,8 +26,8 @@ def test_real_checkpoints_load_and_reject_blank_image_without_persistence():
     assert result['screening']['classifier_called'] is False
     assert result['probabilities'] is None
     assert result['uncalibratedModelScores'] is None
-    assert result['model']['pupil_version'] == 'successful_500_target15_refine_v2/block_03'
-    assert result['model']['pupil_branch'] == 'source_pixel_refinement'
+    assert result['model']['pupil_version'] == 'pupil_boundary_200ep_strict122_20261031_v1'
+    assert result['model']['pupil_branch'] == 'pupil_boundary_segmentation'
     assert result['clinicalDiagnosis'] is None
     assert client.get('/api/v1/hirschberg/health').json()['loaded'] is True
     # Python imports may create cache files; uploads and output assets must not be saved.

@@ -1,7 +1,7 @@
 {
   "source": "D:\\REMICARE_TRAIN_AI\\HIRSCHBERG_METHOD",
-  "modelId": "classifier_retrain_20261030_v2",
-  "pupilVersion": "successful_500_target15_refine_v2/block_03",
+  "modelId": "matched_bundle_20261101_v1",
+  "pupilVersion": "pupil_boundary_200ep_strict122_20261031_v1",
   "researchOnly": true,
   "files": [
     {
@@ -16,8 +16,8 @@
     },
     {
       "path": "model_bundle.json",
-      "sha256": "4751292e2dc30b81e5c986a7f7210f6a6860259def076b894311c686340b5f05",
-      "bytes": 2758
+      "sha256": "343585c193e879ea78c7ab70e4ed7dfb46668ae9197d09f4dc023359c0756cdf",
+      "bytes": 2841
     },
     {
       "path": "models/classifier_retrain_20261030_v2/classifier.pt",
@@ -106,8 +106,8 @@
     },
     {
       "path": "research/hirschberg_localization/reflex_roi_qc.py",
-      "sha256": "05ce1b4d162cd051e38ed99b6e4e9db51c36b79461a47bd7d47c2490a49fce87",
-      "bytes": 6449
+      "sha256": "8af552dcd88018d9dde853e84b67a182b8bf6c2bed43055370d182280c6ea20c",
+      "bytes": 6603
     },
     {
       "path": "research/hirschberg_localization/resnet_reference.py",
@@ -201,8 +201,8 @@
     },
     {
       "path": "scripts/hirschberg_engine.py",
-      "sha256": "097311271d52076c3f6ae3c73dae10b0a555b8d2812c14fea2b97f1db783ec93",
-      "bytes": 22046
+      "sha256": "810807ff7dee54864ea6383740ebaf7f4202a52d776f9edd1f8b2a7c685e96ae",
+      "bytes": 22083
     },
     {
       "path": "scripts/hirschberg_iris_geometry_pilot.py",
@@ -228,6 +228,41 @@
       "path": "scripts/hirschberg_reviewed_incremental_train.py",
       "sha256": "517fd71641a4e2327e3c5c75ca87ea3e21afd3ad5522eda07dff57265f7a92e9",
       "bytes": 431
+    },
+    {
+      "path": "research/hirschberg_localization/boundary_pupil.py",
+      "sha256": "ac7068c865e4adc174cab8fc82b69ab3a047051c984360a7ca2ab6279528a564",
+      "bytes": 2109
+    },
+    {
+      "path": "models/boundary_classifier_20261031_v1/pupil.pt",
+      "sha256": "ee4d8c3b77ca3c669022d89d6ad96e0f7f2ae8cadb304482adddbcf916293148",
+      "bytes": 493025
+    },
+    {
+      "path": "models/boundary_classifier_20261031_v1/classifier.pt",
+      "sha256": "5b31062b27e0f0d81b02032d8edfc591b390133fe0716b8f776793c9a57e5597",
+      "bytes": 95421599
+    },
+    {
+      "path": "models/matched_bundle_20261101_v1/classifier.pt",
+      "sha256": "bcb0e726e0aff8465d797d41c497f6ce374b3bbb34ecb1e1ebdc32a26242603e",
+      "bytes": 95421599
+    },
+    {
+      "path": "models/matched_bundle_20261101_v1/eyelid.pt",
+      "sha256": "b4d3f0182c84e07ba3a21db9acaa8a815214597e13b82c6a598e31f6f8114863",
+      "bytes": 488469
+    },
+    {
+      "path": "models/matched_bundle_20261101_v1/iris.pt",
+      "sha256": "c2a8086bd6b11eb5b6b0288a67c65290c0386fe5b47c2c56dcd79b6e9fe91f4b",
+      "bytes": 1480557
+    },
+    {
+      "path": "models/matched_bundle_20261101_v1/pupil.pt",
+      "sha256": "4136349b7099a8f4d1678ed9f89559d233d3adb7c78f04bfdde542e613759f53",
+      "bytes": 492791
     }
   ],
   "modules": [

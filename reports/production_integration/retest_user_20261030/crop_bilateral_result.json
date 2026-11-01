@@ -1,0 +1,234 @@
+{
+  "case_id": "ae766407345b497abeead89dc418526d",
+  "filename": "crop_bilateral.png",
+  "timestamp_utc": "2026-10-30T09:59:41.030130+00:00",
+  "source_sha256": "dfe6b046004ab932701174ccf7a29d3ed7fa5dd1aee7592d55f3711fd325c9d5",
+  "width": 907,
+  "height": 217,
+  "orientation": "unknown",
+  "input_kind": "bilateral",
+  "coordinate_space": "stored pixels; no rotation/unwarp",
+  "exif_orientation": 1,
+  "checkpoints": {
+    "pupil_direct_center.pt": "b275bd844a5ad0638898b1d7e38fa497029de8776964504229019e4a2db312d7",
+    "reflex_crop256.pt": "cbcd29ef7065dfc28be3f09cca399395db2087bb1f87a51413719128748a4f44",
+    "iris_four.pt": "af713bb8b396a7be831b904206c96b12ca8258ada1c587edaead9f638fd8940c",
+    "eyelid_UNet.pt": "54cb7856f6b91506266b2792354155ee0fd0e3ec566855c4a0b8f7b6a0488423",
+    "roi_seed192.pt": "cc1e9558be005b809b0d5ee79644a56bfe6d8342d251e748d32230b6530d9941"
+  },
+  "model": {
+    "classifier_name": "ResNet50 + Hirschberg + pupil–khe mi",
+    "version": "screening_eyelid_branch_20261011_v1",
+    "classifier_sha256": "b5460f997a87f185399bb0dcc6f498b377fa85f36667149226e4894ad618fe15",
+    "localizers": {
+      "pupil_direct_center.pt": "b275bd844a5ad0638898b1d7e38fa497029de8776964504229019e4a2db312d7",
+      "reflex_crop256.pt": "cbcd29ef7065dfc28be3f09cca399395db2087bb1f87a51413719128748a4f44",
+      "iris_four.pt": "af713bb8b396a7be831b904206c96b12ca8258ada1c587edaead9f638fd8940c",
+      "eyelid_UNet.pt": "54cb7856f6b91506266b2792354155ee0fd0e3ec566855c4a0b8f7b6a0488423",
+      "roi_seed192.pt": "cc1e9558be005b809b0d5ee79644a56bfe6d8342d251e748d32230b6530d9941"
+    },
+    "pupil_version": "pupil_color_features_20261012_v1",
+    "pupil_checkpoint": "research\\hirschberg_localization\\runs\\pupil_color_features_20261012_v1\\control_final.pt",
+    "pupil_branch": "control",
+    "pupil_train_mean_px": 1.8678471754774668,
+    "classifier_training_pupil_sha256": "ff1c2f4fb132430989657d0a35ec443011cfa1e58b8ddf094cc49dd898e39c11",
+    "updated_pupil_classifier_pair_independently_evaluated": false,
+    "independent_evaluation": false,
+    "calibrated_probabilities": false
+  },
+  "classifier_sha256": "b5460f997a87f185399bb0dcc6f498b377fa85f36667149226e4894ad618fe15",
+  "clinical_diagnosis": null,
+  "requires_human_review": true,
+  "training_eligible": false,
+  "eyes": {
+    "image_left": {
+      "bbox": null,
+      "pupil": null,
+      "reflex": null,
+      "raw_predictions": {
+        "pupil": {}
+      },
+      "heatmap_transforms": {},
+      "iris_edges": null,
+      "iris_four": null,
+      "iris_bbox": null,
+      "iris_context_metadata": {
+        "original_bbox": null,
+        "used_bbox": null,
+        "retry_used": false,
+        "method": "original_frozen_iris_crop",
+        "human_review_required": true
+      },
+      "iris_scale_valid": false,
+      "eyelid_contour": [],
+      "detector_eyelid_contour": [],
+      "reflex_qc": {
+        "status": "Invalid Landmark / Low Confidence",
+        "reasons": [
+          "missing_or_nonfinite_geometry"
+        ],
+        "eligible_for_score": false,
+        "config": {
+          "version": "reflex_roi_qc_v2_glint_candidates",
+          "search_radius_over_iris": 0.4,
+          "outlier_vector_over_iris": 0.4,
+          "glint_gray_threshold": 230,
+          "glint_open_kernel_px": 3,
+          "glint_component_bounds_px": [
+            3,
+            10
+          ],
+          "clinical_validated": false,
+          "mask_method": "predicted_iris_disc_intersect_eyelid_polygon_intersect_pupil_center_disc",
+          "candidate_replaces_cnn": false,
+          "segmentation_model_available": false
+        },
+        "local_intensity_candidate": null,
+        "candidate_requires_primary_light_review": true
+      },
+      "anatomical_side": null
+    },
+    "image_right": {
+      "bbox": null,
+      "pupil": null,
+      "reflex": null,
+      "raw_predictions": {
+        "pupil": {}
+      },
+      "heatmap_transforms": {},
+      "iris_edges": null,
+      "iris_four": null,
+      "iris_bbox": null,
+      "iris_context_metadata": {
+        "original_bbox": null,
+        "used_bbox": null,
+        "retry_used": false,
+        "method": "original_frozen_iris_crop",
+        "human_review_required": true
+      },
+      "iris_scale_valid": false,
+      "eyelid_contour": [],
+      "detector_eyelid_contour": [],
+      "reflex_qc": {
+        "status": "Invalid Landmark / Low Confidence",
+        "reasons": [
+          "missing_or_nonfinite_geometry"
+        ],
+        "eligible_for_score": false,
+        "config": {
+          "version": "reflex_roi_qc_v2_glint_candidates",
+          "search_radius_over_iris": 0.4,
+          "outlier_vector_over_iris": 0.4,
+          "glint_gray_threshold": 230,
+          "glint_open_kernel_px": 3,
+          "glint_component_bounds_px": [
+            3,
+            10
+          ],
+          "clinical_validated": false,
+          "mask_method": "predicted_iris_disc_intersect_eyelid_polygon_intersect_pupil_center_disc",
+          "candidate_replaces_cnn": false,
+          "segmentation_model_available": false
+        },
+        "local_intensity_candidate": null,
+        "candidate_requires_primary_light_review": true
+      },
+      "anatomical_side": null
+    }
+  },
+  "eye_roi_fallback": {
+    "status": "not_found",
+    "detections": 0,
+    "input_scale": 1.0
+  },
+  "automatic_capture": {
+    "input_type": "bilateral_candidate",
+    "face_count": 0,
+    "mirror_status": "unknown",
+    "fixation_status": "unknown",
+    "fixation_verified": false,
+    "note": "A still image does not establish mirror history or the actual fixation target."
+  },
+  "roi_source": "online_detector_CNN_ROI_plus10percent_padding",
+  "binocular_iris_radius_qc": {
+    "status": "NOT_ASSESSED",
+    "reason": "missing iris diameters"
+  },
+  "fixation_confirmation": "unknown",
+  "fixation_source": null,
+  "input_contract": {
+    "version": "source_pixels_v1",
+    "eligible": false,
+    "reasons": [
+      "orientation_unverified",
+      "image_left:missing_or_invalid_roi",
+      "image_left:pupil_missing_or_invalid",
+      "image_left:reflex_missing_or_invalid",
+      "image_right:missing_or_invalid_roi",
+      "image_right:pupil_missing_or_invalid",
+      "image_right:reflex_missing_or_invalid"
+    ],
+    "anatomical_sides": {
+      "image_left": null,
+      "image_right": null
+    },
+    "coordinate_space": "stored_source_pixels",
+    "visibility_policy": "occluded/not_visible rejected; model visibility is not clinical confirmation"
+  },
+  "binocular_comparison": {
+    "available": false,
+    "reason": "orientation unverified",
+    "frame": "stored image axes; mirror history unknown",
+    "anatomical_sides_verified": false
+  },
+  "reflex_qc_config": {
+    "version": "reflex_roi_qc_v2_glint_candidates",
+    "search_radius_over_iris": 0.4,
+    "outlier_vector_over_iris": 0.4,
+    "glint_gray_threshold": 230,
+    "glint_open_kernel_px": 3,
+    "glint_component_bounds_px": [
+      3,
+      10
+    ],
+    "clinical_validated": false,
+    "mask_method": "predicted_iris_disc_intersect_eyelid_polygon_intersect_pupil_center_disc",
+    "candidate_replaces_cnn": false,
+    "segmentation_model_available": false
+  },
+  "experimental_classifier_proposal": {
+    "status": "INCONCLUSIVE",
+    "reason": "invalid_input_contract",
+    "input_reasons": [
+      "orientation_unverified",
+      "image_left:missing_or_invalid_roi",
+      "image_left:pupil_missing_or_invalid",
+      "image_left:reflex_missing_or_invalid",
+      "image_right:missing_or_invalid_roi",
+      "image_right:pupil_missing_or_invalid",
+      "image_right:reflex_missing_or_invalid"
+    ],
+    "class_proposal": null,
+    "clinical_diagnosis": null,
+    "classifier_called": false,
+    "requires_human_review": true
+  },
+  "screening": {
+    "status": "INCONCLUSIVE",
+    "reason": "invalid_input_contract",
+    "input_reasons": [
+      "orientation_unverified",
+      "image_left:missing_or_invalid_roi",
+      "image_left:pupil_missing_or_invalid",
+      "image_left:reflex_missing_or_invalid",
+      "image_right:missing_or_invalid_roi",
+      "image_right:pupil_missing_or_invalid",
+      "image_right:reflex_missing_or_invalid"
+    ],
+    "class_proposal": null,
+    "clinical_diagnosis": null,
+    "classifier_called": false,
+    "requires_human_review": true
+  },
+  "reason_vi": "Không xác định được cặp hai mắt. Cần review hoặc chụp lại."
+}

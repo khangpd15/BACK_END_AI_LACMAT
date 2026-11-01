@@ -7,7 +7,7 @@ from threading import RLock
 import time
 
 ROOT = Path(__file__).resolve().parents[1] / 'hirschberg_runtime'
-MODEL_ID = 'classifier_retrain_20261030_v2'
+MODEL_ID = 'matched_bundle_20261101_v1'
 FEATURE_CONTRACT = 'resnet50_hirschberg_geometry_eyelid_v1'
 _lock = RLock()
 _engine = None
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 def screening_message(screening):
     """Public copy stays simple; technical reasons remain in screening/quality."""
     if screening.get('status') == 'INCONCLUSIVE':
-        return 'Chưa thể đánh giá từ ảnh này. Bạn hãy chụp lại, nhìn thẳng vào nguồn sáng gần camera và để rõ cả hai mắt.'
+        return 'Chưa đủ thông tin về hướng ảnh hoặc hướng nhìn; hãy xác nhận điều kiện chụp.' if screening.get('reason') == 'invalid_input_contract' and any(x in screening.get('input_reasons', []) for x in ('orientation_unverified',)) else 'Chưa thể đánh giá: điểm mắt hoặc vùng mắt chưa đạt kiểm tra; cần xem lại ảnh đánh dấu.'
     proposal = str(screening.get('class_proposal') or '').upper()
     if proposal == 'NORMAL':
         return 'Chưa ghi nhận dấu hiệu lác rõ trong ảnh này.'

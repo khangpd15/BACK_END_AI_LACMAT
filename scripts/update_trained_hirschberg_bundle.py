@@ -6,15 +6,15 @@ import json
 from pathlib import Path
 import shutil
 
-MODEL_ID = 'classifier_retrain_20261030_v2'
+MODEL_ID = 'matched_bundle_20261101_v1'
 RUNS = 'research/hirschberg_localization/runs/'
 CV = RUNS + 'cv_visibility_prior_20261030_v1/'
 SOURCES = {
-    'classifier': (CV + 'classifier_retrain_v2/candidate_final.pt', 'checkpoint_sha256'),
-    'pupil': (CV + 'successful_500_target15_refine_v2/block_03/pupil_final.pt', 'pupil_checkpoint_sha256'),
+    'classifier': (CV + 'matched_bundle_retrain_20261101_v1/candidate_final.pt', 'checkpoint_sha256'),
+    'pupil': (CV + 'pupil_boundary_200ep_strict122_20261031_v1/pupil_finetuned_200.pt', None),
     'reflex': (CV + 'successful_500_target15_refine_v2/reflex_03/reflex_final.pt', 'checkpoint_sha256'),
-    'iris': (CV + 'all_old_direct_v1/iris_pupil/iris_four_final.pt', 'iris_checkpoint_sha256'),
-    'eyelid': (RUNS + 'eyelid_reviewed_20261011_v1/candidate_final.pt', None),
+    'iris': (CV + 'iris_eyelid_200ep_20261031_v1/iris_refined200.pt', None),
+    'eyelid': (CV + 'iris_eyelid_200ep_20261031_v1/eyelid_final.pt', None),
     'pupil_base': (RUNS + 'pupil_iris_reviewed_20261011_v1/pupil_final.pt', None),
     'iris_seed': (RUNS + 'eye_crop_192_v1/best.pt', None),
 }
@@ -55,7 +55,7 @@ INIT = '''    def __init__(self):
         self.pr = network(torch, spatial_logits=True, targets=2).to(self.device)
         self.pr.load_state_dict(load('reflex')['state_dict'])
         self.pr.eval()
-        self.pupil = make_model(torch, load('pupil_base')['state_dict']).to(self.device)
+        self.pupil = BoundaryModel().to(self.device)
         self.pupil.load_state_dict(load('pupil')['state_dict'])
         self.pupil.eval()
         self.iris = four_point_model(torch, stable_model(torch, load('iris_seed'))).to(self.device)
@@ -70,7 +70,7 @@ INIT = '''    def __init__(self):
                            'version': bundle['model_id'], 'classifier_sha256': self.classifier_sha256,
                            'localizers': self.checkpoints, 'pupil_version': bundle['pupil_version'],
                            'pupil_checkpoint': bundle['artifacts']['pupil']['path'],
-                           'pupil_branch': 'source_pixel_refinement',
+                           'pupil_branch': 'pupil_boundary_segmentation',
                            'pupil_train_mean_px': bundle['pupil_train_mean_px'],
                            'classifier_training_pupil_sha256': bundle['artifacts']['pupil']['sha256'],
                            'updated_pupil_classifier_pair_independently_evaluated': False,
@@ -98,7 +98,7 @@ def install_bundle(source, dest):
             if not completion['complete'] or completion[completion_key] != source_hash:
                 raise RuntimeError('Incomplete or invalid source checkpoint: ' + role)
         # Retain immutable initializer dependencies at existing paths; version new weights.
-        target_relative = ('models/' + MODEL_ID + '/' + role + '.pt') if completion_key else relative
+        target_relative = ('models/' + MODEL_ID + '/' + role + '.pt') if (completion_key or role in ('pupil', 'iris', 'eyelid')) else relative
         target = dest / target_relative
         target.parent.mkdir(parents=True, exist_ok=True)
         if not target.is_file() or sha(target) != source_hash:
@@ -108,13 +108,17 @@ def install_bundle(source, dest):
         artifacts[role] = {'path': target_relative, 'sha256': source_hash,
                            'source_relative_path': relative, 'bytes': target.stat().st_size}
     bundle = {'schema_version': 1, 'model_id': MODEL_ID,
-              'pupil_version': 'successful_500_target15_refine_v2/block_03',
-              'pupil_train_mean_px': 1.7979000772618392,
+              'pupil_version': 'pupil_boundary_200ep_strict122_20261031_v1',
+              'pupil_train_mean_px': 1.1828089607716257,
               'research_only': True, 'independent_validation': False,
               'roi_policy': 'online_only', 'artifacts': artifacts}
     (dest / 'model_bundle.json').write_text(json.dumps(bundle, indent=2) + '\n', encoding='utf-8')
     engine_path = dest / 'scripts/hirschberg_engine.py'
     code = engine_path.read_text(encoding='utf-8')
+    code = code.replace('from app.hirschberg_runtime.research.hirschberg_localization.direct_pupil_inference import predict as predict_direct_pupil', 'from app.hirschberg_runtime.research.hirschberg_localization.boundary_pupil import predict as predict_direct_pupil, BoundaryModel')
+    boundary_source = source / (CV + 'boundary_classifier_20261031_v1/boundary_pupil.py')
+    boundary_code = boundary_source.read_text(encoding='utf-8').replace('from research.hirschberg_localization.eyelid_segmentation', 'from app.hirschberg_runtime.research.hirschberg_localization.eyelid_segmentation')
+    (dest / 'research/hirschberg_localization/boundary_pupil.py').write_text(boundary_code, encoding='utf-8')
     tree = ast.parse(code)
     engine = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'Engine')
     init = next(n for n in engine.body if isinstance(n, ast.FunctionDef) and n.name == '__init__')
@@ -122,6 +126,9 @@ def install_bundle(source, dest):
     code = ''.join(lines[:init.lineno - 1]) + INIT + ''.join(lines[init.end_lineno:])
     ast.parse(code)
     engine_path.write_text(code, encoding='utf-8')
+    policy = source / (CV + 'matched_bundle_retrain_20261101_v1/runtime_policy')
+    shutil.copy2(policy / 'hirschberg_engine.py', engine_path)
+    shutil.copy2(policy / 'reflex_roi_qc.py', dest / 'research/hirschberg_localization/reflex_roi_qc.py')
     inventory = {item['path']: item for item in manifest['files']}
     for item in artifacts.values():
         inventory[item['path']] = {k: item[k] for k in ('path', 'sha256', 'bytes')}

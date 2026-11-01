@@ -1,0 +1,1086 @@
+{
+  "case_id": "65a375b7ddbb450ca45e3a1795b0252d",
+  "filename": "face_from_screenshot.png",
+  "timestamp_utc": "2026-10-30T10:00:04.247443+00:00",
+  "source_sha256": "5bc9d20fc698d2d4ca48a871c4b787c2d83f90d78e16d90af6fbdd76e395287d",
+  "width": 393,
+  "height": 526,
+  "orientation": "unknown",
+  "input_kind": "fullface",
+  "coordinate_space": "stored pixels; no rotation/unwarp",
+  "exif_orientation": 1,
+  "checkpoints": {
+    "pupil_direct_center.pt": "b275bd844a5ad0638898b1d7e38fa497029de8776964504229019e4a2db312d7",
+    "reflex_crop256.pt": "cbcd29ef7065dfc28be3f09cca399395db2087bb1f87a51413719128748a4f44",
+    "iris_four.pt": "af713bb8b396a7be831b904206c96b12ca8258ada1c587edaead9f638fd8940c",
+    "eyelid_UNet.pt": "54cb7856f6b91506266b2792354155ee0fd0e3ec566855c4a0b8f7b6a0488423",
+    "roi_seed192.pt": "cc1e9558be005b809b0d5ee79644a56bfe6d8342d251e748d32230b6530d9941"
+  },
+  "model": {
+    "classifier_name": "ResNet50 + Hirschberg + pupil–khe mi",
+    "version": "screening_eyelid_branch_20261011_v1",
+    "classifier_sha256": "b5460f997a87f185399bb0dcc6f498b377fa85f36667149226e4894ad618fe15",
+    "localizers": {
+      "pupil_direct_center.pt": "b275bd844a5ad0638898b1d7e38fa497029de8776964504229019e4a2db312d7",
+      "reflex_crop256.pt": "cbcd29ef7065dfc28be3f09cca399395db2087bb1f87a51413719128748a4f44",
+      "iris_four.pt": "af713bb8b396a7be831b904206c96b12ca8258ada1c587edaead9f638fd8940c",
+      "eyelid_UNet.pt": "54cb7856f6b91506266b2792354155ee0fd0e3ec566855c4a0b8f7b6a0488423",
+      "roi_seed192.pt": "cc1e9558be005b809b0d5ee79644a56bfe6d8342d251e748d32230b6530d9941"
+    },
+    "pupil_version": "pupil_color_features_20261012_v1",
+    "pupil_checkpoint": "research\\hirschberg_localization\\runs\\pupil_color_features_20261012_v1\\control_final.pt",
+    "pupil_branch": "control",
+    "pupil_train_mean_px": 1.8678471754774668,
+    "classifier_training_pupil_sha256": "ff1c2f4fb132430989657d0a35ec443011cfa1e58b8ddf094cc49dd898e39c11",
+    "updated_pupil_classifier_pair_independently_evaluated": false,
+    "independent_evaluation": false,
+    "calibrated_probabilities": false
+  },
+  "classifier_sha256": "b5460f997a87f185399bb0dcc6f498b377fa85f36667149226e4894ad618fe15",
+  "clinical_diagnosis": null,
+  "requires_human_review": true,
+  "training_eligible": false,
+  "eyes": {
+    "image_left": {
+      "bbox": [
+        38,
+        210,
+        167,
+        288
+      ],
+      "pupil": [
+        100.95717540383339,
+        243.53348162251135
+      ],
+      "reflex": [
+        100.484375,
+        243.21290322580646
+      ],
+      "raw_predictions": {
+        "pupil": {
+          "peak_xy": [
+            100.95717540383339,
+            243.53348162251135
+          ],
+          "in_crop_and_source": true,
+          "decoder": "expected_center",
+          "visibility": "visible",
+          "visibility_probabilities": [
+            0.90584397315979,
+            0.05410119518637657,
+            0.040054868906736374
+          ],
+          "visibility_reliable": false,
+          "warning": "Visibility head unreliable on occluded eyes; coordinate proposal requires human QC",
+          "transform": {
+            "crop": {
+              "bbox": [
+                38,
+                210,
+                167,
+                288
+              ],
+              "horizontal_flip": false,
+              "crop_width": 129
+            },
+            "letterbox": [
+              1.9844961240310077,
+              1.9871794871794872,
+              0,
+              50
+            ]
+          }
+        },
+        "reflex": {
+          "peak_xy": [
+            100.484375,
+            243.21290322580646
+          ],
+          "in_crop_and_source": true,
+          "visibility": "visible",
+          "visibility_probabilities": [
+            0.8277890682220459,
+            0.026905469596385956,
+            0.14530549943447113
+          ]
+        }
+      },
+      "heatmap_transforms": {
+        "pupil": {
+          "crop": {
+            "bbox": [
+              38,
+              210,
+              167,
+              288
+            ],
+            "horizontal_flip": false,
+            "crop_width": 129
+          },
+          "letterbox": [
+            1.9844961240310077,
+            1.9871794871794872,
+            0,
+            50
+          ],
+          "normalization": "spatial softmax divided by max for visualization only"
+        },
+        "reflex": {
+          "crop": {
+            "bbox": [
+              38,
+              210,
+              167,
+              288
+            ],
+            "horizontal_flip": false,
+            "crop_width": 129
+          },
+          "letterbox": [
+            1.9844961240310077,
+            1.9871794871794872,
+            0,
+            50
+          ],
+          "normalization": "spatial softmax divided by max for visualization only"
+        }
+      },
+      "iris_edges": [
+        [
+          83.57925444841385,
+          245.29794921875
+        ],
+        [
+          113.26448744535446,
+          247.36378651494564
+        ]
+      ],
+      "iris_four": {
+        "iris_left": [
+          83.57925444841385,
+          245.29794921875
+        ],
+        "iris_right": [
+          113.26448744535446,
+          247.36378651494564
+        ],
+        "iris_top": [
+          99.78347417712212,
+          232.02536939538044
+        ],
+        "iris_bottom": [
+          98.96603837609291,
+          262.55720957880436
+        ]
+      },
+      "iris_bbox": [
+        49,
+        217,
+        156,
+        281
+      ],
+      "iris_context_metadata": {
+        "original_bbox": [
+          49,
+          217,
+          156,
+          281
+        ],
+        "used_bbox": [
+          49,
+          217,
+          156,
+          281
+        ],
+        "retry_used": false,
+        "method": "original_frozen_iris_crop",
+        "human_review_required": true
+      },
+      "iris_scale_valid": false,
+      "eyelid_contour": [
+        [
+          64.9111712872982,
+          247.771011531353
+        ],
+        [
+          70.53875014185905,
+          254.31178450584412
+        ],
+        [
+          76.741309851408,
+          258.8023689985275
+        ],
+        [
+          85.99519054591656,
+          262.4426860809326
+        ],
+        [
+          100.04912835359573,
+          263.75075602531433
+        ],
+        [
+          114.05881118774414,
+          261.82056748867035
+        ],
+        [
+          127.44975596666336,
+          258.44561409950256
+        ],
+        [
+          136.24535143375397,
+          256.90726339817047
+        ],
+        [
+          140.41046065092087,
+          255.60497790575027
+        ],
+        [
+          135.3572536110878,
+          249.82135677337646
+        ],
+        [
+          124.65889924764633,
+          240.9012302160263
+        ],
+        [
+          109.56257146596909,
+          235.07166266441345
+        ],
+        [
+          94.34757453203201,
+          234.48075503110886
+        ],
+        [
+          80.33765745162964,
+          237.58655112981796
+        ],
+        [
+          72.33875691890717,
+          241.95578753948212
+        ],
+        [
+          68.05262437462807,
+          245.14902448654175
+        ]
+      ],
+      "iris_left": [
+        83.57925444841385,
+        245.29794921875
+      ],
+      "iris_right": [
+        113.26448744535446,
+        247.36378651494564
+      ],
+      "iris_top": [
+        99.78347417712212,
+        232.02536939538044
+      ],
+      "iris_bottom": [
+        98.96603837609291,
+        262.55720957880436
+      ],
+      "iris_center": [
+        98.42187094688416,
+        247.2912894870924
+      ],
+      "iris_diameter_px": 29.75702844399966,
+      "mediapipe_iris_geometry": {
+        "center": [
+          100.73299857974052,
+          245.18855941295624
+        ],
+        "left": [
+          83.21071118116379,
+          245.72383284568787
+        ],
+        "right": [
+          118.03359532356262,
+          244.58089411258698
+        ],
+        "top": [
+          100.71949428319931,
+          228.0223752260208
+        ],
+        "bottom": [
+          100.56287723779678,
+          262.4466521143913
+        ],
+        "landmark_bbox_axis_ratio": 0.9880314916380547,
+        "source": "MediaPipe iris landmarks; points, not segmentation or fitted ellipse"
+      },
+      "detector_eyelid_contour": [
+        [
+          64.9111712872982,
+          247.771011531353
+        ],
+        [
+          70.53875014185905,
+          254.31178450584412
+        ],
+        [
+          76.741309851408,
+          258.8023689985275
+        ],
+        [
+          85.99519054591656,
+          262.4426860809326
+        ],
+        [
+          100.04912835359573,
+          263.75075602531433
+        ],
+        [
+          114.05881118774414,
+          261.82056748867035
+        ],
+        [
+          127.44975596666336,
+          258.44561409950256
+        ],
+        [
+          136.24535143375397,
+          256.90726339817047
+        ],
+        [
+          140.41046065092087,
+          255.60497790575027
+        ],
+        [
+          135.3572536110878,
+          249.82135677337646
+        ],
+        [
+          124.65889924764633,
+          240.9012302160263
+        ],
+        [
+          109.56257146596909,
+          235.07166266441345
+        ],
+        [
+          94.34757453203201,
+          234.48075503110886
+        ],
+        [
+          80.33765745162964,
+          237.58655112981796
+        ],
+        [
+          72.33875691890717,
+          241.95578753948212
+        ],
+        [
+          68.05262437462807,
+          245.14902448654175
+        ]
+      ],
+      "eyelid_branch_contour": [
+        [
+          54.0,
+          251.0
+        ],
+        [
+          55.0,
+          255.0
+        ],
+        [
+          66.0,
+          253.0
+        ],
+        [
+          90.0,
+          263.0
+        ],
+        [
+          105.0,
+          263.0
+        ],
+        [
+          108.0,
+          261.0
+        ],
+        [
+          134.0,
+          258.0
+        ],
+        [
+          132.0,
+          250.0
+        ],
+        [
+          126.0,
+          243.0
+        ],
+        [
+          113.0,
+          235.0
+        ],
+        [
+          105.0,
+          233.0
+        ],
+        [
+          79.0,
+          233.0
+        ],
+        [
+          74.0,
+          235.0
+        ],
+        [
+          57.0,
+          247.0
+        ]
+      ],
+      "eyelid_prediction_metadata": {
+        "threshold": 0.5,
+        "source": "eyelid_UNet_human_edited_contours",
+        "human_review_required": true,
+        "clinical_validated": false,
+        "crop": {
+          "bbox": [
+            38,
+            210,
+            167,
+            288
+          ],
+          "horizontal_flip": false,
+          "crop_width": 129
+        },
+        "letterbox": [
+          1.4883720930232558,
+          1.4871794871794872,
+          0,
+          38
+        ],
+        "mask_coordinate_space": "source crop pixels, horizontal flip undone",
+        "area_px": 1669.5,
+        "touches_crop_edge": false,
+        "candidate_only": true
+      },
+      "eyelid_qc_source": "detector_contour",
+      "opening_geometry": {
+        "valid": true,
+        "endpoint_role": "CNN mask extrema along PCA axis; NOT human-verified canthi",
+        "left_endpoint": [
+          54.0,
+          251.0
+        ],
+        "right_endpoint": [
+          134.0,
+          258.0
+        ],
+        "pupil_u": 0.5744004631996007,
+        "pupil_v": -0.14359152487217788,
+        "height_width": 0.38843229755694186
+      },
+      "reflex_qc": {
+        "status": "ROI_QC_PASSED_RESEARCH_ONLY",
+        "reasons": [],
+        "eligible_for_score": true,
+        "config": {
+          "version": "reflex_roi_qc_v2_glint_candidates",
+          "search_radius_over_iris": 0.4,
+          "outlier_vector_over_iris": 0.4,
+          "glint_gray_threshold": 230,
+          "glint_open_kernel_px": 3,
+          "glint_component_bounds_px": [
+            3,
+            10
+          ],
+          "clinical_validated": false,
+          "mask_method": "predicted_iris_disc_intersect_eyelid_polygon_intersect_pupil_center_disc",
+          "candidate_replaces_cnn": false,
+          "segmentation_model_available": false
+        },
+        "local_intensity_candidate": [
+          100,
+          243
+        ],
+        "candidate_requires_primary_light_review": true,
+        "vector_over_iris_radius": 0.03839335929664469,
+        "roi_pixel_count": 108,
+        "intensity_range": [
+          35,
+          224
+        ],
+        "maximum_pixel_count": 1,
+        "selection_rule": "first raster-order maximum; ties retained as count; not verified reflex",
+        "glint_candidates": [],
+        "glint_candidate_count": 0,
+        "glint_candidate_selection": "ranked by local contrast, then proximity to iris center; human confirmation required"
+      },
+      "anatomical_side": null
+    },
+    "image_right": {
+      "bbox": [
+        210,
+        212,
+        333,
+        284
+      ],
+      "pupil": [
+        261.8997002840042,
+        242.28437744140626
+      ],
+      "reflex": [
+        263.29296875,
+        243.68
+      ],
+      "raw_predictions": {
+        "pupil": {
+          "peak_xy": [
+            261.8997002840042,
+            242.28437744140626
+          ],
+          "in_crop_and_source": true,
+          "decoder": "expected_center",
+          "visibility": "visible",
+          "visibility_probabilities": [
+            0.9046765565872192,
+            0.05006910488009453,
+            0.0452544167637825
+          ],
+          "visibility_reliable": false,
+          "warning": "Visibility head unreliable on occluded eyes; coordinate proposal requires human QC",
+          "transform": {
+            "crop": {
+              "bbox": [
+                210,
+                212,
+                333,
+                284
+              ],
+              "horizontal_flip": true,
+              "crop_width": 123
+            },
+            "letterbox": [
+              2.0813008130081303,
+              2.0833333333333335,
+              0,
+              53
+            ]
+          }
+        },
+        "reflex": {
+          "peak_xy": [
+            263.29296875,
+            243.68
+          ],
+          "in_crop_and_source": true,
+          "visibility": "visible",
+          "visibility_probabilities": [
+            0.8290905356407166,
+            0.02647251822054386,
+            0.14443691074848175
+          ]
+        }
+      },
+      "heatmap_transforms": {
+        "pupil": {
+          "crop": {
+            "bbox": [
+              210,
+              212,
+              333,
+              284
+            ],
+            "horizontal_flip": true,
+            "crop_width": 123
+          },
+          "letterbox": [
+            2.0813008130081303,
+            2.0833333333333335,
+            0,
+            53
+          ],
+          "normalization": "spatial softmax divided by max for visualization only"
+        },
+        "reflex": {
+          "crop": {
+            "bbox": [
+              210,
+              212,
+              333,
+              284
+            ],
+            "horizontal_flip": true,
+            "crop_width": 123
+          },
+          "letterbox": [
+            2.0813008130081303,
+            2.0833333333333335,
+            0,
+            53
+          ],
+          "normalization": "spatial softmax divided by max for visualization only"
+        }
+      },
+      "iris_edges": [
+        [
+          245.28537392616272,
+          247.6731898659154
+        ],
+        [
+          275.3929165303707,
+          246.77844860679224
+        ]
+      ],
+      "iris_four": {
+        "iris_left": [
+          245.28537392616272,
+          247.6731898659154
+        ],
+        "iris_right": [
+          275.3929165303707,
+          246.77844860679224
+        ],
+        "iris_top": [
+          263.4923746585846,
+          229.76874562313682
+        ],
+        "iris_bottom": [
+          260.76534354686737,
+          263.226243671618
+        ]
+      },
+      "iris_bbox": [
+        221,
+        218,
+        322,
+        278
+      ],
+      "iris_context_metadata": {
+        "original_bbox": [
+          221,
+          218,
+          322,
+          278
+        ],
+        "used_bbox": [
+          221,
+          218,
+          322,
+          278
+        ],
+        "retry_used": false,
+        "method": "original_frozen_iris_crop",
+        "human_review_required": true
+      },
+      "iris_scale_valid": false,
+      "eyelid_contour": [
+        [
+          236.00366306304932,
+          256.2168914079666
+        ],
+        [
+          240.46441447734833,
+          257.60139763355255
+        ],
+        [
+          248.95572406053543,
+          258.7293030619621
+        ],
+        [
+          261.8292422890663,
+          260.9349663257599
+        ],
+        [
+          275.41835939884186,
+          261.4608811736107
+        ],
+        [
+          288.828371822834,
+          259.10242372751236
+        ],
+        [
+          297.1682177782059,
+          255.17590951919556
+        ],
+        [
+          302.715215921402,
+          250.87582004070282
+        ],
+        [
+          307.63672971725464,
+          244.8637679219246
+        ],
+        [
+          304.543882727623,
+          242.55997276306152
+        ],
+        [
+          300.18783938884735,
+          239.96281653642654
+        ],
+        [
+          292.220890045166,
+          236.73945027589798
+        ],
+        [
+          278.24889743328094,
+          234.81912195682526
+        ],
+        [
+          262.9363603591919,
+          235.93663418293
+        ],
+        [
+          248.89552277326584,
+          241.73332911729813
+        ],
+        [
+          239.96251845359802,
+          250.53191947937012
+        ]
+      ],
+      "iris_left": [
+        245.28537392616272,
+        247.6731898659154
+      ],
+      "iris_right": [
+        275.3929165303707,
+        246.77844860679224
+      ],
+      "iris_top": [
+        263.4923746585846,
+        229.76874562313682
+      ],
+      "iris_bottom": [
+        260.76534354686737,
+        263.226243671618
+      ],
+      "iris_center": [
+        260.3391452282667,
+        246.49749464737744
+      ],
+      "iris_diameter_px": 30.120834709300084,
+      "mediapipe_iris_geometry": {
+        "center": [
+          262.91223299503326,
+          246.09726703166962
+        ],
+        "left": [
+          246.3990667462349,
+          246.3242244720459
+        ],
+        "right": [
+          279.71743404865265,
+          245.63885313272476
+        ],
+        "top": [
+          262.4545158147812,
+          229.87241226434708
+        ],
+        "bottom": [
+          263.4205473661423,
+          262.2894059419632
+        ],
+        "landmark_bbox_axis_ratio": 0.9731726887652041,
+        "source": "MediaPipe iris landmarks; points, not segmentation or fitted ellipse"
+      },
+      "detector_eyelid_contour": [
+        [
+          236.00366306304932,
+          256.2168914079666
+        ],
+        [
+          240.46441447734833,
+          257.60139763355255
+        ],
+        [
+          248.95572406053543,
+          258.7293030619621
+        ],
+        [
+          261.8292422890663,
+          260.9349663257599
+        ],
+        [
+          275.41835939884186,
+          261.4608811736107
+        ],
+        [
+          288.828371822834,
+          259.10242372751236
+        ],
+        [
+          297.1682177782059,
+          255.17590951919556
+        ],
+        [
+          302.715215921402,
+          250.87582004070282
+        ],
+        [
+          307.63672971725464,
+          244.8637679219246
+        ],
+        [
+          304.543882727623,
+          242.55997276306152
+        ],
+        [
+          300.18783938884735,
+          239.96281653642654
+        ],
+        [
+          292.220890045166,
+          236.73945027589798
+        ],
+        [
+          278.24889743328094,
+          234.81912195682526
+        ],
+        [
+          262.9363603591919,
+          235.93663418293
+        ],
+        [
+          248.89552277326584,
+          241.73332911729813
+        ],
+        [
+          239.96251845359802,
+          250.53191947937012
+        ]
+      ],
+      "eyelid_branch_contour": [
+        [
+          315.0,
+          248.0
+        ],
+        [
+          314.0,
+          254.0
+        ],
+        [
+          312.0,
+          254.0
+        ],
+        [
+          310.0,
+          251.0
+        ],
+        [
+          306.0,
+          251.0
+        ],
+        [
+          291.0,
+          260.0
+        ],
+        [
+          283.0,
+          262.0
+        ],
+        [
+          259.0,
+          262.0
+        ],
+        [
+          255.0,
+          260.0
+        ],
+        [
+          243.0,
+          260.0
+        ],
+        [
+          238.0,
+          257.0
+        ],
+        [
+          240.0,
+          250.0
+        ],
+        [
+          247.0,
+          241.0
+        ],
+        [
+          254.0,
+          236.0
+        ],
+        [
+          264.0,
+          232.0
+        ],
+        [
+          278.0,
+          231.0
+        ],
+        [
+          289.0,
+          232.0
+        ],
+        [
+          307.0,
+          239.0
+        ],
+        [
+          312.0,
+          243.0
+        ]
+      ],
+      "eyelid_prediction_metadata": {
+        "threshold": 0.5,
+        "source": "eyelid_UNet_human_edited_contours",
+        "human_review_required": true,
+        "clinical_validated": false,
+        "crop": {
+          "bbox": [
+            210,
+            212,
+            333,
+            284
+          ],
+          "horizontal_flip": true,
+          "crop_width": 123
+        },
+        "letterbox": [
+          1.5609756097560976,
+          1.5555555555555556,
+          0,
+          40
+        ],
+        "mask_coordinate_space": "source crop pixels, horizontal flip undone",
+        "area_px": 1712.0,
+        "touches_crop_edge": false,
+        "candidate_only": true
+      },
+      "eyelid_qc_source": "detector_contour",
+      "opening_geometry": {
+        "valid": true,
+        "endpoint_role": "CNN mask extrema along PCA axis; NOT human-verified canthi",
+        "left_endpoint": [
+          238.0,
+          257.0
+        ],
+        "right_endpoint": [
+          315.0,
+          248.0
+        ],
+        "pupil_u": 0.3282391631187826,
+        "pupil_v": -0.1527463498394154,
+        "height_width": 0.4128121625969086
+      },
+      "reflex_qc": {
+        "status": "ROI_QC_PASSED_RESEARCH_ONLY",
+        "reasons": [],
+        "eligible_for_score": true,
+        "config": {
+          "version": "reflex_roi_qc_v2_glint_candidates",
+          "search_radius_over_iris": 0.4,
+          "outlier_vector_over_iris": 0.4,
+          "glint_gray_threshold": 230,
+          "glint_open_kernel_px": 3,
+          "glint_component_bounds_px": [
+            3,
+            10
+          ],
+          "clinical_validated": false,
+          "mask_method": "predicted_iris_disc_intersect_eyelid_polygon_intersect_pupil_center_disc",
+          "candidate_replaces_cnn": false,
+          "segmentation_model_available": false
+        },
+        "local_intensity_candidate": [
+          264,
+          243
+        ],
+        "candidate_requires_primary_light_review": true,
+        "vector_over_iris_radius": 0.1309422183713732,
+        "roi_pixel_count": 112,
+        "intensity_range": [
+          37,
+          224
+        ],
+        "maximum_pixel_count": 1,
+        "selection_rule": "first raster-order maximum; ties retained as count; not verified reflex",
+        "glint_candidates": [],
+        "glint_candidate_count": 0,
+        "glint_candidate_selection": "ranked by local contrast, then proximity to iris center; human confirmation required"
+      },
+      "anatomical_side": null
+    }
+  },
+  "detected_faces": 1,
+  "automatic_capture": {
+    "input_type": "fullface",
+    "face_count": 1,
+    "mirror_status": "unknown",
+    "fixation_status": "unknown",
+    "fixation_verified": false,
+    "note": "A still image does not establish mirror history or the actual fixation target.",
+    "eye_line_roll_deg": -0.3390243244514502,
+    "roll_note": "2D eye-line inclination only; not a measurement of gaze."
+  },
+  "roi_source": "online_detector_CNN_ROI_plus10percent_padding",
+  "binocular_iris_radius_qc": {
+    "relative_difference": 0.012078226543572412,
+    "limit": 0.15,
+    "denominator": "max(R_OD,R_OS)",
+    "formula": "abs(R_OD-R_OS)/max(R_OD,R_OS)",
+    "status": "PASS_RESEARCH_ONLY",
+    "clinical_validated": false
+  },
+  "fixation_confirmation": "unknown",
+  "fixation_source": null,
+  "input_contract": {
+    "version": "source_pixels_v1",
+    "eligible": false,
+    "reasons": [
+      "orientation_unverified"
+    ],
+    "anatomical_sides": {
+      "image_left": null,
+      "image_right": null
+    },
+    "coordinate_space": "stored_source_pixels",
+    "visibility_policy": "occluded/not_visible rejected; model visibility is not clinical confirmation"
+  },
+  "binocular_comparison": {
+    "available": false,
+    "reason": "orientation unverified",
+    "frame": "stored image axes; mirror history unknown",
+    "anatomical_sides_verified": false
+  },
+  "reflex_qc_config": {
+    "version": "reflex_roi_qc_v2_glint_candidates",
+    "search_radius_over_iris": 0.4,
+    "outlier_vector_over_iris": 0.4,
+    "glint_gray_threshold": 230,
+    "glint_open_kernel_px": 3,
+    "glint_component_bounds_px": [
+      3,
+      10
+    ],
+    "clinical_validated": false,
+    "mask_method": "predicted_iris_disc_intersect_eyelid_polygon_intersect_pupil_center_disc",
+    "candidate_replaces_cnn": false,
+    "segmentation_model_available": false
+  },
+  "experimental_classifier_proposal": {
+    "status": "INCONCLUSIVE",
+    "reason": "invalid_input_contract",
+    "input_reasons": [
+      "orientation_unverified"
+    ],
+    "class_proposal": null,
+    "clinical_diagnosis": null,
+    "classifier_called": false,
+    "requires_human_review": true
+  },
+  "screening": {
+    "status": "INCONCLUSIVE",
+    "reason": "invalid_input_contract",
+    "input_reasons": [
+      "orientation_unverified"
+    ],
+    "class_proposal": null,
+    "clinical_diagnosis": null,
+    "classifier_called": false,
+    "requires_human_review": true
+  },
+  "reason_vi": "Đầu vào chưa đủ điều kiện: orientation_unverified"
+}

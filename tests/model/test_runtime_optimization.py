@@ -5,7 +5,7 @@ import pytest
 
 from app.services.trained_hirschberg_service import load_trained_hirschberg
 from app.hirschberg_runtime.scripts.export_hirschberg_review163_steps import decode
-from app.hirschberg_runtime.research.hirschberg_localization.direct_pupil_inference import predict
+from app.hirschberg_runtime.research.hirschberg_localization.boundary_pupil import predict
 from app.hirschberg_runtime.research.hirschberg_localization.reflex_roi_qc import diagnose
 
 
@@ -18,13 +18,14 @@ def test_landmarks_and_metadata_identical_without_visualizations(side):
     lean, empty = decode(engine.pr, image, box, side, engine.torch, engine.device, size=256, visualize=False)
     assert full == lean
     assert maps and empty == {}
-    # A valid source-space iris boundary exercises the prior and pupil decoder.
+    # The boundary branch accepts the compatible signature but does not use an iris prior.
     iris = {'iris_left': [55, 40], 'iris_right': [95, 40], 'iris_top': [75, 22], 'iris_bottom': [75, 58]}
     point, maps, metadata = predict(engine.pupil, image, box, side, iris, engine.torch, engine.device)
     lean_point, empty, lean_metadata = predict(engine.pupil, image, box, side, iris, engine.torch, engine.device, visualize=False)
     assert point == lean_point
     assert metadata == lean_metadata
-    assert maps and empty == {}
+    assert metadata['branch'] == 'pupil_boundary'
+    assert maps == {} and empty == {}
 
 
 def test_reflex_quality_gate_identical_without_mask_image():

@@ -1,23 +1,23 @@
 {
   "schema_version": 1,
-  "model_id": "classifier_retrain_20261030_v2",
-  "pupil_version": "successful_500_target15_refine_v2/block_03",
-  "pupil_train_mean_px": 1.7979000772618392,
+  "model_id": "matched_bundle_20261101_v1",
+  "pupil_version": "pupil_boundary_200ep_strict122_20261031_v1",
+  "pupil_train_mean_px": 1.1828089607716257,
   "research_only": true,
   "independent_validation": false,
   "roi_policy": "online_only",
   "artifacts": {
     "classifier": {
-      "path": "models/classifier_retrain_20261030_v2/classifier.pt",
-      "sha256": "79391ce62f2ca898cf84a269ffc4e4811da9f32b4cccdbe04d4412f7ec187020",
-      "source_relative_path": "research/hirschberg_localization/runs/cv_visibility_prior_20261030_v1/classifier_retrain_v2/candidate_final.pt",
-      "bytes": 95421186
+      "path": "models/matched_bundle_20261101_v1/classifier.pt",
+      "sha256": "bcb0e726e0aff8465d797d41c497f6ce374b3bbb34ecb1e1ebdc32a26242603e",
+      "bytes": 95421599,
+      "source_relative_path": "research/hirschberg_localization/runs/cv_visibility_prior_20261030_v1/matched_bundle_retrain_20261101_v1/candidate_final.pt"
     },
     "pupil": {
-      "path": "models/classifier_retrain_20261030_v2/pupil.pt",
-      "sha256": "f5e854ff0d38b77a006e19a35bd774f0be968524a07379bd07f0cfbc27f9b93c",
-      "source_relative_path": "research/hirschberg_localization/runs/cv_visibility_prior_20261030_v1/successful_500_target15_refine_v2/block_03/pupil_final.pt",
-      "bytes": 1459526
+      "path": "models/matched_bundle_20261101_v1/pupil.pt",
+      "sha256": "4136349b7099a8f4d1678ed9f89559d233d3adb7c78f04bfdde542e613759f53",
+      "bytes": 492791,
+      "source_relative_path": "research/hirschberg_localization/runs/cv_visibility_prior_20261030_v1/pupil_boundary_200ep_strict122_20261031_v1/pupil_finetuned_200.pt"
     },
     "reflex": {
       "path": "models/classifier_retrain_20261030_v2/reflex.pt",
@@ -26,16 +26,16 @@
       "bytes": 484826
     },
     "iris": {
-      "path": "models/classifier_retrain_20261030_v2/iris.pt",
-      "sha256": "f042cfdd50b50486b915b59eb8694f9e7bf72d4b4644e4b9ab97d2257b3d54ca",
-      "source_relative_path": "research/hirschberg_localization/runs/cv_visibility_prior_20261030_v1/all_old_direct_v1/iris_pupil/iris_four_final.pt",
-      "bytes": 4303206
+      "path": "models/matched_bundle_20261101_v1/iris.pt",
+      "sha256": "c2a8086bd6b11eb5b6b0288a67c65290c0386fe5b47c2c56dcd79b6e9fe91f4b",
+      "bytes": 1480557,
+      "source_relative_path": "research/hirschberg_localization/runs/cv_visibility_prior_20261030_v1/iris_eyelid_200ep_20261031_v1/iris_refined200.pt"
     },
     "eyelid": {
-      "path": "research/hirschberg_localization/runs/eyelid_reviewed_20261011_v1/candidate_final.pt",
-      "sha256": "54cb7856f6b91506266b2792354155ee0fd0e3ec566855c4a0b8f7b6a0488423",
-      "source_relative_path": "research/hirschberg_localization/runs/eyelid_reviewed_20261011_v1/candidate_final.pt",
-      "bytes": 489445
+      "path": "models/matched_bundle_20261101_v1/eyelid.pt",
+      "sha256": "b4d3f0182c84e07ba3a21db9acaa8a815214597e13b82c6a598e31f6f8114863",
+      "bytes": 488469,
+      "source_relative_path": "research/hirschberg_localization/runs/cv_visibility_prior_20261030_v1/iris_eyelid_200ep_20261031_v1/eyelid_final.pt"
     },
     "pupil_base": {
       "path": "research/hirschberg_localization/runs/pupil_iris_reviewed_20261011_v1/pupil_final.pt",
@@ -49,5 +49,6 @@
       "source_relative_path": "research/hirschberg_localization/runs/eye_crop_192_v1/best.pt",
       "bytes": 496513
     }
-  }
+  },
+  "quality_policy": "geometry_warnings_with_hard_visibility_and_coordinate_checks_v1"
 }

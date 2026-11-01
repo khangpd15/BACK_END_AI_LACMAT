@@ -3,14 +3,14 @@ import math
 import numpy as np
 import cv2
 from PIL import Image, ImageDraw
-CONFIG = {'version': 'reflex_roi_qc_v2_glint_candidates', 'search_radius_over_iris': 0.4, 'outlier_vector_over_iris': 0.4, 'glint_gray_threshold': 230, 'glint_open_kernel_px': 3, 'glint_component_bounds_px': [3, 10], 'clinical_validated': False, 'mask_method': 'predicted_iris_disc_intersect_eyelid_polygon_intersect_pupil_center_disc', 'candidate_replaces_cnn': False, 'segmentation_model_available': False}
+CONFIG = {'version': 'reflex_roi_qc_v3_geometry_warnings', 'search_radius_over_iris': 0.4, 'outlier_vector_over_iris': 0.4, 'glint_gray_threshold': 230, 'glint_open_kernel_px': 3, 'glint_component_bounds_px': [3, 10], 'clinical_validated': False, 'mask_method': 'predicted_iris_disc_intersect_eyelid_polygon_intersect_pupil_center_disc', 'candidate_replaces_cnn': False, 'segmentation_model_available': False}
 
 def point(value):
     return isinstance(value, (list, tuple)) and len(value) == 2 and all((isinstance(v, (float, int)) and (not isinstance(v, bool)) and math.isfinite(v) for v in value))
 
 def diagnose(image, eye, *, visualize=True):
     """Search source pixels, retain all raw landmarks, return mask and explicit QC."""
-    q = {'status': 'Invalid Landmark / Low Confidence', 'reasons': [], 'eligible_for_score': False, 'config': CONFIG.copy(), 'local_intensity_candidate': None, 'candidate_requires_primary_light_review': True}
+    q = {'status': 'Invalid Landmark / Low Confidence', 'reasons': [], 'warnings': [], 'eligible_for_score': False, 'config': CONFIG.copy(), 'local_intensity_candidate': None, 'candidate_requires_primary_light_review': True}
     pupil, reflex, center, diameter = (eye.get(k) for k in ('pupil', 'reflex', 'iris_center', 'iris_diameter_px'))
     if not all((point(v) for v in (pupil, reflex, center))) or not isinstance(diameter, (float, int)) or (not math.isfinite(diameter)) or (diameter <= 0):
         q['reasons'].append('missing_or_nonfinite_geometry')
@@ -19,7 +19,7 @@ def diagnose(image, eye, *, visualize=True):
     ratio = math.dist(pupil, reflex) / radius
     q['vector_over_iris_radius'] = ratio
     if ratio > CONFIG['outlier_vector_over_iris']:
-        q['reasons'].append('reflex_pupil_vector_exceeds_0_4R')
+        q['warnings'].append('reflex_pupil_vector_exceeds_0_4R')
     box = eye.get('bbox')
     contour = eye.get('eyelid_contour', [])
     if not isinstance(box, list) or len(box) != 4 or (not all((isinstance(v, int) for v in box))) or (not (0 <= box[0] < box[2] <= image.width and 0 <= box[1] < box[3] <= image.height)):
@@ -40,9 +40,13 @@ def diagnose(image, eye, *, visualize=True):
         return (q, mask_image)
     px, py = reflex
     ix, iy = (int(round(px)) - x0, int(round(py)) - y0)
-    inside = 0 <= ix < x1 - x0 and 0 <= iy < y1 - y0 and bool(np.asarray(visible)[iy, ix]) and (math.dist(reflex, center) <= radius) and (ratio <= CONFIG['search_radius_over_iris'])
+    inside = 0 <= ix < x1 - x0 and 0 <= iy < y1 - y0 and bool(np.asarray(visible)[iy, ix])
+    if math.dist(reflex, center) > radius:
+        q['warnings'].append('reflex_outside_estimated_iris_disc')
+    if ratio > CONFIG['search_radius_over_iris']:
+        q['warnings'].append('cnn_reflex_outside_search_roi')
     if not inside:
-        q['reasons'].append('cnn_reflex_outside_search_roi')
+        q['reasons'].append('cnn_reflex_outside_visible_eye')
     gray = np.asarray(image.crop(box).convert('L'))
     values = gray[mask]
     maximum = int(values.max())

@@ -18,7 +18,7 @@ from app.hirschberg_runtime.scripts.hirschberg_iris_geometry_stable_pilot import
 from app.hirschberg_runtime.research.hirschberg_localization.iris_four_points import four_point_model
 from app.hirschberg_runtime.research.hirschberg_localization.iris_context import predict_with_context
 from app.hirschberg_runtime.research.hirschberg_localization.pupil_iris_prior import make_model
-from app.hirschberg_runtime.research.hirschberg_localization.direct_pupil_inference import predict as predict_direct_pupil
+from app.hirschberg_runtime.research.hirschberg_localization.boundary_pupil import predict as predict_direct_pupil, BoundaryModel
 from app.hirschberg_runtime.scripts.hirschberg_localizer import network
 from app.hirschberg_runtime.research.hirschberg_localization.automatic_upload import capture_assessment, paired_eye_rois
 from app.hirschberg_runtime.research.hirschberg_localization.iris_radius_qc import compare_diameters
@@ -107,7 +107,7 @@ class Engine:
         self.pr = network(torch, spatial_logits=True, targets=2).to(self.device)
         self.pr.load_state_dict(load('reflex')['state_dict'])
         self.pr.eval()
-        self.pupil = make_model(torch, load('pupil_base')['state_dict']).to(self.device)
+        self.pupil = BoundaryModel().to(self.device)
         self.pupil.load_state_dict(load('pupil')['state_dict'])
         self.pupil.eval()
         self.iris = four_point_model(torch, stable_model(torch, load('iris_seed'))).to(self.device)
@@ -122,7 +122,7 @@ class Engine:
                            'version': bundle['model_id'], 'classifier_sha256': self.classifier_sha256,
                            'localizers': self.checkpoints, 'pupil_version': bundle['pupil_version'],
                            'pupil_checkpoint': bundle['artifacts']['pupil']['path'],
-                           'pupil_branch': 'source_pixel_refinement',
+                           'pupil_branch': 'pupil_boundary_segmentation',
                            'pupil_train_mean_px': bundle['pupil_train_mean_px'],
                            'classifier_training_pupil_sha256': bundle['artifacts']['pupil']['sha256'],
                            'updated_pupil_classifier_pair_independently_evaluated': False,
@@ -257,18 +257,14 @@ class Engine:
             eye['reflex_qc'], _ = reflex_diagnose(image, eye, visualize=False)
             axis_ratio = (eye.get('mediapipe_iris_geometry') or {}).get('landmark_bbox_axis_ratio')
             if axis_ratio is not None and (not 0.85 <= axis_ratio <= 1.0):
-                eye['reflex_qc']['reasons'].append('mediapipe_iris_axis_ratio_outside_0_85_1_0')
-                eye['reflex_qc']['eligible_for_score'] = False
-                eye['reflex_qc']['status'] = 'Invalid Landmark / Low Confidence'
+                eye['reflex_qc'].setdefault('warnings', []).append('mediapipe_iris_axis_ratio_outside_0_85_1_0')
             record['eyes'][side] = eye
         iris_diameters = [record['eyes'][side].get('iris_diameter_px') for side in ('image_left', 'image_right')]
         record['binocular_iris_radius_qc'] = compare_diameters(iris_diameters)
         if record['binocular_iris_radius_qc']['status'] == 'Invalid Landmark / Low Confidence':
             for side in ('image_left', 'image_right'):
                 qc = record['eyes'][side]['reflex_qc']
-                qc['reasons'].append('bilateral_iris_radius_difference_over_0_15')
-                qc['eligible_for_score'] = False
-                qc['status'] = 'Invalid Landmark / Low Confidence'
+                qc.setdefault('warnings', []).append('bilateral_iris_radius_difference_over_0_15')
         record['fixation_confirmation'] = fixation
         record['fixation_source'] = fixation_source if fixation == 'confirmed' else None
         record['input_contract'] = validate_input(record)
@@ -280,6 +276,8 @@ class Engine:
         record['reflex_qc_config'] = REFLEX_QC_CONFIG.copy()
         record['experimental_classifier_proposal'] = screen_with_guards(lambda: self.classify(image, record), record, orientation, fixation)
         record['screening'] = record['experimental_classifier_proposal']
+        record['screening']['quality_warnings'] = [{'side': side, 'code': code} for side, eye in record['eyes'].items() for code in eye.get('reflex_qc', {}).get('warnings', [])]
+        record['screening']['quality_policy'] = 'geometry_warnings_with_hard_visibility_and_coordinate_checks_v1'
         if automatic:
             record['automatic_capture']['common_direction_flag'] = record['binocular_comparison'].get('same_half_plane')
             record['automatic_capture']['fixation_status'] = fixation
